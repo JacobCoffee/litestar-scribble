@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="cyan" data-content_root="./">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>WordBank System Documentation - scribbl-py</title><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="_static/shibuya.css?v=14737038" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx_paramlinks.css" />
+    <link media="print" rel="stylesheet" type="text/css" href="_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=fc559bc7" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="WordBank System Documentation"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="index.html">
+      
+      
+      <strong>scribbl-py</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link">
+          <a href="https://litestar.dev/">
+            <span>Litestar</span></a>
+        </li><li class="link">
+          <a href="https://pypi.org/project/scribbl-py/">
+            <span>PyPI</span></a>
+        </li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Learn</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting-started/installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/index.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/configuration.html">Configuration Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/development.html">Development Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/deployment.html">Deployment Guide</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/plugin.html">Plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/storage.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/services.html">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/realtime.html">Realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/auth.html">Auth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/web.html">Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/game.html">Game</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/JacobCoffee/scribbl-py">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/litestar">Discord</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#features">Features</a><ul>
+<li><a class="reference internal" href="#word-categories">Word Categories</a></li>
+<li><a class="reference internal" href="#difficulty-levels">Difficulty Levels</a></li>
+<li><a class="reference internal" href="#close-guess-detection">Close Guess Detection</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#usage">Usage</a><ul>
+<li><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
+<li><a class="reference internal" href="#category-and-difficulty-filtering">Category and Difficulty Filtering</a></li>
+<li><a class="reference internal" href="#custom-words">Custom Words</a><ul>
+<li><a class="reference internal" href="#from-dictionary">From Dictionary</a></li>
+<li><a class="reference internal" href="#from-file">From File</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#game-session-management">Game Session Management</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a><ul>
+<li><a class="reference internal" href="#similarity-threshold">Similarity Threshold</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#api-reference">API Reference</a><ul>
+<li><a class="reference internal" href="#wordbankservice">WordBankService</a><ul>
+<li><a class="reference internal" href="#init-word-lists-none-similarity-threshold-0-75"><code class="docutils literal notranslate"><span class="pre">__init__(*,</span> <span class="pre">word_lists=None,</span> <span class="pre">similarity_threshold=0.75)</span></code></a></li>
+<li><a class="reference internal" href="#get-word-options-game-id-count-3-difficulty-none-category-none"><code class="docutils literal notranslate"><span class="pre">get_word_options(game_id,</span> <span class="pre">*,</span> <span class="pre">count=3,</span> <span class="pre">difficulty=None,</span> <span class="pre">category=None)</span></code></a></li>
+<li><a class="reference internal" href="#check-guess-word-guess"><code class="docutils literal notranslate"><span class="pre">check_guess(word,</span> <span class="pre">guess)</span></code></a></li>
+<li><a class="reference internal" href="#load-custom-words-words-merge-true"><code class="docutils literal notranslate"><span class="pre">load_custom_words(words,</span> <span class="pre">*,</span> <span class="pre">merge=True)</span></code></a></li>
+<li><a class="reference internal" href="#load-custom-words-from-file-file-path-category-difficulty-merge-true"><code class="docutils literal notranslate"><span class="pre">load_custom_words_from_file(file_path,</span> <span class="pre">category,</span> <span class="pre">difficulty,</span> <span class="pre">*,</span> <span class="pre">merge=True)</span></code></a></li>
+<li><a class="reference internal" href="#reset-game-words-game-id"><code class="docutils literal notranslate"><span class="pre">reset_game_words(game_id)</span></code></a></li>
+<li><a class="reference internal" href="#get-word-count-category-none-difficulty-none"><code class="docutils literal notranslate"><span class="pre">get_word_count(*,</span> <span class="pre">category=None,</span> <span class="pre">difficulty=None)</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#close-guess-algorithm">Close Guess Algorithm</a><ul>
+<li><a class="reference internal" href="#sequence-similarity">1. Sequence Similarity</a></li>
+<li><a class="reference internal" href="#plural-singular-detection">2. Plural/Singular Detection</a></li>
+<li><a class="reference internal" href="#single-character-difference">3. Single Character Difference</a></li>
+<li><a class="reference internal" href="#common-prefix">4. Common Prefix</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#best-practices">Best Practices</a><ul>
+<li><a class="reference internal" href="#for-game-implementation">For Game Implementation</a></li>
+<li><a class="reference internal" href="#for-custom-words">For Custom Words</a></li>
+<li><a class="reference internal" href="#performance">Performance</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">scribbl-py</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">WordBank System Documentation</strong>
+        <meta itemprop="position" content="2" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <section id="wordbank-system-documentation">
+<h1>WordBank System Documentation<a class="headerlink" href="#wordbank-system-documentation" title="Link to this heading">¶</a></h1>
+<p>The WordBank system provides comprehensive word selection and validation functionality for the Skribbl Mode drawing game.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>The WordBank manages:</p>
+<ul class="simple">
+<li><p><strong>Word Selection</strong>: Random word selection from categorized lists</p></li>
+<li><p><strong>Difficulty Levels</strong>: Easy, Medium, and Hard word categories</p></li>
+<li><p><strong>Custom Words</strong>: Support for loading custom word lists</p></li>
+<li><p><strong>Guess Validation</strong>: Intelligent matching with close-guess detection</p></li>
+<li><p><strong>Session Management</strong>: Track used words per game to avoid repetition</p></li>
+</ul>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading">¶</a></h2>
+<section id="word-categories">
+<h3>Word Categories<a class="headerlink" href="#word-categories" title="Link to this heading">¶</a></h3>
+<p>The system includes 10 built-in categories with 600+ words:</p>
+<ul class="simple">
+<li><p><strong>Animals</strong>: Common and exotic animals (e.g., cat, elephant, platypus)</p></li>
+<li><p><strong>Objects</strong>: Everyday items and tools (e.g., chair, telescope, abacus)</p></li>
+<li><p><strong>Actions</strong>: Verbs and activities (e.g., run, meditate, somersault)</p></li>
+<li><p><strong>Places</strong>: Locations and landmarks (e.g., park, pyramid, acropolis)</p></li>
+<li><p><strong>Food</strong>: Cuisine from around the world (e.g., pizza, ratatouille, kimchi)</p></li>
+<li><p><strong>Sports</strong>: Athletic activities (e.g., soccer, curling, pentathlon)</p></li>
+<li><p><strong>Movies</strong>: Film-related concepts (e.g., superhero, plot twist, allegory)</p></li>
+<li><p><strong>Nature</strong>: Natural phenomena (e.g., waterfall, aurora borealis, ecosystem)</p></li>
+<li><p><strong>Technology</strong>: Tech terms (e.g., smartphone, blockchain, quantum computing)</p></li>
+<li><p><strong>Professions</strong>: Occupations (e.g., teacher, archaeologist, anesthesiologist)</p></li>
+</ul>
+</section>
+<section id="difficulty-levels">
+<h3>Difficulty Levels<a class="headerlink" href="#difficulty-levels" title="Link to this heading">¶</a></h3>
+<p>Each category has three difficulty levels:</p>
+<ul class="simple">
+<li><p><strong>Easy</strong>: Common, simple words (20+ words per category)</p></li>
+<li><p><strong>Medium</strong>: Moderately challenging words (20+ words per category)</p></li>
+<li><p><strong>Hard</strong>: Complex, specialized terms (20+ words per category)</p></li>
+</ul>
+</section>
+<section id="close-guess-detection">
+<h3>Close Guess Detection<a class="headerlink" href="#close-guess-detection" title="Link to this heading">¶</a></h3>
+<p>The system intelligently detects “close” guesses using multiple algorithms:</p>
+<ol class="arabic simple">
+<li><p><strong>Sequence Similarity</strong>: Uses difflib’s SequenceMatcher (default 75% threshold)</p></li>
+<li><p><strong>Plural/Singular Variations</strong>: Detects simple plurals (s, es, ies/y)</p></li>
+<li><p><strong>Single Character Differences</strong>: Catches typos (substitution, insertion, deletion)</p></li>
+<li><p><strong>Common Prefix Detection</strong>: Identifies partial matches for longer words</p></li>
+</ol>
+</section>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h2>
+<section id="basic-usage">
+<h3>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.game</span><span class="w"> </span><span class="kn">import</span> <span class="n">WordBankService</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="c1"># Create word bank instance</span>
+</span><span data-line="5"><span class="n">word_bank</span> <span class="o">=</span> <span class="n">WordBankService</span><span class="p">()</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="c1"># Start a game session</span>
+</span><span data-line="8"><span class="n">game_id</span> <span class="o">=</span> <span class="n">uuid4</span><span class="p">()</span>
+</span><span data-line="9">
+</span><span data-line="10"><span class="c1"># Get 3 random word options for the drawer</span>
+</span><span data-line="11"><span class="n">options</span> <span class="o">=</span> <span class="n">word_bank</span><span class="o">.</span><span class="n">get_word_options</span><span class="p">(</span><span class="n">game_id</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</span><span data-line="12"><span class="c1"># Example: [&#39;elephant&#39;, &#39;pizza&#39;, &#39;running&#39;]</span>
+</span><span data-line="13">
+</span><span data-line="14"><span class="c1"># Drawer selects a word</span>
+</span><span data-line="15"><span class="n">selected_word</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="16">
+</span><span data-line="17"><span class="c1"># Check player guesses</span>
+</span><span data-line="18"><span class="n">result</span> <span class="o">=</span> <span class="n">word_bank</span><span class="o">.</span><span class="n">check_guess</span><span class="p">(</span><span class="n">selected_word</span><span class="p">,</span> <span class="s2">&quot;elephant&quot;</span><span class="p">)</span>
+</span><span data-line="19"><span class="c1"># Returns: GuessResult.CORRECT</span>
+</span><span data-line="20">
+</span><span data-line="21"><span class="n">result</span> <span class="o">=</span> <span class="n">word_bank</span><span class="o">.</span><span class="n">check_guess</span><span class="p">(</span><span class="n">selected_word</span><span class="p">,</span> <span class="s2">&quot;elephent&quot;</span><span class="p">)</span>
+</span><span data-line="22"><span class="c1"># Returns: GuessResult.CLOSE</span>
+</span><span data-line="23">
+</span><span data-line="24"><span class="n">result</span> <span class="o">=</span> <span class="n">word_bank</span><span class="o">.</span><span class="n">check_guess</span><span class="p">(</span><span class="n">selected_word</span><span class="p">,</span> <span class="s2">&quot;cat&quot;</span><span class="p">)</span>
+</span><span data-line="25"><span class="c1"># Returns: GuessResult.WRONG</span>
+</span></pre></div>
+</div>
+</section>
+<section id="category-and-difficulty-filtering">
+<h3>Category and Difficulty Filtering<a class="headerlink" href="#category-and-difficulty-filtering" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.game</span><span class="w"> </span><span class="kn">import</span> <span class="n">DifficultyLevel</span><span class="p">,</span> <span class="n">WordCategory</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="c1"># Get words from specific category</span>
+</span><span data-line="4"><span class="n">animals</span> <span class="o">=</span> <span class="n">word_bank</span><span class="o">.</span><span class="n">get_word_options</span><span class="p">(</span>
+</span><span data-line="5">    <span class="n">game_id</span><span class="p">,</span>
+</span><span data-line="6">    <span class="n">count</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+</span><span data-line="7">    <span class="n">category</span><span class="o">=</span><span class="n">WordCategory</span><span class="o">.</span><span class="n">ANIMALS</span>
+</span><span data-line="8"><span class="p">)</span>
+</span><span data-line="9">
+</span><span data-line="10"><span class="c1"># Get words of specific difficulty</span>
+</span><span data-line="11"><span class="n">easy_words</span> <span class="o">=</span> <span class="n">word_bank</span><span class="o">.</span><span class="n">get_word_options</span><span class="p">(</span>
+</span><span data-line="12">    <span class="n">game_id</span><span class="p">,</span>
+</span><span data-line="13">    <span class="n">count</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+</span><span data-line="14">    <span class="n">difficulty</span><span class="o">=</span><span class="n">DifficultyLevel</span><span class="o">.</span><span class="n">EASY</span>
+</span><span data-line="15"><span class="p">)</span>
+</span><span data-line="16">
+</span><span data-line="17"><span class="c1"># Combine filters</span>
+</span><span data-line="18"><span class="n">hard_food</span> <span class="o">=</span> <span class="n">word_bank</span><span class="o">.</span><span class="n">get_word_options</span><span class="p">(</span>
+</span><span data-line="19">    <span class="n">game_id</span><span class="p">,</span>
+</span><span data-line="20">    <span class="n">count</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+</span><span data-line="21">    <span class="n">category</span><span class="o">=</span><span class="n">WordCategory</span><span class="o">.</span><span class="n">FOOD</span><span class="p">,</span>
+</span><span data-line="22">    <span class="n">difficulty</span><span class="o">=</span><span class="n">DifficultyLevel</span><span class="o">.</span><span class="n">HARD</span>
+</span><span data-line="23"><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="custom-words">
+<h3>Custom Words<a class="headerlink" href="#custom-words" title="Link to this heading">¶</a></h3>
+<section id="from-dictionary">
+<h4>From Dictionary<a class="headerlink" href="#from-dictionary" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">custom_words</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="2">    <span class="n">WordCategory</span><span class="o">.</span><span class="n">OBJECTS</span><span class="p">:</span> <span class="p">{</span>
+</span><span data-line="3">        <span class="n">DifficultyLevel</span><span class="o">.</span><span class="n">EASY</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;lightsaber&quot;</span><span class="p">,</span> <span class="s2">&quot;pokeball&quot;</span><span class="p">],</span>
+</span><span data-line="4">        <span class="n">DifficultyLevel</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;portal gun&quot;</span><span class="p">,</span> <span class="s2">&quot;time turner&quot;</span><span class="p">],</span>
+</span><span data-line="5">    <span class="p">}</span>
+</span><span data-line="6"><span class="p">}</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="c1"># Merge with existing words</span>
+</span><span data-line="9"><span class="n">word_bank</span><span class="o">.</span><span class="n">load_custom_words</span><span class="p">(</span><span class="n">custom_words</span><span class="p">,</span> <span class="n">merge</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span data-line="10">
+</span><span data-line="11"><span class="c1"># Replace existing words</span>
+</span><span data-line="12"><span class="n">word_bank</span><span class="o">.</span><span class="n">load_custom_words</span><span class="p">(</span><span class="n">custom_words</span><span class="p">,</span> <span class="n">merge</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="from-file">
+<h4>From File<a class="headerlink" href="#from-file" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Load words from text file (one word per line)</span>
+</span><span data-line="2"><span class="n">word_bank</span><span class="o">.</span><span class="n">load_custom_words_from_file</span><span class="p">(</span>
+</span><span data-line="3">    <span class="s2">&quot;my_words.txt&quot;</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">category</span><span class="o">=</span><span class="n">WordCategory</span><span class="o">.</span><span class="n">OBJECTS</span><span class="p">,</span>
+</span><span data-line="5">    <span class="n">difficulty</span><span class="o">=</span><span class="n">DifficultyLevel</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">,</span>
+</span><span data-line="6">    <span class="n">merge</span><span class="o">=</span><span class="kc">True</span>
+</span><span data-line="7"><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+</section>
+<section id="game-session-management">
+<h3>Game Session Management<a class="headerlink" href="#game-session-management" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Words are automatically tracked per game</span>
+</span><span data-line="2"><span class="n">game1</span> <span class="o">=</span> <span class="n">uuid4</span><span class="p">()</span>
+</span><span data-line="3"><span class="n">game2</span> <span class="o">=</span> <span class="n">uuid4</span><span class="p">()</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="c1"># Each game has separate word tracking</span>
+</span><span data-line="6"><span class="n">words1</span> <span class="o">=</span> <span class="n">word_bank</span><span class="o">.</span><span class="n">get_word_options</span><span class="p">(</span><span class="n">game1</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</span><span data-line="7"><span class="n">words2</span> <span class="o">=</span> <span class="n">word_bank</span><span class="o">.</span><span class="n">get_word_options</span><span class="p">(</span><span class="n">game2</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</span><span data-line="8"><span class="c1"># words1 and words2 can overlap</span>
+</span><span data-line="9">
+</span><span data-line="10"><span class="c1"># Words won&#39;t repeat within the same game</span>
+</span><span data-line="11"><span class="n">more_words1</span> <span class="o">=</span> <span class="n">word_bank</span><span class="o">.</span><span class="n">get_word_options</span><span class="p">(</span><span class="n">game1</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</span><span data-line="12"><span class="c1"># Guaranteed to be different from words1</span>
+</span><span data-line="13">
+</span><span data-line="14"><span class="c1"># Reset word tracking for new game</span>
+</span><span data-line="15"><span class="n">word_bank</span><span class="o">.</span><span class="n">reset_game_words</span><span class="p">(</span><span class="n">game1</span><span class="p">)</span>
+</span><span data-line="16"><span class="c1"># Now words can be reused</span>
+</span></pre></div>
+</div>
+</section>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">¶</a></h3>
+<section id="similarity-threshold">
+<h4>Similarity Threshold<a class="headerlink" href="#similarity-threshold" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Stricter matching (0.0 - 1.0, default 0.75)</span>
+</span><span data-line="2"><span class="n">word_bank</span> <span class="o">=</span> <span class="n">WordBankService</span><span class="p">(</span><span class="n">similarity_threshold</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="c1"># More lenient matching</span>
+</span><span data-line="5"><span class="n">word_bank</span> <span class="o">=</span> <span class="n">WordBankService</span><span class="p">(</span><span class="n">similarity_threshold</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">¶</a></h2>
+<section id="wordbankservice">
+<h3>WordBankService<a class="headerlink" href="#wordbankservice" title="Link to this heading">¶</a></h3>
+<section id="init-word-lists-none-similarity-threshold-0-75">
+<h4><code class="docutils literal notranslate"><span class="pre">__init__(*,</span> <span class="pre">word_lists=None,</span> <span class="pre">similarity_threshold=0.75)</span></code><a class="headerlink" href="#init-word-lists-none-similarity-threshold-0-75" title="Link to this heading">¶</a></h4>
+<p>Create a new WordBank instance.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">word_lists</span></code>: Optional custom word lists (defaults to built-in lists)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">similarity_threshold</span></code>: Threshold for close match detection (0.0-1.0)</p></li>
+</ul>
+</section>
+<section id="get-word-options-game-id-count-3-difficulty-none-category-none">
+<h4><code class="docutils literal notranslate"><span class="pre">get_word_options(game_id,</span> <span class="pre">*,</span> <span class="pre">count=3,</span> <span class="pre">difficulty=None,</span> <span class="pre">category=None)</span></code><a class="headerlink" href="#get-word-options-game-id-count-3-difficulty-none-category-none" title="Link to this heading">¶</a></h4>
+<p>Get random word options for a round.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">game_id</span></code>: UUID of the game session</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">count</span></code>: Number of words to return (default 3)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">difficulty</span></code>: Optional DifficultyLevel filter</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">category</span></code>: Optional WordCategory filter</p></li>
+</ul>
+<p><strong>Returns:</strong> List of word strings</p>
+<p><strong>Raises:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">InvalidCategoryError</span></code>: Invalid category specified</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InsufficientWordsError</span></code>: Not enough words available</p></li>
+</ul>
+</section>
+<section id="check-guess-word-guess">
+<h4><code class="docutils literal notranslate"><span class="pre">check_guess(word,</span> <span class="pre">guess)</span></code><a class="headerlink" href="#check-guess-word-guess" title="Link to this heading">¶</a></h4>
+<p>Check if a guess matches the target word.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">word</span></code>: The target word</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">guess</span></code>: The player’s guess</p></li>
+</ul>
+<p><strong>Returns:</strong> <code class="docutils literal notranslate"><span class="pre">GuessResult</span></code> enum value:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CORRECT</span></code>: Exact match</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CLOSE</span></code>: Close match (trigger hint)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WRONG</span></code>: No match</p></li>
+</ul>
+</section>
+<section id="load-custom-words-words-merge-true">
+<h4><code class="docutils literal notranslate"><span class="pre">load_custom_words(words,</span> <span class="pre">*,</span> <span class="pre">merge=True)</span></code><a class="headerlink" href="#load-custom-words-words-merge-true" title="Link to this heading">¶</a></h4>
+<p>Load custom words from dictionary.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">words</span></code>: Dictionary mapping categories/difficulties to word lists</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">merge</span></code>: If True, merge with existing words; if False, replace</p></li>
+</ul>
+</section>
+<section id="load-custom-words-from-file-file-path-category-difficulty-merge-true">
+<h4><code class="docutils literal notranslate"><span class="pre">load_custom_words_from_file(file_path,</span> <span class="pre">category,</span> <span class="pre">difficulty,</span> <span class="pre">*,</span> <span class="pre">merge=True)</span></code><a class="headerlink" href="#load-custom-words-from-file-file-path-category-difficulty-merge-true" title="Link to this heading">¶</a></h4>
+<p>Load custom words from a text file.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">file_path</span></code>: Path to text file (one word per line)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">category</span></code>: WordCategory to assign words to</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">difficulty</span></code>: DifficultyLevel to assign words to</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">merge</span></code>: If True, merge with existing words; if False, replace</p></li>
+</ul>
+<p><strong>Raises:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">FileNotFoundError</span></code>: File doesn’t exist</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InvalidCategoryError</span></code>: Invalid category</p></li>
+</ul>
+</section>
+<section id="reset-game-words-game-id">
+<h4><code class="docutils literal notranslate"><span class="pre">reset_game_words(game_id)</span></code><a class="headerlink" href="#reset-game-words-game-id" title="Link to this heading">¶</a></h4>
+<p>Reset used word tracking for a game session.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">game_id</span></code>: UUID of the game session</p></li>
+</ul>
+</section>
+<section id="get-word-count-category-none-difficulty-none">
+<h4><code class="docutils literal notranslate"><span class="pre">get_word_count(*,</span> <span class="pre">category=None,</span> <span class="pre">difficulty=None)</span></code><a class="headerlink" href="#get-word-count-category-none-difficulty-none" title="Link to this heading">¶</a></h4>
+<p>Get total number of available words.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">category</span></code>: Optional category filter</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">difficulty</span></code>: Optional difficulty filter</p></li>
+</ul>
+<p><strong>Returns:</strong> Integer count of words</p>
+</section>
+</section>
+</section>
+<section id="close-guess-algorithm">
+<h2>Close Guess Algorithm<a class="headerlink" href="#close-guess-algorithm" title="Link to this heading">¶</a></h2>
+<p>The close guess detection uses multiple heuristics to determine if a guess is “close enough” to warrant a hint:</p>
+<section id="sequence-similarity">
+<h3>1. Sequence Similarity<a class="headerlink" href="#sequence-similarity" title="Link to this heading">¶</a></h3>
+<p>Uses Python’s <code class="docutils literal notranslate"><span class="pre">difflib.SequenceMatcher</span></code> to calculate similarity ratio:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">similarity</span> <span class="o">=</span> <span class="n">SequenceMatcher</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">word</span><span class="p">,</span> <span class="n">guess</span><span class="p">)</span><span class="o">.</span><span class="n">ratio</span><span class="p">()</span>
+</span><span data-line="2"><span class="k">if</span> <span class="n">similarity</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">:</span>  <span class="c1"># default 0.75</span>
+</span><span data-line="3">    <span class="k">return</span> <span class="n">CLOSE</span>
+</span></pre></div>
+</div>
+</section>
+<section id="plural-singular-detection">
+<h3>2. Plural/Singular Detection<a class="headerlink" href="#plural-singular-detection" title="Link to this heading">¶</a></h3>
+<p>Handles common pluralization patterns:</p>
+<ul class="simple">
+<li><p>Simple ‘s’: cat → cats</p></li>
+<li><p>‘es’ suffix: box → boxes</p></li>
+<li><p>‘ies/y’ variation: berry → berries</p></li>
+</ul>
+</section>
+<section id="single-character-difference">
+<h3>3. Single Character Difference<a class="headerlink" href="#single-character-difference" title="Link to this heading">¶</a></h3>
+<p>Detects typos with one character different:</p>
+<ul class="simple">
+<li><p><strong>Substitution</strong>: cat → bat</p></li>
+<li><p><strong>Insertion</strong>: cat → coat</p></li>
+<li><p><strong>Deletion</strong>: coat → cat</p></li>
+</ul>
+</section>
+<section id="common-prefix">
+<h3>4. Common Prefix<a class="headerlink" href="#common-prefix" title="Link to this heading">¶</a></h3>
+<p>For longer words (4+ chars), checks if 70% of the word matches:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">min_prefix</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.7</span><span class="p">)</span>
+</span><span data-line="2"><span class="k">if</span> <span class="n">word</span><span class="p">[:</span><span class="n">min_prefix</span><span class="p">]</span> <span class="o">==</span> <span class="n">guess</span><span class="p">[:</span><span class="n">min_prefix</span><span class="p">]:</span>
+</span><span data-line="3">    <span class="k">return</span> <span class="n">CLOSE</span>
+</span></pre></div>
+</div>
+</section>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading">¶</a></h2>
+<section id="for-game-implementation">
+<h3>For Game Implementation<a class="headerlink" href="#for-game-implementation" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Create one WordBank instance per game server</strong> (reuse across games)</p></li>
+<li><p><strong>Use game_id to track word usage</strong> per session</p></li>
+<li><p><strong>Reset game words</strong> when starting a new game</p></li>
+<li><p><strong>Handle GuessResult.CLOSE</strong> by showing “Player X is close!” message</p></li>
+<li><p><strong>Filter by category/difficulty</strong> based on game settings</p></li>
+</ol>
+</section>
+<section id="for-custom-words">
+<h3>For Custom Words<a class="headerlink" href="#for-custom-words" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Keep custom words lowercase</strong> for consistency</p></li>
+<li><p><strong>Avoid very short words</strong> (&lt; 3 characters) for better gameplay</p></li>
+<li><p><strong>Test close match detection</strong> for new word lists</p></li>
+<li><p><strong>Organize by difficulty</strong> appropriately</p></li>
+</ol>
+</section>
+<section id="performance">
+<h3>Performance<a class="headerlink" href="#performance" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>WordBank uses deep copy for thread safety</p></li>
+<li><p>Word selection is O(n) where n = available words</p></li>
+<li><p>Close guess detection is O(m) where m = word length</p></li>
+<li><p>Typical performance: &lt; 1ms for word selection, &lt; 0.1ms for guess checking</p></li>
+</ul>
+</section>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
+<p>See <code class="docutils literal notranslate"><span class="pre">examples/wordbank_example.py</span></code> for a comprehensive demonstration of all features.</p>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">¶</a></h2>
+<p>Run the test suite:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/test_game_wordbank.py<span class="w"> </span>-v
+</span></pre></div>
+</div>
+<p>Tests cover:</p>
+<ul class="simple">
+<li><p>Initialization and configuration</p></li>
+<li><p>Word selection and filtering</p></li>
+<li><p>Guess checking (all match types)</p></li>
+<li><p>Custom word loading</p></li>
+<li><p>Game session management</p></li>
+<li><p>Word list quality assurance</p></li>
+</ul>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2025, Jacob Coffee</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=30646c52"></script>
+      <script src="_static/design-tabs.js?v=f930bc37"></script>
+      <script src="_static/shibuya.js?v=c1cf1a6b"></script></body>
+</html>

@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="cyan" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Realtime - scribbl-py</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Auth" href="auth.html" /><link rel="prev" title="Services" href="services.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=14737038" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_paramlinks.css" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=fc559bc7" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="Realtime"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      
+      
+      <strong>scribbl-py</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link">
+          <a href="https://litestar.dev/">
+            <span>Litestar</span></a>
+        </li><li class="link">
+          <a href="https://pypi.org/project/scribbl-py/">
+            <span>PyPI</span></a>
+        </li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Learn</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/index.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guides/configuration.html">Configuration Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/development.html">Development Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/deployment.html">Deployment Guide</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plugin.html">Plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="services.html">Services</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auth.html">Auth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web.html">Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="game.html">Game</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/JacobCoffee/scribbl-py">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/litestar">Discord</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#canvaswebsockethandler">CanvasWebSocketHandler</a><ul>
+<li><a class="reference internal" href="#scribbl_py.CanvasWebSocketHandler"><code class="docutils literal notranslate"><span class="pre">CanvasWebSocketHandler</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.CanvasWebSocketHandler.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.CanvasWebSocketHandler.handle_connection"><code class="docutils literal notranslate">handle_connection()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#connectionmanager">ConnectionManager</a><ul>
+<li><a class="reference internal" href="#scribbl_py.ConnectionManager"><code class="docutils literal notranslate"><span class="pre">ConnectionManager</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.ConnectionManager.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectionManager.connect"><code class="docutils literal notranslate">connect()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectionManager.disconnect"><code class="docutils literal notranslate">disconnect()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectionManager.get_connected_users"><code class="docutils literal notranslate">get_connected_users()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectionManager.get_user"><code class="docutils literal notranslate">get_user()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectionManager.update_cursor"><code class="docutils literal notranslate">update_cursor()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectionManager.broadcast"><code class="docutils literal notranslate">broadcast()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectionManager.send_to_user"><code class="docutils literal notranslate">send_to_user()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectionManager.active_canvases"><code class="docutils literal notranslate">active_canvases</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectionManager.total_connections"><code class="docutils literal notranslate">total_connections</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#connecteduser">ConnectedUser</a><ul>
+<li><a class="reference internal" href="#scribbl_py.ConnectedUser"><code class="docutils literal notranslate"><span class="pre">ConnectedUser</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.ConnectedUser.user_id"><code class="docutils literal notranslate">user_id</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectedUser.user_name"><code class="docutils literal notranslate">user_name</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectedUser.websocket"><code class="docutils literal notranslate">websocket</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectedUser.canvas_id"><code class="docutils literal notranslate">canvas_id</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectedUser.cursor_x"><code class="docutils literal notranslate">cursor_x</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectedUser.cursor_y"><code class="docutils literal notranslate">cursor_y</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectedUser.connected_at"><code class="docutils literal notranslate">connected_at</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectedUser.to_dict"><code class="docutils literal notranslate">to_dict()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ConnectedUser.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#message-types">Message Types</a><ul>
+<li><a class="reference internal" href="#scribbl_py.MessageType"><code class="docutils literal notranslate"><span class="pre">MessageType</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.MessageType.JOIN"><code class="docutils literal notranslate">JOIN</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.LEAVE"><code class="docutils literal notranslate">LEAVE</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.ELEMENT_ADD"><code class="docutils literal notranslate">ELEMENT_ADD</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.ELEMENT_UPDATE"><code class="docutils literal notranslate">ELEMENT_UPDATE</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.ELEMENT_DELETE"><code class="docutils literal notranslate">ELEMENT_DELETE</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.CURSOR_MOVE"><code class="docutils literal notranslate">CURSOR_MOVE</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.UNDO"><code class="docutils literal notranslate">UNDO</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.REDO"><code class="docutils literal notranslate">REDO</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.STROKE_START"><code class="docutils literal notranslate">STROKE_START</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.STROKE_CONTINUE"><code class="docutils literal notranslate">STROKE_CONTINUE</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.STROKE_END"><code class="docutils literal notranslate">STROKE_END</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.SYNC"><code class="docutils literal notranslate">SYNC</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.USER_JOINED"><code class="docutils literal notranslate">USER_JOINED</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.USER_LEFT"><code class="docutils literal notranslate">USER_LEFT</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.ELEMENT_ADDED"><code class="docutils literal notranslate">ELEMENT_ADDED</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.ELEMENT_UPDATED"><code class="docutils literal notranslate">ELEMENT_UPDATED</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.ELEMENT_DELETED"><code class="docutils literal notranslate">ELEMENT_DELETED</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.CURSOR_MOVED"><code class="docutils literal notranslate">CURSOR_MOVED</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.UNDO_RESULT"><code class="docutils literal notranslate">UNDO_RESULT</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.REDO_RESULT"><code class="docutils literal notranslate">REDO_RESULT</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.ERROR"><code class="docutils literal notranslate">ERROR</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.STROKE_STARTED"><code class="docutils literal notranslate">STROKE_STARTED</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.STROKE_CONTINUED"><code class="docutils literal notranslate">STROKE_CONTINUED</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.STROKE_ENDED"><code class="docutils literal notranslate">STROKE_ENDED</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.MessageType.__new__"><code class="docutils literal notranslate">__new__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#factory-function">Factory Function</a><ul>
+<li><a class="reference internal" href="#scribbl_py.create_websocket_handler"><code class="docutils literal notranslate"><span class="pre">create_websocket_handler()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">scribbl-py</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">API Reference</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Realtime</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <section id="realtime">
+<h1>Realtime<a class="headerlink" href="#realtime" title="Link to this heading">¶</a></h1>
+<p>The realtime module provides WebSocket handlers for real-time collaboration.</p>
+<section id="canvaswebsockethandler">
+<h2>CanvasWebSocketHandler<a class="headerlink" href="#canvaswebsockethandler" title="Link to this heading">¶</a></h2>
+<p>WebSocket handler for canvas collaboration:</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.CanvasWebSocketHandler">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">CanvasWebSocketHandler</span></span><a class="reference internal" href="../_modules/scribbl_py/realtime/handler.html#CanvasWebSocketHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.CanvasWebSocketHandler" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Handler for canvas WebSocket connections.</p>
+<p>This handler manages WebSocket connections for canvas sessions,
+handling user connections, element changes, and cursor synchronization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.CanvasWebSocketHandler.params.connection_manager"></span><strong>connection_manager</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.CanvasWebSocketHandler.params.connection_manager">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ConnectionManager" title="scribbl_py.realtime.manager.ConnectionManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionManager</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.CanvasWebSocketHandler.params.canvas_service"></span><strong>canvas_service</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.CanvasWebSocketHandler.params.canvas_service">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="services.html#scribbl_py.CanvasService" title="scribbl_py.services.canvas.CanvasService"><code class="xref py py-class docutils literal notranslate"><span class="pre">CanvasService</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.CanvasWebSocketHandler.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">canvas_service</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/realtime/handler.html#CanvasWebSocketHandler.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.CanvasWebSocketHandler.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialize the WebSocket handler.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.CanvasWebSocketHandler.params.connection_manager"></span><strong>connection_manager</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.CanvasWebSocketHandler.params.connection_manager">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ConnectionManager" title="scribbl_py.realtime.manager.ConnectionManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionManager</span></code></a></span>) – The connection manager instance.</p></li>
+<li><p><span class="target" id="scribbl_py.CanvasWebSocketHandler.params.canvas_service"></span><strong>canvas_service</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.CanvasWebSocketHandler.params.canvas_service">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="services.html#scribbl_py.CanvasService" title="scribbl_py.services.canvas.CanvasService"><code class="xref py py-class docutils literal notranslate"><span class="pre">CanvasService</span></code></a></span>) – The canvas service instance.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.CanvasWebSocketHandler.handle_connection">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">socket</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/realtime/handler.html#CanvasWebSocketHandler.handle_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.CanvasWebSocketHandler.handle_connection" title="Link to this definition">¶</a></dt>
+<dd><p>Handle a WebSocket connection for a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.CanvasWebSocketHandler.handle_connection.params.socket"></span><strong>socket</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.CanvasWebSocketHandler.handle_connection.params.socket">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.litestar.dev/2/reference/connection.html#litestar.connection.WebSocket" title="(in Litestar)"><code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocket</span></code></a></span>) – The WebSocket connection.</p></li>
+<li><p><span class="target" id="scribbl_py.CanvasWebSocketHandler.handle_connection.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.CanvasWebSocketHandler.handle_connection.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The canvas ID from the URL.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="connectionmanager">
+<h2>ConnectionManager<a class="headerlink" href="#connectionmanager" title="Link to this heading">¶</a></h2>
+<p>Manages WebSocket connections and user presence:</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.ConnectionManager">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">ConnectionManager</span></span><a class="reference internal" href="../_modules/scribbl_py/realtime/manager.html#ConnectionManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ConnectionManager" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Manages WebSocket connections for canvas sessions.</p>
+<p>This class provides thread-safe connection management for real-time
+canvas collaboration. It tracks connections per canvas and provides
+methods for broadcasting messages to connected clients.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.ConnectionManager.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/realtime/manager.html#ConnectionManager.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ConnectionManager.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialize the connection manager.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.ConnectionManager.connect">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">websocket</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Anonymous'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/realtime/manager.html#ConnectionManager.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ConnectionManager.connect" title="Link to this definition">¶</a></dt>
+<dd><p>Register a new WebSocket connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.ConnectionManager.connect.params.websocket"></span><strong>websocket</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.connect.params.websocket">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.litestar.dev/2/reference/connection.html#litestar.connection.WebSocket" title="(in Litestar)"><code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocket</span></code></a></span>) – The WebSocket connection.</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectionManager.connect.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.connect.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The canvas being joined.</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectionManager.connect.params.user_id"></span><strong>user_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.connect.params.user_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Unique identifier for the user.</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectionManager.connect.params.user_name"></span><strong>user_name</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.connect.params.user_name">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Display name for the user.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ConnectedUser" title="scribbl_py.realtime.manager.ConnectedUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectedUser</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The ConnectedUser instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.ConnectionManager.disconnect">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/realtime/manager.html#ConnectionManager.disconnect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ConnectionManager.disconnect" title="Link to this definition">¶</a></dt>
+<dd><p>Remove a WebSocket connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.ConnectionManager.disconnect.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.disconnect.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The canvas being left.</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectionManager.disconnect.params.user_id"></span><strong>user_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.disconnect.params.user_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The user’s identifier.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.ConnectionManager.get_connected_users">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_connected_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/realtime/manager.html#ConnectionManager.get_connected_users"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ConnectionManager.get_connected_users" title="Link to this definition">¶</a></dt>
+<dd><p>Get all users connected to a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.ConnectionManager.get_connected_users.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.get_connected_users.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The canvas to query.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference internal" href="#scribbl_py.ConnectedUser" title="scribbl_py.realtime.manager.ConnectedUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectedUser</span></code></a>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of connected users.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.ConnectionManager.get_user">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/realtime/manager.html#ConnectionManager.get_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ConnectionManager.get_user" title="Link to this definition">¶</a></dt>
+<dd><p>Get a specific connected user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.ConnectionManager.get_user.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.get_user.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The canvas to query.</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectionManager.get_user.params.user_id"></span><strong>user_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.get_user.params.user_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The user’s identifier.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ConnectedUser" title="scribbl_py.realtime.manager.ConnectedUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectedUser</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The ConnectedUser or None if not found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.ConnectionManager.update_cursor">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_cursor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/realtime/manager.html#ConnectionManager.update_cursor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ConnectionManager.update_cursor" title="Link to this definition">¶</a></dt>
+<dd><p>Update a user’s cursor position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.ConnectionManager.update_cursor.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.update_cursor.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The canvas.</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectionManager.update_cursor.params.user_id"></span><strong>user_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.update_cursor.params.user_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The user’s identifier.</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectionManager.update_cursor.params.x"></span><strong>x</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.update_cursor.params.x">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – X coordinate.</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectionManager.update_cursor.params.y"></span><strong>y</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.update_cursor.params.y">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Y coordinate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.ConnectionManager.broadcast">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">broadcast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_user</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/realtime/manager.html#ConnectionManager.broadcast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ConnectionManager.broadcast" title="Link to this definition">¶</a></dt>
+<dd><p>Broadcast a message to all users on a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.ConnectionManager.broadcast.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.broadcast.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The canvas to broadcast to.</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectionManager.broadcast.params.message"></span><strong>message</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.broadcast.params.message">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span>) – The message to send.</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectionManager.broadcast.params.exclude_user"></span><strong>exclude_user</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.broadcast.params.exclude_user">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – Optional user ID to exclude from broadcast.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.ConnectionManager.send_to_user">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">send_to_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/realtime/manager.html#ConnectionManager.send_to_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ConnectionManager.send_to_user" title="Link to this definition">¶</a></dt>
+<dd><p>Send a message to a specific user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.ConnectionManager.send_to_user.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.send_to_user.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The canvas.</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectionManager.send_to_user.params.user_id"></span><strong>user_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.send_to_user.params.user_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The target user.</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectionManager.send_to_user.params.message"></span><strong>message</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectionManager.send_to_user.params.message">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span>) – The message to send.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if sent successfully, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="scribbl_py.ConnectionManager.active_canvases">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">active_canvases</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#scribbl_py.ConnectionManager.active_canvases" title="Link to this definition">¶</a></dt>
+<dd><p>Get the number of active canvas sessions.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="scribbl_py.ConnectionManager.total_connections">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">total_connections</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#scribbl_py.ConnectionManager.total_connections" title="Link to this definition">¶</a></dt>
+<dd><p>Get the total number of connected users.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="connecteduser">
+<h2>ConnectedUser<a class="headerlink" href="#connecteduser" title="Link to this heading">¶</a></h2>
+<p>Represents a connected user:</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.ConnectedUser">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">ConnectedUser</span></span><a class="reference internal" href="../_modules/scribbl_py/realtime/manager.html#ConnectedUser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ConnectedUser" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Represents a connected user in a canvas session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.ConnectedUser.params.user_id"></span><strong>user_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectedUser.params.user_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectedUser.params.user_name"></span><strong>user_name</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectedUser.params.user_name">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectedUser.params.websocket"></span><strong>websocket</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectedUser.params.websocket">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.litestar.dev/2/reference/connection.html#litestar.connection.WebSocket" title="(in Litestar)"><code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocket</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectedUser.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectedUser.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectedUser.params.cursor_x"></span><strong>cursor_x</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectedUser.params.cursor_x">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectedUser.params.cursor_y"></span><strong>cursor_y</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectedUser.params.cursor_y">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectedUser.params.connected_at"></span><strong>connected_at</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectedUser.params.connected_at">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ConnectedUser.user_id">
+<span class="sig-name descname"><span class="pre">user_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><a class="headerlink" href="#scribbl_py.ConnectedUser.user_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ConnectedUser.user_name">
+<span class="sig-name descname"><span class="pre">user_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><a class="headerlink" href="#scribbl_py.ConnectedUser.user_name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ConnectedUser.websocket">
+<span class="sig-name descname"><span class="pre">websocket</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.litestar.dev/2/reference/connection.html#litestar.connection.WebSocket" title="(in Litestar)"><code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocket</span></code></a></em><a class="headerlink" href="#scribbl_py.ConnectedUser.websocket" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ConnectedUser.canvas_id">
+<span class="sig-name descname"><span class="pre">canvas_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></em><a class="headerlink" href="#scribbl_py.ConnectedUser.canvas_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ConnectedUser.cursor_x">
+<span class="sig-name descname"><span class="pre">cursor_x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></em><a class="headerlink" href="#scribbl_py.ConnectedUser.cursor_x" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ConnectedUser.cursor_y">
+<span class="sig-name descname"><span class="pre">cursor_y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></em><a class="headerlink" href="#scribbl_py.ConnectedUser.cursor_y" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ConnectedUser.connected_at">
+<span class="sig-name descname"><span class="pre">connected_at</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></em><a class="headerlink" href="#scribbl_py.ConnectedUser.connected_at" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.ConnectedUser.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/realtime/manager.html#ConnectedUser.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ConnectedUser.to_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Convert to dictionary for serialization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.ConnectedUser.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">websocket</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor_x=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor_y=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connected_at=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scribbl_py.ConnectedUser.__init__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.ConnectedUser.params.user_id"></span><strong>user_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectedUser.params.user_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectedUser.params.user_name"></span><strong>user_name</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectedUser.params.user_name">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectedUser.params.websocket"></span><strong>websocket</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectedUser.params.websocket">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.litestar.dev/2/reference/connection.html#litestar.connection.WebSocket" title="(in Litestar)"><code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocket</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectedUser.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectedUser.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectedUser.params.cursor_x"></span><strong>cursor_x</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectedUser.params.cursor_x">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectedUser.params.cursor_y"></span><strong>cursor_y</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectedUser.params.cursor_y">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ConnectedUser.params.connected_at"></span><strong>connected_at</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ConnectedUser.params.connected_at">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="message-types">
+<h2>Message Types<a class="headerlink" href="#message-types" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.MessageType">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">MessageType</span></span><a class="reference internal" href="../_modules/scribbl_py/realtime/messages.html#MessageType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.MessageType" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>Types of WebSocket messages.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.JOIN">
+<span class="sig-name descname"><span class="pre">JOIN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'join'</span></em><a class="headerlink" href="#scribbl_py.MessageType.JOIN" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.LEAVE">
+<span class="sig-name descname"><span class="pre">LEAVE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'leave'</span></em><a class="headerlink" href="#scribbl_py.MessageType.LEAVE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.ELEMENT_ADD">
+<span class="sig-name descname"><span class="pre">ELEMENT_ADD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'element_add'</span></em><a class="headerlink" href="#scribbl_py.MessageType.ELEMENT_ADD" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.ELEMENT_UPDATE">
+<span class="sig-name descname"><span class="pre">ELEMENT_UPDATE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'element_update'</span></em><a class="headerlink" href="#scribbl_py.MessageType.ELEMENT_UPDATE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.ELEMENT_DELETE">
+<span class="sig-name descname"><span class="pre">ELEMENT_DELETE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'element_delete'</span></em><a class="headerlink" href="#scribbl_py.MessageType.ELEMENT_DELETE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.CURSOR_MOVE">
+<span class="sig-name descname"><span class="pre">CURSOR_MOVE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cursor_move'</span></em><a class="headerlink" href="#scribbl_py.MessageType.CURSOR_MOVE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.UNDO">
+<span class="sig-name descname"><span class="pre">UNDO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'undo'</span></em><a class="headerlink" href="#scribbl_py.MessageType.UNDO" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.REDO">
+<span class="sig-name descname"><span class="pre">REDO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'redo'</span></em><a class="headerlink" href="#scribbl_py.MessageType.REDO" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.STROKE_START">
+<span class="sig-name descname"><span class="pre">STROKE_START</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stroke_start'</span></em><a class="headerlink" href="#scribbl_py.MessageType.STROKE_START" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.STROKE_CONTINUE">
+<span class="sig-name descname"><span class="pre">STROKE_CONTINUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stroke_continue'</span></em><a class="headerlink" href="#scribbl_py.MessageType.STROKE_CONTINUE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.STROKE_END">
+<span class="sig-name descname"><span class="pre">STROKE_END</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stroke_end'</span></em><a class="headerlink" href="#scribbl_py.MessageType.STROKE_END" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.SYNC">
+<span class="sig-name descname"><span class="pre">SYNC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sync'</span></em><a class="headerlink" href="#scribbl_py.MessageType.SYNC" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.USER_JOINED">
+<span class="sig-name descname"><span class="pre">USER_JOINED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'user_joined'</span></em><a class="headerlink" href="#scribbl_py.MessageType.USER_JOINED" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.USER_LEFT">
+<span class="sig-name descname"><span class="pre">USER_LEFT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'user_left'</span></em><a class="headerlink" href="#scribbl_py.MessageType.USER_LEFT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.ELEMENT_ADDED">
+<span class="sig-name descname"><span class="pre">ELEMENT_ADDED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'element_added'</span></em><a class="headerlink" href="#scribbl_py.MessageType.ELEMENT_ADDED" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.ELEMENT_UPDATED">
+<span class="sig-name descname"><span class="pre">ELEMENT_UPDATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'element_updated'</span></em><a class="headerlink" href="#scribbl_py.MessageType.ELEMENT_UPDATED" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.ELEMENT_DELETED">
+<span class="sig-name descname"><span class="pre">ELEMENT_DELETED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'element_deleted'</span></em><a class="headerlink" href="#scribbl_py.MessageType.ELEMENT_DELETED" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.CURSOR_MOVED">
+<span class="sig-name descname"><span class="pre">CURSOR_MOVED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cursor_moved'</span></em><a class="headerlink" href="#scribbl_py.MessageType.CURSOR_MOVED" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.UNDO_RESULT">
+<span class="sig-name descname"><span class="pre">UNDO_RESULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'undo_result'</span></em><a class="headerlink" href="#scribbl_py.MessageType.UNDO_RESULT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.REDO_RESULT">
+<span class="sig-name descname"><span class="pre">REDO_RESULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'redo_result'</span></em><a class="headerlink" href="#scribbl_py.MessageType.REDO_RESULT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.ERROR">
+<span class="sig-name descname"><span class="pre">ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'error'</span></em><a class="headerlink" href="#scribbl_py.MessageType.ERROR" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.STROKE_STARTED">
+<span class="sig-name descname"><span class="pre">STROKE_STARTED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stroke_started'</span></em><a class="headerlink" href="#scribbl_py.MessageType.STROKE_STARTED" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.STROKE_CONTINUED">
+<span class="sig-name descname"><span class="pre">STROKE_CONTINUED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stroke_continued'</span></em><a class="headerlink" href="#scribbl_py.MessageType.STROKE_CONTINUED" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.STROKE_ENDED">
+<span class="sig-name descname"><span class="pre">STROKE_ENDED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stroke_ended'</span></em><a class="headerlink" href="#scribbl_py.MessageType.STROKE_ENDED" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.MessageType.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scribbl_py.MessageType.__new__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="factory-function">
+<h2>Factory Function<a class="headerlink" href="#factory-function" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="scribbl_py.create_websocket_handler">
+<span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">create_websocket_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">canvas_service</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/realtime/handler.html#create_websocket_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.create_websocket_handler" title="Link to this definition">¶</a></dt>
+<dd><p>Create a WebSocket router for canvas real-time collaboration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.create_websocket_handler.params.path"></span><strong>path</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.create_websocket_handler.params.path">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Base path for WebSocket routes.</p></li>
+<li><p><span class="target" id="scribbl_py.create_websocket_handler.params.connection_manager"></span><strong>connection_manager</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.create_websocket_handler.params.connection_manager">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ConnectionManager" title="scribbl_py.realtime.manager.ConnectionManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionManager</span></code></a></span>) – The connection manager instance.</p></li>
+<li><p><span class="target" id="scribbl_py.create_websocket_handler.params.canvas_service"></span><strong>canvas_service</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.create_websocket_handler.params.canvas_service">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="services.html#scribbl_py.CanvasService" title="scribbl_py.services.canvas.CanvasService"><code class="xref py py-class docutils literal notranslate"><span class="pre">CanvasService</span></code></a></span>) – The canvas service instance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.litestar.dev/2/reference/router.html#litestar.router.Router" title="(in Litestar)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Router</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A Litestar Router with WebSocket handlers.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="services.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Services</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="auth.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Auth</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2025, Jacob Coffee</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=30646c52"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../_static/shibuya.js?v=c1cf1a6b"></script></body>
+</html>

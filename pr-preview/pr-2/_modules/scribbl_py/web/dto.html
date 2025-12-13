@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="cyan" data-content_root="../../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>scribbl_py.web.dto - scribbl-py</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=14737038" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_paramlinks.css" />
+    <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=fc559bc7" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="scribbl_py.web.dto"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../../../index.html">
+      
+      
+      <strong>scribbl-py</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link">
+          <a href="https://litestar.dev/">
+            <span>Litestar</span></a>
+        </li><li class="link">
+          <a href="https://pypi.org/project/scribbl-py/">
+            <span>PyPI</span></a>
+        </li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Learn</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/index.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/configuration.html">Configuration Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/development.html">Development Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/deployment.html">Deployment Guide</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/plugin.html">Plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/storage.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/services.html">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/realtime.html">Realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/auth.html">Auth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/web.html">Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/game.html">Game</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/JacobCoffee/scribbl-py">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/litestar">Discord</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../../index.html"><span itemprop="name">scribbl-py</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../index.html"><span itemprop="name">Module code</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">scribbl_py.web.dto</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <h1>Source code for scribbl_py.web.dto</h1><div class="highlight"><pre>
+<span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;Data Transfer Objects (DTOs) for the scribbl-py API.&quot;&quot;&quot;</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+</span><span data-line="7"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+</span><span data-line="8"><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">UUID</span>
+</span><span data-line="9">
+</span><span data-line="10"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.core.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span> <span class="k">as</span> <span class="n">DomainPoint</span>
+</span><span data-line="11"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.core.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Shape</span><span class="p">,</span> <span class="n">Stroke</span><span class="p">,</span> <span class="n">Text</span>
+</span><span data-line="12"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.core.style</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElementStyle</span>
+</span><span data-line="13"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.core.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElementType</span><span class="p">,</span> <span class="n">ShapeType</span>
+</span><span data-line="14">
+</span><span data-line="15"><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+</span><span data-line="16">    <span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.core.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Canvas</span><span class="p">,</span> <span class="n">Element</span>
+</span><span data-line="17">
+</span><span data-line="18">
+</span><span data-line="19"><span class="c1"># Canvas DTOs</span>
+</span><span data-line="20">
+</span><span data-line="21">
+<div class="viewcode-block" id="CreateCanvasDTO">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.CreateCanvasDTO">[docs]</a>
+</span><span data-line="22"><span class="nd">@dataclass</span>
+</span><span data-line="23"><span class="k">class</span><span class="w"> </span><span class="nc">CreateCanvasDTO</span><span class="p">:</span>
+</span><span data-line="24"><span class="w">    </span><span class="sd">&quot;&quot;&quot;DTO for creating a new canvas.</span>
+</span><span data-line="25">
+</span><span data-line="26"><span class="sd">    Attributes:</span>
+</span><span data-line="27"><span class="sd">        name: Display name for the canvas.</span>
+</span><span data-line="28"><span class="sd">        width: Canvas width in pixels.</span>
+</span><span data-line="29"><span class="sd">        height: Canvas height in pixels.</span>
+</span><span data-line="30"><span class="sd">        background_color: Background color in hex format.</span>
+</span><span data-line="31"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="32">
+</span><span data-line="33">    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span data-line="34">    <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1920</span>
+</span><span data-line="35">    <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1080</span>
+</span><span data-line="36">    <span class="n">background_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;#ffffff&quot;</span></div>
+
+</span><span data-line="37">
+</span><span data-line="38">
+<div class="viewcode-block" id="UpdateCanvasDTO">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.UpdateCanvasDTO">[docs]</a>
+</span><span data-line="39"><span class="nd">@dataclass</span>
+</span><span data-line="40"><span class="k">class</span><span class="w"> </span><span class="nc">UpdateCanvasDTO</span><span class="p">:</span>
+</span><span data-line="41"><span class="w">    </span><span class="sd">&quot;&quot;&quot;DTO for updating canvas properties.</span>
+</span><span data-line="42">
+</span><span data-line="43"><span class="sd">    All fields are optional. Only provided fields will be updated.</span>
+</span><span data-line="44">
+</span><span data-line="45"><span class="sd">    Attributes:</span>
+</span><span data-line="46"><span class="sd">        name: New display name for the canvas.</span>
+</span><span data-line="47"><span class="sd">        width: New canvas width in pixels.</span>
+</span><span data-line="48"><span class="sd">        height: New canvas height in pixels.</span>
+</span><span data-line="49"><span class="sd">        background_color: New background color in hex format.</span>
+</span><span data-line="50"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="51">
+</span><span data-line="52">    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="53">    <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="54">    <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="55">    <span class="n">background_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+</span><span data-line="56">
+</span><span data-line="57">
+<div class="viewcode-block" id="CanvasResponseDTO">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.CanvasResponseDTO">[docs]</a>
+</span><span data-line="58"><span class="nd">@dataclass</span>
+</span><span data-line="59"><span class="k">class</span><span class="w"> </span><span class="nc">CanvasResponseDTO</span><span class="p">:</span>
+</span><span data-line="60"><span class="w">    </span><span class="sd">&quot;&quot;&quot;DTO for canvas list/summary responses.</span>
+</span><span data-line="61">
+</span><span data-line="62"><span class="sd">    Attributes:</span>
+</span><span data-line="63"><span class="sd">        id: Unique identifier for the canvas.</span>
+</span><span data-line="64"><span class="sd">        name: Display name for the canvas.</span>
+</span><span data-line="65"><span class="sd">        width: Canvas width in pixels.</span>
+</span><span data-line="66"><span class="sd">        height: Canvas height in pixels.</span>
+</span><span data-line="67"><span class="sd">        background_color: Background color in hex format.</span>
+</span><span data-line="68"><span class="sd">        element_count: Number of elements on the canvas.</span>
+</span><span data-line="69"><span class="sd">        created_at: Timestamp when the canvas was created.</span>
+</span><span data-line="70"><span class="sd">        updated_at: Timestamp when the canvas was last updated.</span>
+</span><span data-line="71"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="72">
+</span><span data-line="73">    <span class="nb">id</span><span class="p">:</span> <span class="n">UUID</span>
+</span><span data-line="74">    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span data-line="75">    <span class="n">width</span><span class="p">:</span> <span class="nb">int</span>
+</span><span data-line="76">    <span class="n">height</span><span class="p">:</span> <span class="nb">int</span>
+</span><span data-line="77">    <span class="n">background_color</span><span class="p">:</span> <span class="nb">str</span>
+</span><span data-line="78">    <span class="n">element_count</span><span class="p">:</span> <span class="nb">int</span>
+</span><span data-line="79">    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
+</span><span data-line="80">    <span class="n">updated_at</span><span class="p">:</span> <span class="n">datetime</span></div>
+
+</span><span data-line="81">
+</span><span data-line="82">
+<div class="viewcode-block" id="CanvasDetailDTO">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.CanvasDetailDTO">[docs]</a>
+</span><span data-line="83"><span class="nd">@dataclass</span>
+</span><span data-line="84"><span class="k">class</span><span class="w"> </span><span class="nc">CanvasDetailDTO</span><span class="p">:</span>
+</span><span data-line="85"><span class="w">    </span><span class="sd">&quot;&quot;&quot;DTO for detailed canvas responses including elements.</span>
+</span><span data-line="86">
+</span><span data-line="87"><span class="sd">    Attributes:</span>
+</span><span data-line="88"><span class="sd">        id: Unique identifier for the canvas.</span>
+</span><span data-line="89"><span class="sd">        name: Display name for the canvas.</span>
+</span><span data-line="90"><span class="sd">        width: Canvas width in pixels.</span>
+</span><span data-line="91"><span class="sd">        height: Canvas height in pixels.</span>
+</span><span data-line="92"><span class="sd">        background_color: Background color in hex format.</span>
+</span><span data-line="93"><span class="sd">        elements: List of elements on the canvas.</span>
+</span><span data-line="94"><span class="sd">        created_at: Timestamp when the canvas was created.</span>
+</span><span data-line="95"><span class="sd">        updated_at: Timestamp when the canvas was last updated.</span>
+</span><span data-line="96"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="97">
+</span><span data-line="98">    <span class="nb">id</span><span class="p">:</span> <span class="n">UUID</span>
+</span><span data-line="99">    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span data-line="100">    <span class="n">width</span><span class="p">:</span> <span class="nb">int</span>
+</span><span data-line="101">    <span class="n">height</span><span class="p">:</span> <span class="nb">int</span>
+</span><span data-line="102">    <span class="n">background_color</span><span class="p">:</span> <span class="nb">str</span>
+</span><span data-line="103">    <span class="n">elements</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ElementResponseDTO</span><span class="p">]</span>
+</span><span data-line="104">    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
+</span><span data-line="105">    <span class="n">updated_at</span><span class="p">:</span> <span class="n">datetime</span></div>
+
+</span><span data-line="106">
+</span><span data-line="107">
+</span><span data-line="108"><span class="c1"># Element DTOs</span>
+</span><span data-line="109">
+</span><span data-line="110">
+<div class="viewcode-block" id="PointDTO">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.PointDTO">[docs]</a>
+</span><span data-line="111"><span class="nd">@dataclass</span>
+</span><span data-line="112"><span class="k">class</span><span class="w"> </span><span class="nc">PointDTO</span><span class="p">:</span>
+</span><span data-line="113"><span class="w">    </span><span class="sd">&quot;&quot;&quot;DTO for representing a point in 2D space.</span>
+</span><span data-line="114">
+</span><span data-line="115"><span class="sd">    Attributes:</span>
+</span><span data-line="116"><span class="sd">        x: X-coordinate position.</span>
+</span><span data-line="117"><span class="sd">        y: Y-coordinate position.</span>
+</span><span data-line="118"><span class="sd">        pressure: Pressure value for stylus input (0.0 to 1.0).</span>
+</span><span data-line="119"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="120">
+</span><span data-line="121">    <span class="n">x</span><span class="p">:</span> <span class="nb">float</span>
+</span><span data-line="122">    <span class="n">y</span><span class="p">:</span> <span class="nb">float</span>
+</span><span data-line="123">    <span class="n">pressure</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span></div>
+
+</span><span data-line="124">
+</span><span data-line="125">
+<div class="viewcode-block" id="StyleDTO">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.StyleDTO">[docs]</a>
+</span><span data-line="126"><span class="nd">@dataclass</span>
+</span><span data-line="127"><span class="k">class</span><span class="w"> </span><span class="nc">StyleDTO</span><span class="p">:</span>
+</span><span data-line="128"><span class="w">    </span><span class="sd">&quot;&quot;&quot;DTO for element styling configuration.</span>
+</span><span data-line="129">
+</span><span data-line="130"><span class="sd">    Attributes:</span>
+</span><span data-line="131"><span class="sd">        stroke_color: The color of the element&#39;s stroke/outline in hex format.</span>
+</span><span data-line="132"><span class="sd">        fill_color: Optional fill color for the element in hex format.</span>
+</span><span data-line="133"><span class="sd">        stroke_width: Width of the stroke in pixels.</span>
+</span><span data-line="134"><span class="sd">        opacity: Opacity level from 0.0 (transparent) to 1.0 (opaque).</span>
+</span><span data-line="135"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="136">
+</span><span data-line="137">    <span class="n">stroke_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;#000000&quot;</span>
+</span><span data-line="138">    <span class="n">fill_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="139">    <span class="n">stroke_width</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span>
+</span><span data-line="140">    <span class="n">opacity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span></div>
+
+</span><span data-line="141">
+</span><span data-line="142">
+<div class="viewcode-block" id="CreateStrokeDTO">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.CreateStrokeDTO">[docs]</a>
+</span><span data-line="143"><span class="nd">@dataclass</span>
+</span><span data-line="144"><span class="k">class</span><span class="w"> </span><span class="nc">CreateStrokeDTO</span><span class="p">:</span>
+</span><span data-line="145"><span class="w">    </span><span class="sd">&quot;&quot;&quot;DTO for creating a stroke element.</span>
+</span><span data-line="146">
+</span><span data-line="147"><span class="sd">    Attributes:</span>
+</span><span data-line="148"><span class="sd">        points: List of points that make up the stroke path.</span>
+</span><span data-line="149"><span class="sd">        style: Optional styling configuration for the stroke.</span>
+</span><span data-line="150"><span class="sd">        smoothing: Smoothing factor applied to the stroke (0.0 to 1.0).</span>
+</span><span data-line="151"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="152">
+</span><span data-line="153">    <span class="n">points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">PointDTO</span><span class="p">]</span>
+</span><span data-line="154">    <span class="n">style</span><span class="p">:</span> <span class="n">StyleDTO</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="155">    <span class="n">smoothing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span></div>
+
+</span><span data-line="156">
+</span><span data-line="157">
+<div class="viewcode-block" id="CreateShapeDTO">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.CreateShapeDTO">[docs]</a>
+</span><span data-line="158"><span class="nd">@dataclass</span>
+</span><span data-line="159"><span class="k">class</span><span class="w"> </span><span class="nc">CreateShapeDTO</span><span class="p">:</span>
+</span><span data-line="160"><span class="w">    </span><span class="sd">&quot;&quot;&quot;DTO for creating a shape element.</span>
+</span><span data-line="161">
+</span><span data-line="162"><span class="sd">    Attributes:</span>
+</span><span data-line="163"><span class="sd">        shape_type: Type of shape (rectangle, ellipse, etc.).</span>
+</span><span data-line="164"><span class="sd">        x: X-coordinate position.</span>
+</span><span data-line="165"><span class="sd">        y: Y-coordinate position.</span>
+</span><span data-line="166"><span class="sd">        width: Width of the shape in pixels.</span>
+</span><span data-line="167"><span class="sd">        height: Height of the shape in pixels.</span>
+</span><span data-line="168"><span class="sd">        style: Optional styling configuration for the shape.</span>
+</span><span data-line="169"><span class="sd">        rotation: Rotation angle in degrees.</span>
+</span><span data-line="170"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="171">
+</span><span data-line="172">    <span class="n">shape_type</span><span class="p">:</span> <span class="n">ShapeType</span>
+</span><span data-line="173">    <span class="n">x</span><span class="p">:</span> <span class="nb">float</span>
+</span><span data-line="174">    <span class="n">y</span><span class="p">:</span> <span class="nb">float</span>
+</span><span data-line="175">    <span class="n">width</span><span class="p">:</span> <span class="nb">float</span>
+</span><span data-line="176">    <span class="n">height</span><span class="p">:</span> <span class="nb">float</span>
+</span><span data-line="177">    <span class="n">style</span><span class="p">:</span> <span class="n">StyleDTO</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="178">    <span class="n">rotation</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span></div>
+
+</span><span data-line="179">
+</span><span data-line="180">
+<div class="viewcode-block" id="CreateTextDTO">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.CreateTextDTO">[docs]</a>
+</span><span data-line="181"><span class="nd">@dataclass</span>
+</span><span data-line="182"><span class="k">class</span><span class="w"> </span><span class="nc">CreateTextDTO</span><span class="p">:</span>
+</span><span data-line="183"><span class="w">    </span><span class="sd">&quot;&quot;&quot;DTO for creating a text element.</span>
+</span><span data-line="184">
+</span><span data-line="185"><span class="sd">    Attributes:</span>
+</span><span data-line="186"><span class="sd">        content: The text content to display.</span>
+</span><span data-line="187"><span class="sd">        x: X-coordinate position.</span>
+</span><span data-line="188"><span class="sd">        y: Y-coordinate position.</span>
+</span><span data-line="189"><span class="sd">        style: Optional styling configuration for the text.</span>
+</span><span data-line="190"><span class="sd">        font_size: Font size in pixels.</span>
+</span><span data-line="191"><span class="sd">        font_family: Font family name.</span>
+</span><span data-line="192"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="193">
+</span><span data-line="194">    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span>
+</span><span data-line="195">    <span class="n">x</span><span class="p">:</span> <span class="nb">float</span>
+</span><span data-line="196">    <span class="n">y</span><span class="p">:</span> <span class="nb">float</span>
+</span><span data-line="197">    <span class="n">style</span><span class="p">:</span> <span class="n">StyleDTO</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="198">    <span class="n">font_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span>
+</span><span data-line="199">    <span class="n">font_family</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sans-serif&quot;</span></div>
+
+</span><span data-line="200">
+</span><span data-line="201">
+<div class="viewcode-block" id="StrokeDataDTO">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.StrokeDataDTO">[docs]</a>
+</span><span data-line="202"><span class="nd">@dataclass</span>
+</span><span data-line="203"><span class="k">class</span><span class="w"> </span><span class="nc">StrokeDataDTO</span><span class="p">:</span>
+</span><span data-line="204"><span class="w">    </span><span class="sd">&quot;&quot;&quot;DTO for stroke-specific data in element responses.</span>
+</span><span data-line="205">
+</span><span data-line="206"><span class="sd">    Attributes:</span>
+</span><span data-line="207"><span class="sd">        points: List of points that make up the stroke path.</span>
+</span><span data-line="208"><span class="sd">        smoothing: Smoothing factor applied to the stroke (0.0 to 1.0).</span>
+</span><span data-line="209"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="210">
+</span><span data-line="211">    <span class="n">points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">PointDTO</span><span class="p">]</span>
+</span><span data-line="212">    <span class="n">smoothing</span><span class="p">:</span> <span class="nb">float</span></div>
+
+</span><span data-line="213">
+</span><span data-line="214">
+<div class="viewcode-block" id="ShapeDataDTO">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.ShapeDataDTO">[docs]</a>
+</span><span data-line="215"><span class="nd">@dataclass</span>
+</span><span data-line="216"><span class="k">class</span><span class="w"> </span><span class="nc">ShapeDataDTO</span><span class="p">:</span>
+</span><span data-line="217"><span class="w">    </span><span class="sd">&quot;&quot;&quot;DTO for shape-specific data in element responses.</span>
+</span><span data-line="218">
+</span><span data-line="219"><span class="sd">    Attributes:</span>
+</span><span data-line="220"><span class="sd">        shape_type: Type of shape (rectangle, ellipse, etc.).</span>
+</span><span data-line="221"><span class="sd">        width: Width of the shape in pixels.</span>
+</span><span data-line="222"><span class="sd">        height: Height of the shape in pixels.</span>
+</span><span data-line="223"><span class="sd">        rotation: Rotation angle in degrees.</span>
+</span><span data-line="224"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="225">
+</span><span data-line="226">    <span class="n">shape_type</span><span class="p">:</span> <span class="n">ShapeType</span>
+</span><span data-line="227">    <span class="n">width</span><span class="p">:</span> <span class="nb">float</span>
+</span><span data-line="228">    <span class="n">height</span><span class="p">:</span> <span class="nb">float</span>
+</span><span data-line="229">    <span class="n">rotation</span><span class="p">:</span> <span class="nb">float</span></div>
+
+</span><span data-line="230">
+</span><span data-line="231">
+<div class="viewcode-block" id="TextDataDTO">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.TextDataDTO">[docs]</a>
+</span><span data-line="232"><span class="nd">@dataclass</span>
+</span><span data-line="233"><span class="k">class</span><span class="w"> </span><span class="nc">TextDataDTO</span><span class="p">:</span>
+</span><span data-line="234"><span class="w">    </span><span class="sd">&quot;&quot;&quot;DTO for text-specific data in element responses.</span>
+</span><span data-line="235">
+</span><span data-line="236"><span class="sd">    Attributes:</span>
+</span><span data-line="237"><span class="sd">        content: The text content.</span>
+</span><span data-line="238"><span class="sd">        font_size: Font size in pixels.</span>
+</span><span data-line="239"><span class="sd">        font_family: Font family name.</span>
+</span><span data-line="240"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="241">
+</span><span data-line="242">    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span>
+</span><span data-line="243">    <span class="n">font_size</span><span class="p">:</span> <span class="nb">int</span>
+</span><span data-line="244">    <span class="n">font_family</span><span class="p">:</span> <span class="nb">str</span></div>
+
+</span><span data-line="245">
+</span><span data-line="246">
+<div class="viewcode-block" id="ElementResponseDTO">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.ElementResponseDTO">[docs]</a>
+</span><span data-line="247"><span class="nd">@dataclass</span>
+</span><span data-line="248"><span class="k">class</span><span class="w"> </span><span class="nc">ElementResponseDTO</span><span class="p">:</span>
+</span><span data-line="249"><span class="w">    </span><span class="sd">&quot;&quot;&quot;DTO for element responses.</span>
+</span><span data-line="250">
+</span><span data-line="251"><span class="sd">    This DTO includes common element fields and type-specific data.</span>
+</span><span data-line="252">
+</span><span data-line="253"><span class="sd">    Attributes:</span>
+</span><span data-line="254"><span class="sd">        id: Unique identifier for the element.</span>
+</span><span data-line="255"><span class="sd">        element_type: Type of the element (stroke, shape, or text).</span>
+</span><span data-line="256"><span class="sd">        position: Position of the element on the canvas.</span>
+</span><span data-line="257"><span class="sd">        style: Visual styling configuration for the element.</span>
+</span><span data-line="258"><span class="sd">        created_at: Timestamp when the element was created.</span>
+</span><span data-line="259"><span class="sd">        stroke_data: Stroke-specific data (only for stroke elements).</span>
+</span><span data-line="260"><span class="sd">        shape_data: Shape-specific data (only for shape elements).</span>
+</span><span data-line="261"><span class="sd">        text_data: Text-specific data (only for text elements).</span>
+</span><span data-line="262"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="263">
+</span><span data-line="264">    <span class="nb">id</span><span class="p">:</span> <span class="n">UUID</span>
+</span><span data-line="265">    <span class="n">element_type</span><span class="p">:</span> <span class="n">ElementType</span>
+</span><span data-line="266">    <span class="n">position</span><span class="p">:</span> <span class="n">PointDTO</span>
+</span><span data-line="267">    <span class="n">style</span><span class="p">:</span> <span class="n">StyleDTO</span>
+</span><span data-line="268">    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
+</span><span data-line="269">    <span class="n">stroke_data</span><span class="p">:</span> <span class="n">StrokeDataDTO</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="270">    <span class="n">shape_data</span><span class="p">:</span> <span class="n">ShapeDataDTO</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="271">    <span class="n">text_data</span><span class="p">:</span> <span class="n">TextDataDTO</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+</span><span data-line="272">
+</span><span data-line="273">
+</span><span data-line="274"><span class="c1"># Conversion helper functions</span>
+</span><span data-line="275">
+</span><span data-line="276">
+<div class="viewcode-block" id="style_to_dto">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.style_to_dto">[docs]</a>
+</span><span data-line="277"><span class="k">def</span><span class="w"> </span><span class="nf">style_to_dto</span><span class="p">(</span><span class="n">style</span><span class="p">:</span> <span class="n">ElementStyle</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StyleDTO</span><span class="p">:</span>
+</span><span data-line="278"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a domain ElementStyle to a StyleDTO.</span>
+</span><span data-line="279">
+</span><span data-line="280"><span class="sd">    Args:</span>
+</span><span data-line="281"><span class="sd">        style: The domain style object to convert.</span>
+</span><span data-line="282">
+</span><span data-line="283"><span class="sd">    Returns:</span>
+</span><span data-line="284"><span class="sd">        The corresponding StyleDTO.</span>
+</span><span data-line="285"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="286">    <span class="k">return</span> <span class="n">StyleDTO</span><span class="p">(</span>
+</span><span data-line="287">        <span class="n">stroke_color</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">stroke_color</span><span class="p">,</span>
+</span><span data-line="288">        <span class="n">fill_color</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">fill_color</span><span class="p">,</span>
+</span><span data-line="289">        <span class="n">stroke_width</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">stroke_width</span><span class="p">,</span>
+</span><span data-line="290">        <span class="n">opacity</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">opacity</span><span class="p">,</span>
+</span><span data-line="291">    <span class="p">)</span></div>
+
+</span><span data-line="292">
+</span><span data-line="293">
+<div class="viewcode-block" id="style_from_dto">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.style_from_dto">[docs]</a>
+</span><span data-line="294"><span class="k">def</span><span class="w"> </span><span class="nf">style_from_dto</span><span class="p">(</span><span class="n">dto</span><span class="p">:</span> <span class="n">StyleDTO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementStyle</span><span class="p">:</span>
+</span><span data-line="295"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a StyleDTO to a domain ElementStyle.</span>
+</span><span data-line="296">
+</span><span data-line="297"><span class="sd">    Args:</span>
+</span><span data-line="298"><span class="sd">        dto: The DTO to convert.</span>
+</span><span data-line="299">
+</span><span data-line="300"><span class="sd">    Returns:</span>
+</span><span data-line="301"><span class="sd">        The corresponding domain ElementStyle.</span>
+</span><span data-line="302"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="303">    <span class="k">return</span> <span class="n">ElementStyle</span><span class="p">(</span>
+</span><span data-line="304">        <span class="n">stroke_color</span><span class="o">=</span><span class="n">dto</span><span class="o">.</span><span class="n">stroke_color</span><span class="p">,</span>
+</span><span data-line="305">        <span class="n">fill_color</span><span class="o">=</span><span class="n">dto</span><span class="o">.</span><span class="n">fill_color</span><span class="p">,</span>
+</span><span data-line="306">        <span class="n">stroke_width</span><span class="o">=</span><span class="n">dto</span><span class="o">.</span><span class="n">stroke_width</span><span class="p">,</span>
+</span><span data-line="307">        <span class="n">opacity</span><span class="o">=</span><span class="n">dto</span><span class="o">.</span><span class="n">opacity</span><span class="p">,</span>
+</span><span data-line="308">    <span class="p">)</span></div>
+
+</span><span data-line="309">
+</span><span data-line="310">
+<div class="viewcode-block" id="point_to_dto">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.point_to_dto">[docs]</a>
+</span><span data-line="311"><span class="k">def</span><span class="w"> </span><span class="nf">point_to_dto</span><span class="p">(</span><span class="n">point</span><span class="p">:</span> <span class="n">DomainPoint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PointDTO</span><span class="p">:</span>
+</span><span data-line="312"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a domain Point to a PointDTO.</span>
+</span><span data-line="313">
+</span><span data-line="314"><span class="sd">    Args:</span>
+</span><span data-line="315"><span class="sd">        point: The domain point to convert.</span>
+</span><span data-line="316">
+</span><span data-line="317"><span class="sd">    Returns:</span>
+</span><span data-line="318"><span class="sd">        The corresponding PointDTO.</span>
+</span><span data-line="319"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="320">    <span class="k">return</span> <span class="n">PointDTO</span><span class="p">(</span>
+</span><span data-line="321">        <span class="n">x</span><span class="o">=</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+</span><span data-line="322">        <span class="n">y</span><span class="o">=</span><span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+</span><span data-line="323">        <span class="n">pressure</span><span class="o">=</span><span class="n">point</span><span class="o">.</span><span class="n">pressure</span><span class="p">,</span>
+</span><span data-line="324">    <span class="p">)</span></div>
+
+</span><span data-line="325">
+</span><span data-line="326">
+<div class="viewcode-block" id="point_from_dto">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.point_from_dto">[docs]</a>
+</span><span data-line="327"><span class="k">def</span><span class="w"> </span><span class="nf">point_from_dto</span><span class="p">(</span><span class="n">dto</span><span class="p">:</span> <span class="n">PointDTO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DomainPoint</span><span class="p">:</span>
+</span><span data-line="328"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a PointDTO to a domain Point.</span>
+</span><span data-line="329">
+</span><span data-line="330"><span class="sd">    Args:</span>
+</span><span data-line="331"><span class="sd">        dto: The DTO to convert.</span>
+</span><span data-line="332">
+</span><span data-line="333"><span class="sd">    Returns:</span>
+</span><span data-line="334"><span class="sd">        The corresponding domain Point.</span>
+</span><span data-line="335"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="336">    <span class="k">return</span> <span class="n">DomainPoint</span><span class="p">(</span>
+</span><span data-line="337">        <span class="n">x</span><span class="o">=</span><span class="n">dto</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+</span><span data-line="338">        <span class="n">y</span><span class="o">=</span><span class="n">dto</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+</span><span data-line="339">        <span class="n">pressure</span><span class="o">=</span><span class="n">dto</span><span class="o">.</span><span class="n">pressure</span><span class="p">,</span>
+</span><span data-line="340">    <span class="p">)</span></div>
+
+</span><span data-line="341">
+</span><span data-line="342">
+<div class="viewcode-block" id="canvas_to_response">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.canvas_to_response">[docs]</a>
+</span><span data-line="343"><span class="k">def</span><span class="w"> </span><span class="nf">canvas_to_response</span><span class="p">(</span><span class="n">canvas</span><span class="p">:</span> <span class="n">Canvas</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CanvasResponseDTO</span><span class="p">:</span>
+</span><span data-line="344"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a Canvas domain model to a CanvasResponseDTO.</span>
+</span><span data-line="345">
+</span><span data-line="346"><span class="sd">    Args:</span>
+</span><span data-line="347"><span class="sd">        canvas: The canvas to convert.</span>
+</span><span data-line="348">
+</span><span data-line="349"><span class="sd">    Returns:</span>
+</span><span data-line="350"><span class="sd">        The corresponding CanvasResponseDTO.</span>
+</span><span data-line="351"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="352">    <span class="k">return</span> <span class="n">CanvasResponseDTO</span><span class="p">(</span>
+</span><span data-line="353">        <span class="nb">id</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span data-line="354">        <span class="n">name</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+</span><span data-line="355">        <span class="n">width</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+</span><span data-line="356">        <span class="n">height</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+</span><span data-line="357">        <span class="n">background_color</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">background_color</span><span class="p">,</span>
+</span><span data-line="358">        <span class="n">element_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">canvas</span><span class="o">.</span><span class="n">elements</span><span class="p">),</span>
+</span><span data-line="359">        <span class="n">created_at</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">created_at</span><span class="p">,</span>
+</span><span data-line="360">        <span class="n">updated_at</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">updated_at</span><span class="p">,</span>
+</span><span data-line="361">    <span class="p">)</span></div>
+
+</span><span data-line="362">
+</span><span data-line="363">
+<div class="viewcode-block" id="canvas_to_detail">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.canvas_to_detail">[docs]</a>
+</span><span data-line="364"><span class="k">def</span><span class="w"> </span><span class="nf">canvas_to_detail</span><span class="p">(</span><span class="n">canvas</span><span class="p">:</span> <span class="n">Canvas</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CanvasDetailDTO</span><span class="p">:</span>
+</span><span data-line="365"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a Canvas domain model to a CanvasDetailDTO.</span>
+</span><span data-line="366">
+</span><span data-line="367"><span class="sd">    Args:</span>
+</span><span data-line="368"><span class="sd">        canvas: The canvas to convert.</span>
+</span><span data-line="369">
+</span><span data-line="370"><span class="sd">    Returns:</span>
+</span><span data-line="371"><span class="sd">        The corresponding CanvasDetailDTO.</span>
+</span><span data-line="372"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="373">    <span class="k">return</span> <span class="n">CanvasDetailDTO</span><span class="p">(</span>
+</span><span data-line="374">        <span class="nb">id</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span data-line="375">        <span class="n">name</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+</span><span data-line="376">        <span class="n">width</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+</span><span data-line="377">        <span class="n">height</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+</span><span data-line="378">        <span class="n">background_color</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">background_color</span><span class="p">,</span>
+</span><span data-line="379">        <span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="n">element_to_response</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">canvas</span><span class="o">.</span><span class="n">elements</span><span class="p">],</span>
+</span><span data-line="380">        <span class="n">created_at</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">created_at</span><span class="p">,</span>
+</span><span data-line="381">        <span class="n">updated_at</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">updated_at</span><span class="p">,</span>
+</span><span data-line="382">    <span class="p">)</span></div>
+
+</span><span data-line="383">
+</span><span data-line="384">
+<div class="viewcode-block" id="element_to_response">
+<a class="viewcode-back" href="../../../api/web.html#scribbl_py.web.dto.element_to_response">[docs]</a>
+</span><span data-line="385"><span class="k">def</span><span class="w"> </span><span class="nf">element_to_response</span><span class="p">(</span><span class="n">element</span><span class="p">:</span> <span class="n">Element</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementResponseDTO</span><span class="p">:</span>
+</span><span data-line="386"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an Element domain model to an ElementResponseDTO.</span>
+</span><span data-line="387">
+</span><span data-line="388"><span class="sd">    Args:</span>
+</span><span data-line="389"><span class="sd">        element: The element to convert.</span>
+</span><span data-line="390">
+</span><span data-line="391"><span class="sd">    Returns:</span>
+</span><span data-line="392"><span class="sd">        The corresponding ElementResponseDTO.</span>
+</span><span data-line="393"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="394">    <span class="n">base_dto</span> <span class="o">=</span> <span class="n">ElementResponseDTO</span><span class="p">(</span>
+</span><span data-line="395">        <span class="nb">id</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span data-line="396">        <span class="n">element_type</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">element_type</span><span class="p">,</span>
+</span><span data-line="397">        <span class="n">position</span><span class="o">=</span><span class="n">point_to_dto</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">position</span><span class="p">),</span>
+</span><span data-line="398">        <span class="n">style</span><span class="o">=</span><span class="n">style_to_dto</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">style</span><span class="p">),</span>
+</span><span data-line="399">        <span class="n">created_at</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">created_at</span><span class="p">,</span>
+</span><span data-line="400">    <span class="p">)</span>
+</span><span data-line="401">
+</span><span data-line="402">    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">Stroke</span><span class="p">):</span>
+</span><span data-line="403">        <span class="n">base_dto</span><span class="o">.</span><span class="n">stroke_data</span> <span class="o">=</span> <span class="n">StrokeDataDTO</span><span class="p">(</span>
+</span><span data-line="404">            <span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="n">point_to_dto</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">element</span><span class="o">.</span><span class="n">points</span><span class="p">],</span>
+</span><span data-line="405">            <span class="n">smoothing</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">smoothing</span><span class="p">,</span>
+</span><span data-line="406">        <span class="p">)</span>
+</span><span data-line="407">    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">Shape</span><span class="p">):</span>
+</span><span data-line="408">        <span class="n">base_dto</span><span class="o">.</span><span class="n">shape_data</span> <span class="o">=</span> <span class="n">ShapeDataDTO</span><span class="p">(</span>
+</span><span data-line="409">            <span class="n">shape_type</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">shape_type</span><span class="p">,</span>
+</span><span data-line="410">            <span class="n">width</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+</span><span data-line="411">            <span class="n">height</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+</span><span data-line="412">            <span class="n">rotation</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">rotation</span><span class="p">,</span>
+</span><span data-line="413">        <span class="p">)</span>
+</span><span data-line="414">    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">Text</span><span class="p">):</span>
+</span><span data-line="415">        <span class="n">base_dto</span><span class="o">.</span><span class="n">text_data</span> <span class="o">=</span> <span class="n">TextDataDTO</span><span class="p">(</span>
+</span><span data-line="416">            <span class="n">content</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+</span><span data-line="417">            <span class="n">font_size</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">font_size</span><span class="p">,</span>
+</span><span data-line="418">            <span class="n">font_family</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">font_family</span><span class="p">,</span>
+</span><span data-line="419">        <span class="p">)</span>
+</span><span data-line="420">
+</span><span data-line="421">    <span class="k">return</span> <span class="n">base_dto</span></div>
+
+</span></pre></div>
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2025, Jacob Coffee</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=30646c52"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../../../_static/shibuya.js?v=c1cf1a6b"></script></body>
+</html>

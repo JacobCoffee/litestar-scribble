@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="cyan" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Core - scribbl-py</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Storage" href="storage.html" /><link rel="prev" title="Plugin" href="plugin.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=14737038" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_paramlinks.css" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=fc559bc7" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="Core"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      
+      
+      <strong>scribbl-py</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link">
+          <a href="https://litestar.dev/">
+            <span>Litestar</span></a>
+        </li><li class="link">
+          <a href="https://pypi.org/project/scribbl-py/">
+            <span>PyPI</span></a>
+        </li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Learn</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/index.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guides/configuration.html">Configuration Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/development.html">Development Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/deployment.html">Deployment Guide</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plugin.html">Plugin</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="services.html">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="realtime.html">Realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auth.html">Auth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web.html">Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="game.html">Game</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/JacobCoffee/scribbl-py">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/litestar">Discord</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#domain-models">Domain Models</a><ul>
+<li><a class="reference internal" href="#canvas">Canvas</a><ul>
+<li><a class="reference internal" href="#scribbl_py.Canvas"><code class="docutils literal notranslate"><span class="pre">Canvas</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.Canvas.id"><code class="docutils literal notranslate">id</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Canvas.name"><code class="docutils literal notranslate">name</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Canvas.width"><code class="docutils literal notranslate">width</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Canvas.height"><code class="docutils literal notranslate">height</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Canvas.background_color"><code class="docutils literal notranslate">background_color</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Canvas.elements"><code class="docutils literal notranslate">elements</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Canvas.created_at"><code class="docutils literal notranslate">created_at</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Canvas.updated_at"><code class="docutils literal notranslate">updated_at</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Canvas.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#element">Element</a><ul>
+<li><a class="reference internal" href="#scribbl_py.Element"><code class="docutils literal notranslate"><span class="pre">Element</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.Element.id"><code class="docutils literal notranslate">id</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Element.element_type"><code class="docutils literal notranslate">element_type</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Element.position"><code class="docutils literal notranslate">position</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Element.style"><code class="docutils literal notranslate">style</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Element.z_index"><code class="docutils literal notranslate">z_index</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Element.group_id"><code class="docutils literal notranslate">group_id</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Element.created_at"><code class="docutils literal notranslate">created_at</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Element.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#stroke">Stroke</a><ul>
+<li><a class="reference internal" href="#scribbl_py.Stroke"><code class="docutils literal notranslate"><span class="pre">Stroke</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.Stroke.points"><code class="docutils literal notranslate">points</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Stroke.smoothing"><code class="docutils literal notranslate">smoothing</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Stroke.__post_init__"><code class="docutils literal notranslate">__post_init__()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Stroke.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#shape">Shape</a><ul>
+<li><a class="reference internal" href="#scribbl_py.Shape"><code class="docutils literal notranslate"><span class="pre">Shape</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.Shape.shape_type"><code class="docutils literal notranslate">shape_type</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Shape.width"><code class="docutils literal notranslate">width</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Shape.height"><code class="docutils literal notranslate">height</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Shape.rotation"><code class="docutils literal notranslate">rotation</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Shape.__post_init__"><code class="docutils literal notranslate">__post_init__()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Shape.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#text">Text</a><ul>
+<li><a class="reference internal" href="#scribbl_py.Text"><code class="docutils literal notranslate"><span class="pre">Text</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.Text.content"><code class="docutils literal notranslate">content</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Text.font_size"><code class="docutils literal notranslate">font_size</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Text.font_family"><code class="docutils literal notranslate">font_family</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Text.__post_init__"><code class="docutils literal notranslate">__post_init__()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Text.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#point">Point</a><ul>
+<li><a class="reference internal" href="#scribbl_py.Point"><code class="docutils literal notranslate"><span class="pre">Point</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.Point.x"><code class="docutils literal notranslate">x</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Point.y"><code class="docutils literal notranslate">y</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Point.pressure"><code class="docutils literal notranslate">pressure</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Point.timestamp"><code class="docutils literal notranslate">timestamp</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.Point.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#elementstyle">ElementStyle</a><ul>
+<li><a class="reference internal" href="#scribbl_py.ElementStyle"><code class="docutils literal notranslate"><span class="pre">ElementStyle</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.ElementStyle.stroke_color"><code class="docutils literal notranslate">stroke_color</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ElementStyle.fill_color"><code class="docutils literal notranslate">fill_color</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ElementStyle.stroke_width"><code class="docutils literal notranslate">stroke_width</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ElementStyle.opacity"><code class="docutils literal notranslate">opacity</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ElementStyle.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#enums">Enums</a><ul>
+<li><a class="reference internal" href="#elementtype">ElementType</a><ul>
+<li><a class="reference internal" href="#scribbl_py.ElementType"><code class="docutils literal notranslate"><span class="pre">ElementType</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.ElementType.STROKE"><code class="docutils literal notranslate">STROKE</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ElementType.SHAPE"><code class="docutils literal notranslate">SHAPE</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ElementType.TEXT"><code class="docutils literal notranslate">TEXT</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ElementType.GROUP"><code class="docutils literal notranslate">GROUP</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ElementType.__new__"><code class="docutils literal notranslate">__new__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#shapetype">ShapeType</a><ul>
+<li><a class="reference internal" href="#scribbl_py.ShapeType"><code class="docutils literal notranslate"><span class="pre">ShapeType</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.ShapeType.RECTANGLE"><code class="docutils literal notranslate">RECTANGLE</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ShapeType.ELLIPSE"><code class="docutils literal notranslate">ELLIPSE</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ShapeType.LINE"><code class="docutils literal notranslate">LINE</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ShapeType.ARROW"><code class="docutils literal notranslate">ARROW</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ShapeType.TRIANGLE"><code class="docutils literal notranslate">TRIANGLE</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ShapeType.__new__"><code class="docutils literal notranslate">__new__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-scribbl_py.exceptions">Exceptions</a><ul>
+<li><a class="reference internal" href="#scribbl_py.exceptions.ScribblError"><code class="docutils literal notranslate"><span class="pre">ScribblError</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.exceptions.CanvasNotFoundError"><code class="docutils literal notranslate"><span class="pre">CanvasNotFoundError</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.exceptions.CanvasNotFoundError.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#scribbl_py.exceptions.ElementNotFoundError"><code class="docutils literal notranslate"><span class="pre">ElementNotFoundError</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.exceptions.ElementNotFoundError.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#scribbl_py.exceptions.InvalidElementError"><code class="docutils literal notranslate"><span class="pre">InvalidElementError</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.exceptions.InvalidElementError.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">scribbl-py</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">API Reference</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Core</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <section id="core">
+<h1>Core<a class="headerlink" href="#core" title="Link to this heading">¶</a></h1>
+<p>The core module contains domain models, types, and base exceptions for scribbl-py.</p>
+<section id="domain-models">
+<h2>Domain Models<a class="headerlink" href="#domain-models" title="Link to this heading">¶</a></h2>
+<section id="canvas">
+<h3>Canvas<a class="headerlink" href="#canvas" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.Canvas">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">Canvas</span></span><a class="reference internal" href="../_modules/scribbl_py/core/models.html#Canvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.Canvas" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Represents a drawing canvas containing elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> – Unique identifier for the canvas.</p></li>
+<li><p><strong>name</strong> – Display name for the canvas.</p></li>
+<li><p><strong>width</strong> – Canvas width in pixels.</p></li>
+<li><p><strong>height</strong> – Canvas height in pixels.</p></li>
+<li><p><strong>background_color</strong> – Background color in hex format.</p></li>
+<li><p><strong>elements</strong> – List of elements on the canvas.</p></li>
+<li><p><strong>created_at</strong> – Timestamp when the canvas was created.</p></li>
+<li><p><strong>updated_at</strong> – Timestamp when the canvas was last updated.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.Canvas.params.id"></span><strong>id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Canvas.params.id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Canvas.params.name"></span><strong>name</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Canvas.params.name">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Canvas.params.width"></span><strong>width</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Canvas.params.width">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Canvas.params.height"></span><strong>height</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Canvas.params.height">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Canvas.params.background_color"></span><strong>background_color</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Canvas.params.background_color">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Canvas.params.elements"></span><strong>elements</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Canvas.params.elements">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference internal" href="#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a>]</span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Canvas.params.created_at"></span><strong>created_at</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Canvas.params.created_at">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Canvas.params.updated_at"></span><strong>updated_at</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Canvas.params.updated_at">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Canvas.id">
+<span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></em><a class="headerlink" href="#scribbl_py.Canvas.id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Canvas.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Untitled</span> <span class="pre">Canvas'</span></em><a class="headerlink" href="#scribbl_py.Canvas.name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Canvas.width">
+<span class="sig-name descname"><span class="pre">width</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1920</span></em><a class="headerlink" href="#scribbl_py.Canvas.width" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Canvas.height">
+<span class="sig-name descname"><span class="pre">height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1080</span></em><a class="headerlink" href="#scribbl_py.Canvas.height" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Canvas.background_color">
+<span class="sig-name descname"><span class="pre">background_color</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'#ffffff'</span></em><a class="headerlink" href="#scribbl_py.Canvas.background_color" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Canvas.elements">
+<span class="sig-name descname"><span class="pre">elements</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a><span class="pre">[</span><a class="reference internal" href="#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#scribbl_py.Canvas.elements" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Canvas.created_at">
+<span class="sig-name descname"><span class="pre">created_at</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></em><a class="headerlink" href="#scribbl_py.Canvas.created_at" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Canvas.updated_at">
+<span class="sig-name descname"><span class="pre">updated_at</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></em><a class="headerlink" href="#scribbl_py.Canvas.updated_at" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.Canvas.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name='Untitled</span> <span class="pre">Canvas'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width=1920</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height=1080</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_color='#ffffff'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">created_at=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updated_at=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scribbl_py.Canvas.__init__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.Canvas.params.id"></span><strong>id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Canvas.params.id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Canvas.params.name"></span><strong>name</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Canvas.params.name">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Canvas.params.width"></span><strong>width</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Canvas.params.width">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Canvas.params.height"></span><strong>height</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Canvas.params.height">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Canvas.params.background_color"></span><strong>background_color</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Canvas.params.background_color">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Canvas.params.elements"></span><strong>elements</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Canvas.params.elements">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference internal" href="#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a>]</span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Canvas.params.created_at"></span><strong>created_at</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Canvas.params.created_at">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Canvas.params.updated_at"></span><strong>updated_at</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Canvas.params.updated_at">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="element">
+<h3>Element<a class="headerlink" href="#element" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.Element">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">Element</span></span><a class="reference internal" href="../_modules/scribbl_py/core/models.html#Element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.Element" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Base class for all canvas elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> – Unique identifier for the element.</p></li>
+<li><p><strong>element_type</strong> – Type of the element (stroke, shape, text, or group).</p></li>
+<li><p><strong>position</strong> – Position of the element on the canvas.</p></li>
+<li><p><strong>style</strong> – Visual styling configuration for the element.</p></li>
+<li><p><strong>z_index</strong> – Layer ordering (higher values are rendered on top).</p></li>
+<li><p><strong>group_id</strong> – ID of parent group if this element is grouped.</p></li>
+<li><p><strong>created_at</strong> – Timestamp when the element was created.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.Element.params.id"></span><strong>id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Element.params.id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Element.params.position"></span><strong>position</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Element.params.position">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.Point" title="scribbl_py.core.models.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Element.params.style"></span><strong>style</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Element.params.style">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ElementStyle" title="scribbl_py.core.style.ElementStyle"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElementStyle</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Element.params.z_index"></span><strong>z_index</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Element.params.z_index">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Element.params.group_id"></span><strong>group_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Element.params.group_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Element.params.created_at"></span><strong>created_at</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Element.params.created_at">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Element.id">
+<span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></em><a class="headerlink" href="#scribbl_py.Element.id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Element.element_type">
+<span class="sig-name descname"><span class="pre">element_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#scribbl_py.ElementType" title="scribbl_py.core.types.ElementType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElementType</span></code></a></em><a class="headerlink" href="#scribbl_py.Element.element_type" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Element.position">
+<span class="sig-name descname"><span class="pre">position</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#scribbl_py.Point" title="scribbl_py.core.models.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></em><a class="headerlink" href="#scribbl_py.Element.position" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Element.style">
+<span class="sig-name descname"><span class="pre">style</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#scribbl_py.ElementStyle" title="scribbl_py.core.style.ElementStyle"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElementStyle</span></code></a></em><a class="headerlink" href="#scribbl_py.Element.style" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Element.z_index">
+<span class="sig-name descname"><span class="pre">z_index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#scribbl_py.Element.z_index" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Element.group_id">
+<span class="sig-name descname"><span class="pre">group_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a> <span class="pre">|</span> <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#scribbl_py.Element.group_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Element.created_at">
+<span class="sig-name descname"><span class="pre">created_at</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></em><a class="headerlink" href="#scribbl_py.Element.created_at" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.Element.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_index=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_id=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">created_at=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scribbl_py.Element.__init__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.Element.params.id"></span><strong>id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Element.params.id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Element.params.position"></span><strong>position</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Element.params.position">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.Point" title="scribbl_py.core.models.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Element.params.style"></span><strong>style</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Element.params.style">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ElementStyle" title="scribbl_py.core.style.ElementStyle"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElementStyle</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Element.params.z_index"></span><strong>z_index</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Element.params.z_index">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Element.params.group_id"></span><strong>group_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Element.params.group_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Element.params.created_at"></span><strong>created_at</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Element.params.created_at">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="stroke">
+<h3>Stroke<a class="headerlink" href="#stroke" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.Stroke">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">Stroke</span></span><a class="reference internal" href="../_modules/scribbl_py/core/models.html#Stroke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.Stroke" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></p>
+<p>Represents a freehand stroke drawn on the canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> – List of points that make up the stroke path.</p></li>
+<li><p><strong>smoothing</strong> – Smoothing factor applied to the stroke (0.0 to 1.0).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.Stroke.params.id"></span><strong>id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Stroke.params.id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Stroke.params.position"></span><strong>position</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Stroke.params.position">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.Point" title="scribbl_py.core.models.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Stroke.params.style"></span><strong>style</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Stroke.params.style">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ElementStyle" title="scribbl_py.core.style.ElementStyle"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElementStyle</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Stroke.params.z_index"></span><strong>z_index</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Stroke.params.z_index">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Stroke.params.group_id"></span><strong>group_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Stroke.params.group_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Stroke.params.created_at"></span><strong>created_at</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Stroke.params.created_at">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Stroke.params.points"></span><strong>points</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Stroke.params.points">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference internal" href="#scribbl_py.Point" title="scribbl_py.core.models.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a>]</span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Stroke.params.smoothing"></span><strong>smoothing</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Stroke.params.smoothing">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Stroke.points">
+<span class="sig-name descname"><span class="pre">points</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a><span class="pre">[</span><a class="reference internal" href="#scribbl_py.Point" title="scribbl_py.core.models.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#scribbl_py.Stroke.points" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Stroke.smoothing">
+<span class="sig-name descname"><span class="pre">smoothing</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.5</span></em><a class="headerlink" href="#scribbl_py.Stroke.smoothing" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.Stroke.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/core/models.html#Stroke.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.Stroke.__post_init__" title="Link to this definition">¶</a></dt>
+<dd><p>Set the element type to STROKE after initialization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.Stroke.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_index=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_id=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">created_at=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing=0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scribbl_py.Stroke.__init__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.Stroke.params.id"></span><strong>id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Stroke.params.id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Stroke.params.position"></span><strong>position</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Stroke.params.position">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.Point" title="scribbl_py.core.models.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Stroke.params.style"></span><strong>style</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Stroke.params.style">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ElementStyle" title="scribbl_py.core.style.ElementStyle"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElementStyle</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Stroke.params.z_index"></span><strong>z_index</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Stroke.params.z_index">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Stroke.params.group_id"></span><strong>group_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Stroke.params.group_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Stroke.params.created_at"></span><strong>created_at</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Stroke.params.created_at">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Stroke.params.points"></span><strong>points</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Stroke.params.points">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference internal" href="#scribbl_py.Point" title="scribbl_py.core.models.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a>]</span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Stroke.params.smoothing"></span><strong>smoothing</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Stroke.params.smoothing">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="shape">
+<h3>Shape<a class="headerlink" href="#shape" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.Shape">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">Shape</span></span><a class="reference internal" href="../_modules/scribbl_py/core/models.html#Shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.Shape" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></p>
+<p>Represents a geometric shape on the canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shape_type</strong> – Type of shape (rectangle, ellipse, etc.).</p></li>
+<li><p><strong>width</strong> – Width of the shape in pixels.</p></li>
+<li><p><strong>height</strong> – Height of the shape in pixels.</p></li>
+<li><p><strong>rotation</strong> – Rotation angle in degrees.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.Shape.params.id"></span><strong>id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.position"></span><strong>position</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.position">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.Point" title="scribbl_py.core.models.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.style"></span><strong>style</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.style">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ElementStyle" title="scribbl_py.core.style.ElementStyle"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElementStyle</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.z_index"></span><strong>z_index</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.z_index">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.group_id"></span><strong>group_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.group_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.created_at"></span><strong>created_at</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.created_at">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.shape_type"></span><strong>shape_type</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.shape_type">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ShapeType" title="scribbl_py.core.types.ShapeType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ShapeType</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.width"></span><strong>width</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.width">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.height"></span><strong>height</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.height">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.rotation"></span><strong>rotation</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.rotation">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Shape.shape_type">
+<span class="sig-name descname"><span class="pre">shape_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#scribbl_py.ShapeType" title="scribbl_py.core.types.ShapeType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ShapeType</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rectangle'</span></em><a class="headerlink" href="#scribbl_py.Shape.shape_type" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Shape.width">
+<span class="sig-name descname"><span class="pre">width</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></em><a class="headerlink" href="#scribbl_py.Shape.width" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Shape.height">
+<span class="sig-name descname"><span class="pre">height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></em><a class="headerlink" href="#scribbl_py.Shape.height" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Shape.rotation">
+<span class="sig-name descname"><span class="pre">rotation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></em><a class="headerlink" href="#scribbl_py.Shape.rotation" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.Shape.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/core/models.html#Shape.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.Shape.__post_init__" title="Link to this definition">¶</a></dt>
+<dd><p>Set the element type to SHAPE after initialization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.Shape.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_index=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_id=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">created_at=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_type=ShapeType.RECTANGLE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation=0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scribbl_py.Shape.__init__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.Shape.params.id"></span><strong>id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.position"></span><strong>position</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.position">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.Point" title="scribbl_py.core.models.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.style"></span><strong>style</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.style">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ElementStyle" title="scribbl_py.core.style.ElementStyle"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElementStyle</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.z_index"></span><strong>z_index</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.z_index">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.group_id"></span><strong>group_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.group_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.created_at"></span><strong>created_at</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.created_at">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.shape_type"></span><strong>shape_type</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.shape_type">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ShapeType" title="scribbl_py.core.types.ShapeType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ShapeType</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.width"></span><strong>width</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.width">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.height"></span><strong>height</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.height">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Shape.params.rotation"></span><strong>rotation</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Shape.params.rotation">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="text">
+<h3>Text<a class="headerlink" href="#text" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.Text">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">Text</span></span><a class="reference internal" href="../_modules/scribbl_py/core/models.html#Text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.Text" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></p>
+<p>Represents a text element on the canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>content</strong> – The text content to display.</p></li>
+<li><p><strong>font_size</strong> – Font size in pixels.</p></li>
+<li><p><strong>font_family</strong> – Font family name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.Text.params.id"></span><strong>id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Text.params.position"></span><strong>position</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.position">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.Point" title="scribbl_py.core.models.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Text.params.style"></span><strong>style</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.style">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ElementStyle" title="scribbl_py.core.style.ElementStyle"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElementStyle</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Text.params.z_index"></span><strong>z_index</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.z_index">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Text.params.group_id"></span><strong>group_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.group_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Text.params.created_at"></span><strong>created_at</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.created_at">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Text.params.content"></span><strong>content</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.content">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Text.params.font_size"></span><strong>font_size</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.font_size">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Text.params.font_family"></span><strong>font_family</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.font_family">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Text.content">
+<span class="sig-name descname"><span class="pre">content</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#scribbl_py.Text.content" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Text.font_size">
+<span class="sig-name descname"><span class="pre">font_size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">16</span></em><a class="headerlink" href="#scribbl_py.Text.font_size" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Text.font_family">
+<span class="sig-name descname"><span class="pre">font_family</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sans-serif'</span></em><a class="headerlink" href="#scribbl_py.Text.font_family" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.Text.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/core/models.html#Text.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.Text.__post_init__" title="Link to this definition">¶</a></dt>
+<dd><p>Set the element type to TEXT after initialization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.Text.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_index=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_id=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">created_at=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_size=16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_family='sans-serif'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scribbl_py.Text.__init__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.Text.params.id"></span><strong>id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Text.params.position"></span><strong>position</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.position">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.Point" title="scribbl_py.core.models.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Text.params.style"></span><strong>style</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.style">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ElementStyle" title="scribbl_py.core.style.ElementStyle"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElementStyle</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Text.params.z_index"></span><strong>z_index</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.z_index">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Text.params.group_id"></span><strong>group_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.group_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Text.params.created_at"></span><strong>created_at</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.created_at">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Text.params.content"></span><strong>content</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.content">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Text.params.font_size"></span><strong>font_size</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.font_size">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Text.params.font_family"></span><strong>font_family</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Text.params.font_family">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="point">
+<h3>Point<a class="headerlink" href="#point" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.Point">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">Point</span></span><a class="reference internal" href="../_modules/scribbl_py/core/models.html#Point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.Point" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Represents a point in 2D space with optional pressure and timestamp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – X-coordinate position.</p></li>
+<li><p><strong>y</strong> – Y-coordinate position.</p></li>
+<li><p><strong>pressure</strong> – Pressure value for stylus input (0.0 to 1.0).</p></li>
+<li><p><strong>timestamp</strong> – Optional timestamp when the point was created.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.Point.params.x"></span><strong>x</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Point.params.x">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Point.params.y"></span><strong>y</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Point.params.y">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Point.params.pressure"></span><strong>pressure</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Point.params.pressure">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Point.params.timestamp"></span><strong>timestamp</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Point.params.timestamp">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Point.x">
+<span class="sig-name descname"><span class="pre">x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></em><a class="headerlink" href="#scribbl_py.Point.x" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Point.y">
+<span class="sig-name descname"><span class="pre">y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></em><a class="headerlink" href="#scribbl_py.Point.y" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Point.pressure">
+<span class="sig-name descname"><span class="pre">pressure</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></em><a class="headerlink" href="#scribbl_py.Point.pressure" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.Point.timestamp">
+<span class="sig-name descname"><span class="pre">timestamp</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> <span class="pre">|</span> <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#scribbl_py.Point.timestamp" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.Point.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scribbl_py.Point.__init__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.Point.params.x"></span><strong>x</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Point.params.x">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Point.params.y"></span><strong>y</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Point.params.y">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Point.params.pressure"></span><strong>pressure</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Point.params.pressure">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.Point.params.timestamp"></span><strong>timestamp</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.Point.params.timestamp">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="elementstyle">
+<h3>ElementStyle<a class="headerlink" href="#elementstyle" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.ElementStyle">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">ElementStyle</span></span><a class="reference internal" href="../_modules/scribbl_py/core/style.html#ElementStyle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ElementStyle" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Styling configuration for canvas elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stroke_color</strong> – The color of the element’s stroke/outline in hex format.</p></li>
+<li><p><strong>fill_color</strong> – Optional fill color for the element in hex format.</p></li>
+<li><p><strong>stroke_width</strong> – Width of the stroke in pixels.</p></li>
+<li><p><strong>opacity</strong> – Opacity level from 0.0 (transparent) to 1.0 (opaque).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.ElementStyle.params.stroke_color"></span><strong>stroke_color</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ElementStyle.params.stroke_color">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ElementStyle.params.fill_color"></span><strong>fill_color</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ElementStyle.params.fill_color">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ElementStyle.params.stroke_width"></span><strong>stroke_width</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ElementStyle.params.stroke_width">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ElementStyle.params.opacity"></span><strong>opacity</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ElementStyle.params.opacity">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ElementStyle.stroke_color">
+<span class="sig-name descname"><span class="pre">stroke_color</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'#000000'</span></em><a class="headerlink" href="#scribbl_py.ElementStyle.stroke_color" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ElementStyle.fill_color">
+<span class="sig-name descname"><span class="pre">fill_color</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> <span class="pre">|</span> <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#scribbl_py.ElementStyle.fill_color" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ElementStyle.stroke_width">
+<span class="sig-name descname"><span class="pre">stroke_width</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2.0</span></em><a class="headerlink" href="#scribbl_py.ElementStyle.stroke_width" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ElementStyle.opacity">
+<span class="sig-name descname"><span class="pre">opacity</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></em><a class="headerlink" href="#scribbl_py.ElementStyle.opacity" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.ElementStyle.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stroke_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#000000'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stroke_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scribbl_py.ElementStyle.__init__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.ElementStyle.params.stroke_color"></span><strong>stroke_color</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ElementStyle.params.stroke_color">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ElementStyle.params.fill_color"></span><strong>fill_color</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ElementStyle.params.fill_color">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ElementStyle.params.stroke_width"></span><strong>stroke_width</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ElementStyle.params.stroke_width">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ElementStyle.params.opacity"></span><strong>opacity</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ElementStyle.params.opacity">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="enums">
+<h2>Enums<a class="headerlink" href="#enums" title="Link to this heading">¶</a></h2>
+<section id="elementtype">
+<h3>ElementType<a class="headerlink" href="#elementtype" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.ElementType">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">ElementType</span></span><a class="reference internal" href="../_modules/scribbl_py/core/types.html#ElementType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ElementType" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.StrEnum" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">StrEnum</span></code></a></p>
+<p>Enumeration of element types in the canvas.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ElementType.STROKE">
+<span class="sig-name descname"><span class="pre">STROKE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stroke'</span></em><a class="headerlink" href="#scribbl_py.ElementType.STROKE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ElementType.SHAPE">
+<span class="sig-name descname"><span class="pre">SHAPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'shape'</span></em><a class="headerlink" href="#scribbl_py.ElementType.SHAPE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ElementType.TEXT">
+<span class="sig-name descname"><span class="pre">TEXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'text'</span></em><a class="headerlink" href="#scribbl_py.ElementType.TEXT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ElementType.GROUP">
+<span class="sig-name descname"><span class="pre">GROUP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'group'</span></em><a class="headerlink" href="#scribbl_py.ElementType.GROUP" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.ElementType.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scribbl_py.ElementType.__new__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="shapetype">
+<h3>ShapeType<a class="headerlink" href="#shapetype" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.ShapeType">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">ShapeType</span></span><a class="reference internal" href="../_modules/scribbl_py/core/types.html#ShapeType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ShapeType" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.StrEnum" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">StrEnum</span></code></a></p>
+<p>Enumeration of shape types available for drawing.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ShapeType.RECTANGLE">
+<span class="sig-name descname"><span class="pre">RECTANGLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rectangle'</span></em><a class="headerlink" href="#scribbl_py.ShapeType.RECTANGLE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ShapeType.ELLIPSE">
+<span class="sig-name descname"><span class="pre">ELLIPSE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ellipse'</span></em><a class="headerlink" href="#scribbl_py.ShapeType.ELLIPSE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ShapeType.LINE">
+<span class="sig-name descname"><span class="pre">LINE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'line'</span></em><a class="headerlink" href="#scribbl_py.ShapeType.LINE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ShapeType.ARROW">
+<span class="sig-name descname"><span class="pre">ARROW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'arrow'</span></em><a class="headerlink" href="#scribbl_py.ShapeType.ARROW" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ShapeType.TRIANGLE">
+<span class="sig-name descname"><span class="pre">TRIANGLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'triangle'</span></em><a class="headerlink" href="#scribbl_py.ShapeType.TRIANGLE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.ShapeType.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scribbl_py.ShapeType.__new__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="module-scribbl_py.exceptions">
+<span id="exceptions"></span><h2>Exceptions<a class="headerlink" href="#module-scribbl_py.exceptions" title="Link to this heading">¶</a></h2>
+<p>Custom exceptions for scribbl-py.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="scribbl_py.exceptions.ScribblError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.exceptions.</span></span><span class="sig-name descname"><span class="pre">ScribblError</span></span><a class="reference internal" href="../_modules/scribbl_py/exceptions.html#ScribblError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.exceptions.ScribblError" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>Base exception class for all scribbl-py errors.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scribbl_py.exceptions.CanvasNotFoundError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.exceptions.</span></span><span class="sig-name descname"><span class="pre">CanvasNotFoundError</span></span><a class="reference internal" href="../_modules/scribbl_py/exceptions.html#CanvasNotFoundError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.exceptions.CanvasNotFoundError" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scribbl_py.exceptions.ScribblError" title="scribbl_py.exceptions.ScribblError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScribblError</span></code></a></p>
+<p>Raised when a canvas with the specified ID cannot be found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>canvas_id</strong> – The UUID of the canvas that was not found.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>canvas_id</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.exceptions.CanvasNotFoundError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/exceptions.html#CanvasNotFoundError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.exceptions.CanvasNotFoundError.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialize the exception with the canvas ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.exceptions.CanvasNotFoundError.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.exceptions.CanvasNotFoundError.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The UUID of the canvas that was not found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scribbl_py.exceptions.ElementNotFoundError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.exceptions.</span></span><span class="sig-name descname"><span class="pre">ElementNotFoundError</span></span><a class="reference internal" href="../_modules/scribbl_py/exceptions.html#ElementNotFoundError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.exceptions.ElementNotFoundError" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scribbl_py.exceptions.ScribblError" title="scribbl_py.exceptions.ScribblError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScribblError</span></code></a></p>
+<p>Raised when an element with the specified ID cannot be found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>element_id</strong> – The UUID of the element that was not found.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>element_id</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.exceptions.ElementNotFoundError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/exceptions.html#ElementNotFoundError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.exceptions.ElementNotFoundError.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialize the exception with the element ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.exceptions.ElementNotFoundError.params.element_id"></span><strong>element_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.exceptions.ElementNotFoundError.params.element_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The UUID of the element that was not found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="scribbl_py.exceptions.InvalidElementError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidElementError</span></span><a class="reference internal" href="../_modules/scribbl_py/exceptions.html#InvalidElementError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.exceptions.InvalidElementError" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scribbl_py.exceptions.ScribblError" title="scribbl_py.exceptions.ScribblError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScribblError</span></code></a></p>
+<p>Raised when an element is invalid or malformed.</p>
+<p>This exception is used for validation errors related to element data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>message</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.exceptions.InvalidElementError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/exceptions.html#InvalidElementError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.exceptions.InvalidElementError.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialize the exception with a custom message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.exceptions.InvalidElementError.params.message"></span><strong>message</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.exceptions.InvalidElementError.params.message">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Description of why the element is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="plugin.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Plugin</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="storage.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Storage</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2025, Jacob Coffee</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=30646c52"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../_static/shibuya.js?v=c1cf1a6b"></script></body>
+</html>

@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="cyan" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Plugin - scribbl-py</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Core" href="core.html" /><link rel="prev" title="API Reference" href="index.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=14737038" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_paramlinks.css" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=fc559bc7" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="Plugin"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      
+      
+      <strong>scribbl-py</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link">
+          <a href="https://litestar.dev/">
+            <span>Litestar</span></a>
+        </li><li class="link">
+          <a href="https://pypi.org/project/scribbl-py/">
+            <span>PyPI</span></a>
+        </li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Learn</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/index.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guides/configuration.html">Configuration Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/development.html">Development Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/deployment.html">Deployment Guide</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="services.html">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="realtime.html">Realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auth.html">Auth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web.html">Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="game.html">Game</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/JacobCoffee/scribbl-py">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/litestar">Discord</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#scribblplugin">ScribblPlugin</a><ul>
+<li><a class="reference internal" href="#scribbl_py.ScribblPlugin"><code class="docutils literal notranslate"><span class="pre">ScribblPlugin</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.ScribblPlugin.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ScribblPlugin.on_app_init"><code class="docutils literal notranslate">on_app_init()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ScribblPlugin.storage"><code class="docutils literal notranslate">storage</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ScribblPlugin.service"><code class="docutils literal notranslate">service</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ScribblPlugin.connection_manager"><code class="docutils literal notranslate">connection_manager</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ScribblPlugin.auth_service"><code class="docutils literal notranslate">auth_service</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#scribblconfig">ScribblConfig</a><ul>
+<li><a class="reference internal" href="#scribbl_py.ScribblConfig"><code class="docutils literal notranslate"><span class="pre">ScribblConfig</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.ScribblConfig.storage"><code class="docutils literal notranslate">storage</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ScribblConfig.enable_api"><code class="docutils literal notranslate">enable_api</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ScribblConfig.enable_websocket"><code class="docutils literal notranslate">enable_websocket</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ScribblConfig.enable_ui"><code class="docutils literal notranslate">enable_ui</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ScribblConfig.api_path"><code class="docutils literal notranslate">api_path</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ScribblConfig.ws_path"><code class="docutils literal notranslate">ws_path</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ScribblConfig.ui_path"><code class="docutils literal notranslate">ui_path</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ScribblConfig.static_path"><code class="docutils literal notranslate">static_path</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ScribblConfig.dependency_key"><code class="docutils literal notranslate">dependency_key</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ScribblConfig.connection_manager"><code class="docutils literal notranslate">connection_manager</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.ScribblConfig.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">scribbl-py</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">API Reference</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Plugin</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <section id="plugin">
+<h1>Plugin<a class="headerlink" href="#plugin" title="Link to this heading">¶</a></h1>
+<p>The plugin module provides the main integration point for scribbl-py with Litestar applications.</p>
+<section id="scribblplugin">
+<h2>ScribblPlugin<a class="headerlink" href="#scribblplugin" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.ScribblPlugin">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">ScribblPlugin</span></span><a class="reference internal" href="../_modules/scribbl_py/plugin.html#ScribblPlugin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ScribblPlugin" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.litestar.dev/2/reference/plugins/index.html#litestar.plugins.InitPluginProtocol" title="(in Litestar)"><code class="xref py py-class docutils literal notranslate"><span class="pre">InitPluginProtocol</span></code></a></p>
+<p>Litestar plugin for scribbl-py integration.</p>
+<p>This plugin provides seamless integration of scribbl-py with Litestar
+applications. It automatically configures dependency injection for the
+CanvasService and optionally mounts REST API routes and WebSocket handlers.</p>
+<dl class="simple">
+<dt>Features:</dt><dd><ul class="simple">
+<li><p>Automatic dependency injection setup for CanvasService</p></li>
+<li><p>Optional REST API routes mounting</p></li>
+<li><p>Optional WebSocket real-time collaboration support</p></li>
+<li><p>Configurable storage backend</p></li>
+<li><p>Thread-safe initialization</p></li>
+</ul>
+</dd>
+</dl>
+<p>The plugin implements Litestar’s InitPluginProtocol, which means it
+participates in the application initialization lifecycle through the
+on_app_init hook.</p>
+<div class="admonition-example admonition">
+<p class="admonition-title">Example</p>
+<p>Basic usage with defaults:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">litestar</span><span class="w"> </span><span class="kn">import</span> <span class="n">Litestar</span>
+</span><span data-line="2"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScribblPlugin</span><span class="p">,</span> <span class="n">ScribblConfig</span>
+</span><span data-line="3"><span class="gp">&gt;&gt;&gt;</span>
+</span><span data-line="4"><span class="gp">&gt;&gt;&gt; </span><span class="n">app</span> <span class="o">=</span> <span class="n">Litestar</span><span class="p">(</span>
+</span><span data-line="5"><span class="gp">... </span>    <span class="n">plugins</span><span class="o">=</span><span class="p">[</span><span class="n">ScribblPlugin</span><span class="p">(</span><span class="n">ScribblConfig</span><span class="p">())],</span>
+</span><span data-line="6"><span class="gp">... </span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>Custom configuration:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScribblPlugin</span><span class="p">,</span> <span class="n">ScribblConfig</span>
+</span><span data-line="2"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.storage.memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">InMemoryStorage</span>
+</span><span data-line="3"><span class="gp">&gt;&gt;&gt;</span>
+</span><span data-line="4"><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">ScribblConfig</span><span class="p">(</span>
+</span><span data-line="5"><span class="gp">... </span>    <span class="n">storage</span><span class="o">=</span><span class="n">InMemoryStorage</span><span class="p">(),</span> <span class="n">enable_api</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">api_path</span><span class="o">=</span><span class="s2">&quot;/api/canvas&quot;</span><span class="p">,</span> <span class="n">dependency_key</span><span class="o">=</span><span class="s2">&quot;canvas_service&quot;</span>
+</span><span data-line="6"><span class="gp">... </span><span class="p">)</span>
+</span><span data-line="7"><span class="gp">&gt;&gt;&gt; </span><span class="n">plugin</span> <span class="o">=</span> <span class="n">ScribblPlugin</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>Accessing the service in route handlers:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">litestar</span><span class="w"> </span><span class="kn">import</span> <span class="n">get</span>
+</span><span data-line="2"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.services.canvas</span><span class="w"> </span><span class="kn">import</span> <span class="n">CanvasService</span>
+</span><span data-line="3"><span class="gp">&gt;&gt;&gt;</span>
+</span><span data-line="4"><span class="gp">&gt;&gt;&gt; </span><span class="nd">@get</span><span class="p">(</span><span class="s2">&quot;/custom&quot;</span><span class="p">)</span>
+</span><span data-line="5"><span class="gp">... </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">custom_handler</span><span class="p">(</span><span class="n">service</span><span class="p">:</span> <span class="n">CanvasService</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span data-line="6"><span class="gp">... </span>    <span class="n">canvases</span> <span class="o">=</span> <span class="k">await</span> <span class="n">service</span><span class="o">.</span><span class="n">list_canvases</span><span class="p">()</span>
+</span><span data-line="7"><span class="gp">... </span>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">canvases</span><span class="p">)}</span>
+</span></pre></div>
+</div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>_config</strong> – The plugin configuration.</p></li>
+<li><p><strong>_storage</strong> – The initialized storage backend (None until on_app_init).</p></li>
+<li><p><strong>_service</strong> – The initialized CanvasService (None until on_app_init).</p></li>
+<li><p><strong>_connection_manager</strong> – The WebSocket connection manager (None until on_app_init).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="target" id="scribbl_py.ScribblPlugin.params.config"></span><strong>config</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblPlugin.params.config">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ScribblConfig" title="scribbl_py.plugin.ScribblConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScribblConfig</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.ScribblPlugin.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/plugin.html#ScribblPlugin.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ScribblPlugin.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialize the plugin with optional configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.ScribblPlugin.params.config"></span><strong>config</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblPlugin.params.config">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#scribbl_py.ScribblConfig" title="scribbl_py.plugin.ScribblConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScribblConfig</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – Plugin configuration. If None, ScribblConfig with default
+values will be used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.ScribblPlugin.on_app_init">
+<span class="sig-name descname"><span class="pre">on_app_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/plugin.html#ScribblPlugin.on_app_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ScribblPlugin.on_app_init" title="Link to this definition">¶</a></dt>
+<dd><p>Initialize the plugin during application startup.</p>
+<p>This method is called by Litestar during app initialization. It sets up
+the storage backend, creates the CanvasService, registers it with the
+dependency injection system, and optionally mounts API routes and
+WebSocket handlers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.ScribblPlugin.on_app_init.params.app_config"></span><strong>app_config</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblPlugin.on_app_init.params.app_config">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.litestar.dev/2/reference/config.html#litestar.config.app.AppConfig" title="(in Litestar)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AppConfig</span></code></a></span>) – The Litestar application configuration object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.litestar.dev/2/reference/config.html#litestar.config.app.AppConfig" title="(in Litestar)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AppConfig</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The modified application configuration with scribbl-py integration.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is called automatically by Litestar and should not be
+invoked manually.</p>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="scribbl_py.ScribblPlugin.storage">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">storage</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="storage.html#scribbl_py.StorageProtocol" title="scribbl_py.storage.base.StorageProtocol"><span class="pre">StorageProtocol</span></a></em><a class="headerlink" href="#scribbl_py.ScribblPlugin.storage" title="Link to this definition">¶</a></dt>
+<dd><p>Get the initialized storage backend.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The storage backend instance.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.14)"><strong>RuntimeError</strong></a> – If the plugin has not been initialized yet
+    (on_app_init not called).</p>
+</dd>
+</dl>
+<div class="admonition-example admonition">
+<p class="admonition-title">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="gp">&gt;&gt;&gt; </span><span class="n">plugin</span> <span class="o">=</span> <span class="n">ScribblPlugin</span><span class="p">(</span><span class="n">ScribblConfig</span><span class="p">())</span>
+</span><span data-line="2"><span class="gp">&gt;&gt;&gt; </span><span class="c1"># After app initialization</span>
+</span><span data-line="3"><span class="gp">&gt;&gt;&gt; </span><span class="n">storage</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">storage</span>
+</span></pre></div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="scribbl_py.ScribblPlugin.service">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">service</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="services.html#scribbl_py.CanvasService" title="scribbl_py.services.canvas.CanvasService"><span class="pre">CanvasService</span></a></em><a class="headerlink" href="#scribbl_py.ScribblPlugin.service" title="Link to this definition">¶</a></dt>
+<dd><p>Get the initialized canvas service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The CanvasService instance.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.14)"><strong>RuntimeError</strong></a> – If the plugin has not been initialized yet
+    (on_app_init not called).</p>
+</dd>
+</dl>
+<div class="admonition-example admonition">
+<p class="admonition-title">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="gp">&gt;&gt;&gt; </span><span class="n">plugin</span> <span class="o">=</span> <span class="n">ScribblPlugin</span><span class="p">(</span><span class="n">ScribblConfig</span><span class="p">())</span>
+</span><span data-line="2"><span class="gp">&gt;&gt;&gt; </span><span class="c1"># After app initialization</span>
+</span><span data-line="3"><span class="gp">&gt;&gt;&gt; </span><span class="n">service</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">service</span>
+</span><span data-line="4"><span class="gp">&gt;&gt;&gt; </span><span class="n">canvases</span> <span class="o">=</span> <span class="k">await</span> <span class="n">service</span><span class="o">.</span><span class="n">list_canvases</span><span class="p">()</span>
+</span></pre></div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="scribbl_py.ScribblPlugin.connection_manager">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">connection_manager</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="realtime.html#scribbl_py.ConnectionManager" title="scribbl_py.realtime.manager.ConnectionManager"><span class="pre">ConnectionManager</span></a></em><a class="headerlink" href="#scribbl_py.ScribblPlugin.connection_manager" title="Link to this definition">¶</a></dt>
+<dd><p>Get the initialized connection manager.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The ConnectionManager instance.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.14)"><strong>RuntimeError</strong></a> – If the plugin has not been initialized yet
+    (on_app_init not called).</p>
+</dd>
+</dl>
+<div class="admonition-example admonition">
+<p class="admonition-title">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="gp">&gt;&gt;&gt; </span><span class="n">plugin</span> <span class="o">=</span> <span class="n">ScribblPlugin</span><span class="p">(</span><span class="n">ScribblConfig</span><span class="p">())</span>
+</span><span data-line="2"><span class="gp">&gt;&gt;&gt; </span><span class="c1"># After app initialization</span>
+</span><span data-line="3"><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">connection_manager</span>
+</span><span data-line="4"><span class="gp">&gt;&gt;&gt; </span><span class="n">active</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">active_canvases</span>
+</span></pre></div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="scribbl_py.ScribblPlugin.auth_service">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">auth_service</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="auth.html#scribbl_py.AuthService" title="scribbl_py.auth.service.AuthService"><span class="pre">AuthService</span></a></em><a class="headerlink" href="#scribbl_py.ScribblPlugin.auth_service" title="Link to this definition">¶</a></dt>
+<dd><p>Get the initialized auth service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The AuthService instance.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.14)"><strong>RuntimeError</strong></a> – If the plugin has not been initialized yet
+    (on_app_init not called).</p>
+</dd>
+</dl>
+<div class="admonition-example admonition">
+<p class="admonition-title">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="gp">&gt;&gt;&gt; </span><span class="n">plugin</span> <span class="o">=</span> <span class="n">ScribblPlugin</span><span class="p">(</span><span class="n">ScribblConfig</span><span class="p">())</span>
+</span><span data-line="2"><span class="gp">&gt;&gt;&gt; </span><span class="c1"># After app initialization</span>
+</span><span data-line="3"><span class="gp">&gt;&gt;&gt; </span><span class="n">auth</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">auth_service</span>
+</span><span data-line="4"><span class="gp">&gt;&gt;&gt; </span><span class="n">leaderboard</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">get_leaderboard</span><span class="p">(</span><span class="s2">&quot;wins&quot;</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="scribblconfig">
+<h2>ScribblConfig<a class="headerlink" href="#scribblconfig" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.ScribblConfig">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">ScribblConfig</span></span><a class="reference internal" href="../_modules/scribbl_py/plugin.html#ScribblConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.ScribblConfig" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Configuration for the Scribbl plugin.</p>
+<p>This configuration class allows customization of the scribbl-py plugin
+behavior when integrated with a Litestar application.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>storage</strong> – Storage backend to use for canvas persistence. If None,
+InMemoryStorage will be used by default.</p></li>
+<li><p><strong>enable_api</strong> – Whether to mount the REST API routes. Defaults to True.</p></li>
+<li><p><strong>enable_websocket</strong> – Whether to enable WebSocket real-time features.
+Defaults to True.</p></li>
+<li><p><strong>api_path</strong> – Base path for mounting API routes. Defaults to “/api”.</p></li>
+<li><p><strong>ws_path</strong> – Base path for WebSocket routes. Defaults to “/ws”.</p></li>
+<li><p><strong>dependency_key</strong> – Dependency injection key for CanvasService. This key
+is used to access the service in route handlers via DI.
+Defaults to “service”.</p></li>
+<li><p><strong>connection_manager</strong> – Optional pre-configured ConnectionManager for
+WebSocket connections. If None, a new one will be created.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition-example admonition">
+<p class="admonition-title">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.storage.memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">InMemoryStorage</span>
+</span><span data-line="2"><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">ScribblConfig</span><span class="p">(</span>
+</span><span data-line="3"><span class="gp">... </span>    <span class="n">storage</span><span class="o">=</span><span class="n">InMemoryStorage</span><span class="p">(),</span> <span class="n">enable_api</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">api_path</span><span class="o">=</span><span class="s2">&quot;/api/v1&quot;</span><span class="p">,</span> <span class="n">dependency_key</span><span class="o">=</span><span class="s2">&quot;canvas_service&quot;</span>
+</span><span data-line="4"><span class="gp">... </span><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.storage"></span><strong>storage</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.storage">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="storage.html#scribbl_py.StorageProtocol" title="scribbl_py.storage.base.StorageProtocol"><code class="xref py py-class docutils literal notranslate"><span class="pre">StorageProtocol</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.enable_api"></span><strong>enable_api</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.enable_api">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.enable_websocket"></span><strong>enable_websocket</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.enable_websocket">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.enable_ui"></span><strong>enable_ui</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.enable_ui">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.api_path"></span><strong>api_path</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.api_path">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.ws_path"></span><strong>ws_path</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.ws_path">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.ui_path"></span><strong>ui_path</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.ui_path">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.static_path"></span><strong>static_path</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.static_path">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.dependency_key"></span><strong>dependency_key</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.dependency_key">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.connection_manager"></span><strong>connection_manager</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.connection_manager">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="realtime.html#scribbl_py.ConnectionManager" title="scribbl_py.realtime.manager.ConnectionManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionManager</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ScribblConfig.storage">
+<span class="sig-name descname"><span class="pre">storage</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="storage.html#scribbl_py.StorageProtocol" title="scribbl_py.storage.base.StorageProtocol"><code class="xref py py-class docutils literal notranslate"><span class="pre">StorageProtocol</span></code></a> <span class="pre">|</span> <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#scribbl_py.ScribblConfig.storage" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ScribblConfig.enable_api">
+<span class="sig-name descname"><span class="pre">enable_api</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#scribbl_py.ScribblConfig.enable_api" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ScribblConfig.enable_websocket">
+<span class="sig-name descname"><span class="pre">enable_websocket</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#scribbl_py.ScribblConfig.enable_websocket" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ScribblConfig.enable_ui">
+<span class="sig-name descname"><span class="pre">enable_ui</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#scribbl_py.ScribblConfig.enable_ui" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ScribblConfig.api_path">
+<span class="sig-name descname"><span class="pre">api_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/api'</span></em><a class="headerlink" href="#scribbl_py.ScribblConfig.api_path" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ScribblConfig.ws_path">
+<span class="sig-name descname"><span class="pre">ws_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/ws'</span></em><a class="headerlink" href="#scribbl_py.ScribblConfig.ws_path" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ScribblConfig.ui_path">
+<span class="sig-name descname"><span class="pre">ui_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/ui'</span></em><a class="headerlink" href="#scribbl_py.ScribblConfig.ui_path" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ScribblConfig.static_path">
+<span class="sig-name descname"><span class="pre">static_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/static'</span></em><a class="headerlink" href="#scribbl_py.ScribblConfig.static_path" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ScribblConfig.dependency_key">
+<span class="sig-name descname"><span class="pre">dependency_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'service'</span></em><a class="headerlink" href="#scribbl_py.ScribblConfig.dependency_key" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scribbl_py.ScribblConfig.connection_manager">
+<span class="sig-name descname"><span class="pre">connection_manager</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="realtime.html#scribbl_py.ConnectionManager" title="scribbl_py.realtime.manager.ConnectionManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionManager</span></code></a> <span class="pre">|</span> <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#scribbl_py.ScribblConfig.connection_manager" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.ScribblConfig.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_api</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_websocket</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_ui</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/api'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/ws'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ui_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/ui'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">static_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/static'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dependency_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'service'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection_manager</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scribbl_py.ScribblConfig.__init__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.storage"></span><strong>storage</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.storage">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="storage.html#scribbl_py.StorageProtocol" title="scribbl_py.storage.base.StorageProtocol"><code class="xref py py-class docutils literal notranslate"><span class="pre">StorageProtocol</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.enable_api"></span><strong>enable_api</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.enable_api">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.enable_websocket"></span><strong>enable_websocket</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.enable_websocket">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.enable_ui"></span><strong>enable_ui</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.enable_ui">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.api_path"></span><strong>api_path</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.api_path">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.ws_path"></span><strong>ws_path</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.ws_path">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.ui_path"></span><strong>ui_path</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.ui_path">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.static_path"></span><strong>static_path</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.static_path">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.dependency_key"></span><strong>dependency_key</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.dependency_key">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><span class="target" id="scribbl_py.ScribblConfig.params.connection_manager"></span><strong>connection_manager</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.ScribblConfig.params.connection_manager">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="realtime.html#scribbl_py.ConnectionManager" title="scribbl_py.realtime.manager.ConnectionManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionManager</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="index.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">API Reference</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="core.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Core</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2025, Jacob Coffee</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=30646c52"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../_static/shibuya.js?v=c1cf1a6b"></script></body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="cyan" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Quickstart - scribbl-py</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Guides" href="../guides/index.html" /><link rel="prev" title="Installation" href="installation.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=14737038" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_paramlinks.css" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=fc559bc7" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="Quickstart"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      
+      
+      <strong>scribbl-py</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link">
+          <a href="https://litestar.dev/">
+            <span>Litestar</span></a>
+        </li><li class="link">
+          <a href="https://pypi.org/project/scribbl-py/">
+            <span>PyPI</span></a>
+        </li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Learn</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Getting Started</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Quickstart</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/index.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guides/configuration.html">Configuration Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/development.html">Development Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/deployment.html">Deployment Guide</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/plugin.html">Plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/storage.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/services.html">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/realtime.html">Realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/auth.html">Auth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/web.html">Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/game.html">Game</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/JacobCoffee/scribbl-py">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/litestar">Discord</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#running-the-application">Running the Application</a></li>
+<li><a class="reference internal" href="#using-the-canvas-editor">Using the Canvas Editor</a></li>
+<li><a class="reference internal" href="#playing-canvas-clash">Playing Canvas Clash</a><ul>
+<li><a class="reference internal" href="#starting-a-game">Starting a Game</a></li>
+<li><a class="reference internal" href="#gameplay">Gameplay</a></li>
+<li><a class="reference internal" href="#multiplayer-testing">Multiplayer Testing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-the-rest-api">Using the REST API</a><ul>
+<li><a class="reference internal" href="#creating-a-canvas">Creating a Canvas</a></li>
+<li><a class="reference internal" href="#adding-a-stroke">Adding a Stroke</a></li>
+<li><a class="reference internal" href="#exporting">Exporting</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#websocket-real-time-collaboration">WebSocket Real-time Collaboration</a></li>
+<li><a class="reference internal" href="#using-the-plugin-in-your-own-app">Using the Plugin in Your Own App</a></li>
+<li><a class="reference internal" href="#next-steps">Next Steps</a></li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">scribbl-py</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">Getting Started</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Quickstart</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <section id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">¶</a></h1>
+<p>This guide walks you through using scribbl-py for the first time.</p>
+<section id="running-the-application">
+<h2>Running the Application<a class="headerlink" href="#running-the-application" title="Link to this heading">¶</a></h2>
+<p>Start the application:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">make<span class="w"> </span>serve
+</span></pre></div>
+</div>
+<p>Open <a class="reference external" href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> in your browser.</p>
+</section>
+<section id="using-the-canvas-editor">
+<h2>Using the Canvas Editor<a class="headerlink" href="#using-the-canvas-editor" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Navigate to <a class="reference external" href="http://127.0.0.1:8000/ui/">http://127.0.0.1:8000/ui/</a></p></li>
+<li><p>Click “New Canvas” to create a drawing</p></li>
+<li><p>Use the toolbar to select tools:</p>
+<ul class="simple">
+<li><p><strong>Pen</strong> - Freehand drawing</p></li>
+<li><p><strong>Line</strong> - Straight lines</p></li>
+<li><p><strong>Rectangle</strong> - Rectangles and squares</p></li>
+<li><p><strong>Ellipse</strong> - Circles and ellipses</p></li>
+<li><p><strong>Text</strong> - Add text labels</p></li>
+<li><p><strong>Eraser</strong> - Erase elements</p></li>
+<li><p><strong>Fill</strong> - Fill shapes with color</p></li>
+</ul>
+</li>
+<li><p>Choose colors and brush sizes</p></li>
+<li><p>Use Ctrl+Z / Ctrl+Y for undo/redo</p></li>
+<li><p>Export your drawing as PNG, SVG, or JSON</p></li>
+</ol>
+</section>
+<section id="playing-canvas-clash">
+<h2>Playing Canvas Clash<a class="headerlink" href="#playing-canvas-clash" title="Link to this heading">¶</a></h2>
+<p>Canvas Clash is a Pictionary-style multiplayer game.</p>
+<section id="starting-a-game">
+<h3>Starting a Game<a class="headerlink" href="#starting-a-game" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Navigate to <a class="reference external" href="http://127.0.0.1:8000/canvas-clash/">http://127.0.0.1:8000/canvas-clash/</a></p></li>
+<li><p>Click “Create Room” or enter a room code to join</p></li>
+<li><p>Share the room code with friends</p></li>
+<li><p>Wait for players to join (minimum 2)</p></li>
+<li><p>The host clicks “Start Game”</p></li>
+</ol>
+</section>
+<section id="gameplay">
+<h3>Gameplay<a class="headerlink" href="#gameplay" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Each round, one player becomes the drawer</p></li>
+<li><p>The drawer selects a word from three options</p></li>
+<li><p>Draw the word while others guess in chat</p></li>
+<li><p>Points are awarded for:</p>
+<ul class="simple">
+<li><p><strong>Guessing correctly</strong> (faster = more points)</p></li>
+<li><p><strong>Drawing</strong> (based on how many players guess)</p></li>
+</ul>
+</li>
+<li><p>The player with the most points wins!</p></li>
+</ol>
+</section>
+<section id="multiplayer-testing">
+<h3>Multiplayer Testing<a class="headerlink" href="#multiplayer-testing" title="Link to this heading">¶</a></h3>
+<p>To test multiplayer locally:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Open two browser windows</span>
+</span><span data-line="2">make<span class="w"> </span>game-test
+</span></pre></div>
+</div>
+<p>This opens one regular and one incognito window for testing with separate sessions.</p>
+</section>
+</section>
+<section id="using-the-rest-api">
+<h2>Using the REST API<a class="headerlink" href="#using-the-rest-api" title="Link to this heading">¶</a></h2>
+<p>scribbl-py provides a REST API for programmatic access.</p>
+<section id="creating-a-canvas">
+<h3>Creating a Canvas<a class="headerlink" href="#creating-a-canvas" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/api/canvases<span class="w"> </span><span class="se">\</span>
+</span><span data-line="2"><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span data-line="3"><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;name&quot;: &quot;My Canvas&quot;, &quot;width&quot;: 800, &quot;height&quot;: 600}&#39;</span>
+</span></pre></div>
+</div>
+<p>Response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="p">{</span>
+</span><span data-line="2"><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;550e8400-e29b-41d4-a716-446655440000&quot;</span><span class="p">,</span>
+</span><span data-line="3"><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;My Canvas&quot;</span><span class="p">,</span>
+</span><span data-line="4"><span class="w">  </span><span class="nt">&quot;width&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">800</span><span class="p">,</span>
+</span><span data-line="5"><span class="w">  </span><span class="nt">&quot;height&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">600</span><span class="p">,</span>
+</span><span data-line="6"><span class="w">  </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+</span><span data-line="7"><span class="w">  </span><span class="nt">&quot;elements&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+</span><span data-line="8"><span class="p">}</span>
+</span></pre></div>
+</div>
+</section>
+<section id="adding-a-stroke">
+<h3>Adding a Stroke<a class="headerlink" href="#adding-a-stroke" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/api/canvases/<span class="o">{</span>id<span class="o">}</span>/elements/strokes<span class="w"> </span><span class="se">\</span>
+</span><span data-line="2"><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span data-line="3"><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+</span><span data-line="4"><span class="s1">    &quot;points&quot;: [{&quot;x&quot;: 10, &quot;y&quot;: 10}, {&quot;x&quot;: 100, &quot;y&quot;: 100}],</span>
+</span><span data-line="5"><span class="s1">    &quot;style&quot;: {&quot;stroke_color&quot;: &quot;#000000&quot;, &quot;stroke_width&quot;: 2}</span>
+</span><span data-line="6"><span class="s1">  }&#39;</span>
+</span></pre></div>
+</div>
+</section>
+<section id="exporting">
+<h3>Exporting<a class="headerlink" href="#exporting" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Export as JSON</span>
+</span><span data-line="2">curl<span class="w"> </span>http://127.0.0.1:8000/api/canvases/<span class="o">{</span>id<span class="o">}</span>/export/json
+</span><span data-line="3">
+</span><span data-line="4"><span class="c1"># Export as SVG</span>
+</span><span data-line="5">curl<span class="w"> </span>http://127.0.0.1:8000/api/canvases/<span class="o">{</span>id<span class="o">}</span>/export/svg
+</span><span data-line="6">
+</span><span data-line="7"><span class="c1"># Export as PNG</span>
+</span><span data-line="8">curl<span class="w"> </span>http://127.0.0.1:8000/api/canvases/<span class="o">{</span>id<span class="o">}</span>/export/png<span class="w"> </span>-o<span class="w"> </span>canvas.png
+</span></pre></div>
+</div>
+</section>
+</section>
+<section id="websocket-real-time-collaboration">
+<h2>WebSocket Real-time Collaboration<a class="headerlink" href="#websocket-real-time-collaboration" title="Link to this heading">¶</a></h2>
+<p>Connect to a canvas for real-time updates:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kd">const</span><span class="w"> </span><span class="nx">ws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">WebSocket</span><span class="p">(</span><span class="s1">&#39;ws://127.0.0.1:8000/ws/canvas/{canvas_id}&#39;</span><span class="p">);</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="c1">// Join the canvas session</span>
+</span><span data-line="4"><span class="nx">ws</span><span class="p">.</span><span class="nx">onopen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="5"><span class="w">  </span><span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+</span><span data-line="6"><span class="w">    </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;join&#39;</span><span class="p">,</span>
+</span><span data-line="7"><span class="w">    </span><span class="nx">user_id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;user123&#39;</span><span class="p">,</span>
+</span><span data-line="8"><span class="w">    </span><span class="nx">user_name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Alice&#39;</span>
+</span><span data-line="9"><span class="w">  </span><span class="p">}));</span>
+</span><span data-line="10"><span class="p">};</span>
+</span><span data-line="11">
+</span><span data-line="12"><span class="c1">// Handle messages</span>
+</span><span data-line="13"><span class="nx">ws</span><span class="p">.</span><span class="nx">onmessage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="14"><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+</span><span data-line="15"><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Received:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">message</span><span class="p">);</span>
+</span><span data-line="16"><span class="p">};</span>
+</span><span data-line="17">
+</span><span data-line="18"><span class="c1">// Add an element</span>
+</span><span data-line="19"><span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+</span><span data-line="20"><span class="w">  </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;element_add&#39;</span><span class="p">,</span>
+</span><span data-line="21"><span class="w">  </span><span class="nx">element</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="22"><span class="w">    </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;stroke&#39;</span><span class="p">,</span>
+</span><span data-line="23"><span class="w">    </span><span class="nx">points</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="nx">x</span><span class="o">:</span><span class="w"> </span><span class="mf">10</span><span class="p">,</span><span class="w"> </span><span class="nx">y</span><span class="o">:</span><span class="w"> </span><span class="mf">10</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nx">x</span><span class="o">:</span><span class="w"> </span><span class="mf">100</span><span class="p">,</span><span class="w"> </span><span class="nx">y</span><span class="o">:</span><span class="w"> </span><span class="mf">100</span><span class="p">}],</span>
+</span><span data-line="24"><span class="w">    </span><span class="nx">style</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">stroke_color</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;#000000&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">stroke_width</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="p">}</span>
+</span><span data-line="25"><span class="w">  </span><span class="p">}</span>
+</span><span data-line="26"><span class="p">}));</span>
+</span></pre></div>
+</div>
+</section>
+<section id="using-the-plugin-in-your-own-app">
+<h2>Using the Plugin in Your Own App<a class="headerlink" href="#using-the-plugin-in-your-own-app" title="Link to this heading">¶</a></h2>
+<p>Integrate scribbl-py into your Litestar application:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">litestar</span><span class="w"> </span><span class="kn">import</span> <span class="n">Litestar</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScribblPlugin</span><span class="p">,</span> <span class="n">ScribblConfig</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="n">app</span> <span class="o">=</span> <span class="n">Litestar</span><span class="p">(</span>
+</span><span data-line="5">    <span class="n">plugins</span><span class="o">=</span><span class="p">[</span><span class="n">ScribblPlugin</span><span class="p">(</span><span class="n">ScribblConfig</span><span class="p">())],</span>
+</span><span data-line="6"><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>With custom configuration:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span data-line="2">    <span class="n">ScribblPlugin</span><span class="p">,</span>
+</span><span data-line="3">    <span class="n">ScribblConfig</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">InMemoryStorage</span><span class="p">,</span>
+</span><span data-line="5"><span class="p">)</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="n">config</span> <span class="o">=</span> <span class="n">ScribblConfig</span><span class="p">(</span>
+</span><span data-line="8">    <span class="n">storage</span><span class="o">=</span><span class="n">InMemoryStorage</span><span class="p">(),</span>
+</span><span data-line="9">    <span class="n">api_path</span><span class="o">=</span><span class="s2">&quot;/api/v1&quot;</span><span class="p">,</span>
+</span><span data-line="10">    <span class="n">enable_websocket</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span data-line="11">    <span class="n">enable_game</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span data-line="12"><span class="p">)</span>
+</span><span data-line="13">
+</span><span data-line="14"><span class="n">app</span> <span class="o">=</span> <span class="n">Litestar</span><span class="p">(</span>
+</span><span data-line="15">    <span class="n">plugins</span><span class="o">=</span><span class="p">[</span><span class="n">ScribblPlugin</span><span class="p">(</span><span class="n">config</span><span class="p">)],</span>
+</span><span data-line="16"><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../guides/configuration.html"><span class="doc">Configuration Guide</span></a> - Configure OAuth, telemetry, and more</p></li>
+<li><p><a class="reference internal" href="../guides/development.html"><span class="doc">Development Guide</span></a> - Set up a development environment</p></li>
+<li><p><a class="reference internal" href="../guides/deployment.html"><span class="doc">Deployment Guide</span></a> - Deploy to production</p></li>
+<li><p><a class="reference internal" href="../api/index.html"><span class="doc">API Reference</span></a> - Complete API reference</p></li>
+</ul>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="installation.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Installation</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="../guides/index.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Guides</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2025, Jacob Coffee</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=30646c52"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../_static/shibuya.js?v=c1cf1a6b"></script></body>
+</html>

@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="cyan" data-content_root="./">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Skribbl Mode Game Models Design - scribbl-py</title><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="_static/shibuya.css?v=14737038" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx_paramlinks.css" />
+    <link media="print" rel="stylesheet" type="text/css" href="_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=fc559bc7" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="Skribbl Mode Game Models Design"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="index.html">
+      
+      
+      <strong>scribbl-py</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link">
+          <a href="https://litestar.dev/">
+            <span>Litestar</span></a>
+        </li><li class="link">
+          <a href="https://pypi.org/project/scribbl-py/">
+            <span>PyPI</span></a>
+        </li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Learn</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting-started/installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/index.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/configuration.html">Configuration Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/development.html">Development Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/deployment.html">Deployment Guide</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/plugin.html">Plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/storage.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/services.html">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/realtime.html">Realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/auth.html">Auth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/web.html">Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/game.html">Game</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/JacobCoffee/scribbl-py">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/litestar">Discord</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#model-architecture">Model Architecture</a><ul>
+<li><a class="reference internal" href="#enums">1. Enums</a><ul>
+<li><a class="reference internal" href="#gamestate">GameState</a></li>
+<li><a class="reference internal" href="#gamemode">GameMode</a></li>
+<li><a class="reference internal" href="#playerstate">PlayerState</a></li>
+<li><a class="reference internal" href="#wordcategory">WordCategory</a></li>
+<li><a class="reference internal" href="#chatmessagetype">ChatMessageType</a></li>
+<li><a class="reference internal" href="#guessresult">GuessResult</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#core-models">2. Core Models</a><ul>
+<li><a class="reference internal" href="#player">Player</a></li>
+<li><a class="reference internal" href="#wordbank">WordBank</a></li>
+<li><a class="reference internal" href="#guess">Guess</a></li>
+<li><a class="reference internal" href="#chatmessage">ChatMessage</a></li>
+<li><a class="reference internal" href="#round">Round</a></li>
+<li><a class="reference internal" href="#gamesettings">GameSettings</a></li>
+<li><a class="reference internal" href="#gameroom">GameRoom</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#example-usage">Example Usage</a><ul>
+<li><a class="reference internal" href="#creating-a-game-room">Creating a Game Room</a></li>
+<li><a class="reference internal" href="#adding-players">Adding Players</a></li>
+<li><a class="reference internal" href="#starting-a-game">Starting a Game</a></li>
+<li><a class="reference internal" href="#word-selection-and-round-start">Word Selection and Round Start</a></li>
+<li><a class="reference internal" href="#handling-guesses">Handling Guesses</a></li>
+<li><a class="reference internal" href="#revealing-hints">Revealing Hints</a></li>
+<li><a class="reference internal" href="#ending-a-round">Ending a Round</a></li>
+<li><a class="reference internal" href="#close-guess-hints">Close Guess Hints</a></li>
+<li><a class="reference internal" href="#custom-words">Custom Words</a></li>
+<li><a class="reference internal" href="#drawer-points">Drawer Points</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#integration-points">Integration Points</a><ul>
+<li><a class="reference internal" href="#with-existing-canvas-system">With Existing Canvas System</a></li>
+<li><a class="reference internal" href="#with-websocket-system">With WebSocket System</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#scoring-algorithm">Scoring Algorithm</a></li>
+<li><a class="reference internal" href="#state-machine">State Machine</a></li>
+<li><a class="reference internal" href="#file-locations">File Locations</a></li>
+<li><a class="reference internal" href="#next-steps">Next Steps</a></li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">scribbl-py</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Skribbl Mode Game Models Design</strong>
+        <meta itemprop="position" content="2" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <section id="skribbl-mode-game-models-design">
+<h1>Skribbl Mode Game Models Design<a class="headerlink" href="#skribbl-mode-game-models-design" title="Link to this heading">¶</a></h1>
+<p>This document describes the data models for Phase 9.1 Skribbl Mode game system.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>The game models are located in <code class="docutils literal notranslate"><span class="pre">/Users/coffee/git/public/JacobCoffee/scribbl-py/src/scribbl_py/game/models.py</span></code> and follow the existing codebase patterns using dataclasses with full type annotations.</p>
+</section>
+<section id="model-architecture">
+<h2>Model Architecture<a class="headerlink" href="#model-architecture" title="Link to this heading">¶</a></h2>
+<section id="enums">
+<h3>1. Enums<a class="headerlink" href="#enums" title="Link to this heading">¶</a></h3>
+<section id="gamestate">
+<h4>GameState<a class="headerlink" href="#gamestate" title="Link to this heading">¶</a></h4>
+<p>Represents the state machine for game flow:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LOBBY</span></code> - Waiting for players to join</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WORD_SELECTION</span></code> - Drawer choosing a word</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DRAWING</span></code> - Active round with players guessing</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ROUND_END</span></code> - Round complete, showing results</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GAME_OVER</span></code> - All rounds finished</p></li>
+</ul>
+</section>
+<section id="gamemode">
+<h4>GameMode<a class="headerlink" href="#gamemode" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SKRIBBL</span></code> - Drawing guessing game</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">COLLABORATIVE</span></code> - Free-form whiteboard (future)</p></li>
+</ul>
+</section>
+<section id="playerstate">
+<h4>PlayerState<a class="headerlink" href="#playerstate" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CONNECTED</span></code> - Active player</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DISCONNECTED</span></code> - Temporarily disconnected</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LEFT</span></code> - Permanently left</p></li>
+</ul>
+</section>
+<section id="wordcategory">
+<h4>WordCategory<a class="headerlink" href="#wordcategory" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ANIMALS</span></code>, <code class="docutils literal notranslate"><span class="pre">OBJECTS</span></code>, <code class="docutils literal notranslate"><span class="pre">ACTIONS</span></code>, <code class="docutils literal notranslate"><span class="pre">FOOD</span></code>, <code class="docutils literal notranslate"><span class="pre">PLACES</span></code>, <code class="docutils literal notranslate"><span class="pre">PEOPLE</span></code>, <code class="docutils literal notranslate"><span class="pre">NATURE</span></code>, <code class="docutils literal notranslate"><span class="pre">TECHNOLOGY</span></code>, <code class="docutils literal notranslate"><span class="pre">SPORTS</span></code>, <code class="docutils literal notranslate"><span class="pre">ENTERTAINMENT</span></code>, <code class="docutils literal notranslate"><span class="pre">CUSTOM</span></code></p></li>
+</ul>
+</section>
+<section id="chatmessagetype">
+<h4>ChatMessageType<a class="headerlink" href="#chatmessagetype" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GUESS</span></code> - Player guess attempt</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SYSTEM</span></code> - System notifications</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HINT</span></code> - Close guess hints</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CORRECT</span></code> - Correct guess notification</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DRAWER</span></code> - Drawer messages (shown after round)</p></li>
+</ul>
+</section>
+<section id="guessresult">
+<h4>GuessResult<a class="headerlink" href="#guessresult" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CORRECT</span></code> - Exact match</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CLOSE</span></code> - Close to the word (Levenshtein distance)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WRONG</span></code> - Not close</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ALREADY_GUESSED</span></code> - Player already guessed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DRAWER</span></code> - Drawer cannot guess</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">INVALID</span></code> - Invalid guess</p></li>
+</ul>
+</section>
+</section>
+<section id="core-models">
+<h3>2. Core Models<a class="headerlink" href="#core-models" title="Link to this heading">¶</a></h3>
+<section id="player">
+<h4>Player<a class="headerlink" href="#player" title="Link to this heading">¶</a></h4>
+<p>Represents a player in the game room.</p>
+<p><strong>Attributes:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">id:</span> <span class="pre">UUID</span></code> - Unique identifier</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_id:</span> <span class="pre">str</span></code> - User ID from auth system</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_name:</span> <span class="pre">str</span></code> - Display name</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">avatar_url:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span></code> - Avatar image URL</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">score:</span> <span class="pre">int</span></code> - Total score across all rounds</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">is_host:</span> <span class="pre">bool</span></code> - Room host flag</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">connection_state:</span> <span class="pre">PlayerState</span></code> - Connection status</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">has_guessed:</span> <span class="pre">bool</span></code> - Guessed correctly this round</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">guess_time:</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">None</span></code> - Time taken to guess</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">joined_at:</span> <span class="pre">datetime</span></code> - Join timestamp</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">last_seen:</span> <span class="pre">datetime</span></code> - Last activity timestamp</p></li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">reset_round_state()</span></code> - Reset per-round state</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">award_points(points:</span> <span class="pre">int)</span></code> - Add points to score</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mark_active()</span></code> - Update last_seen timestamp</p></li>
+</ul>
+</section>
+<section id="wordbank">
+<h4>WordBank<a class="headerlink" href="#wordbank" title="Link to this heading">¶</a></h4>
+<p>Collection of words organized by category.</p>
+<p><strong>Attributes:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">id:</span> <span class="pre">UUID</span></code> - Unique identifier</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">name:</span> <span class="pre">str</span></code> - Display name</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">category:</span> <span class="pre">WordCategory</span></code> - Category</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">words:</span> <span class="pre">list[str]</span></code> - Available words</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">difficulty:</span> <span class="pre">int</span></code> - Difficulty level (1-5)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">is_default:</span> <span class="pre">bool</span></code> - Built-in flag</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">created_by:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span></code> - Creator user ID</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">created_at:</span> <span class="pre">datetime</span></code> - Creation timestamp</p></li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">get_random_words(count:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">3)</span> <span class="pre">-&gt;</span> <span class="pre">list[str]</span></code> - Get random words for selection</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">add_word(word:</span> <span class="pre">str)</span></code> - Add word to bank</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">remove_word(word:</span> <span class="pre">str)</span></code> - Remove word from bank</p></li>
+</ul>
+</section>
+<section id="guess">
+<h4>Guess<a class="headerlink" href="#guess" title="Link to this heading">¶</a></h4>
+<p>Represents a player’s guess attempt.</p>
+<p><strong>Attributes:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">id:</span> <span class="pre">UUID</span></code> - Unique identifier</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">player_id:</span> <span class="pre">UUID</span></code> - Player who guessed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">player_name:</span> <span class="pre">str</span></code> - Player display name</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">guess_text:</span> <span class="pre">str</span></code> - The guessed word/phrase</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">result:</span> <span class="pre">GuessResult</span></code> - Guess result</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">points_awarded:</span> <span class="pre">int</span></code> - Points awarded</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">time_elapsed:</span> <span class="pre">float</span></code> - Seconds since round start</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timestamp:</span> <span class="pre">datetime</span></code> - Guess timestamp</p></li>
+</ul>
+</section>
+<section id="chatmessage">
+<h4>ChatMessage<a class="headerlink" href="#chatmessage" title="Link to this heading">¶</a></h4>
+<p>Chat message for guessing and communication.</p>
+<p><strong>Attributes:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">id:</span> <span class="pre">UUID</span></code> - Unique identifier</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">message_type:</span> <span class="pre">ChatMessageType</span></code> - Message type</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sender_id:</span> <span class="pre">UUID</span> <span class="pre">|</span> <span class="pre">None</span></code> - Sender player ID</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sender_name:</span> <span class="pre">str</span></code> - Sender display name</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">content:</span> <span class="pre">str</span></code> - Message text</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metadata:</span> <span class="pre">dict[str,</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">bool]</span> <span class="pre">|</span> <span class="pre">None</span></code> - Additional data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timestamp:</span> <span class="pre">datetime</span></code> - Message timestamp</p></li>
+</ul>
+<p><strong>Class Methods:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">system(content:</span> <span class="pre">str,</span> <span class="pre">**metadata)</span> <span class="pre">-&gt;</span> <span class="pre">ChatMessage</span></code> - Create system message</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hint(player_name:</span> <span class="pre">str,</span> <span class="pre">**metadata)</span> <span class="pre">-&gt;</span> <span class="pre">ChatMessage</span></code> - Create hint message</p></li>
+</ul>
+</section>
+<section id="round">
+<h4>Round<a class="headerlink" href="#round" title="Link to this heading">¶</a></h4>
+<p>Represents a single game round.</p>
+<p><strong>Attributes:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">id:</span> <span class="pre">UUID</span></code> - Unique identifier</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">round_number:</span> <span class="pre">int</span></code> - Sequential round number (1-indexed)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">drawer_id:</span> <span class="pre">UUID</span></code> - Player drawing this round</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">word:</span> <span class="pre">str</span></code> - The word being drawn (hidden)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">word_hint:</span> <span class="pre">str</span></code> - Partially revealed word</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">word_options:</span> <span class="pre">list[str]</span></code> - Three word choices</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">canvas_id:</span> <span class="pre">UUID</span></code> - Canvas for this round</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start_time:</span> <span class="pre">datetime</span> <span class="pre">|</span> <span class="pre">None</span></code> - Round start time</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">end_time:</span> <span class="pre">datetime</span> <span class="pre">|</span> <span class="pre">None</span></code> - Round end time</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">duration_seconds:</span> <span class="pre">int</span></code> - Total round duration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">guesses:</span> <span class="pre">list[Guess]</span></code> - All guess attempts</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chat_messages:</span> <span class="pre">list[ChatMessage]</span></code> - Round chat messages</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scores:</span> <span class="pre">dict[str,</span> <span class="pre">int]</span></code> - Player scores this round</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">is_active:</span> <span class="pre">bool</span></code> - Active round flag</p></li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">start(word:</span> <span class="pre">str)</span></code> - Start round with selected word</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">end()</span></code> - End the round</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">add_guess(guess:</span> <span class="pre">Guess)</span></code> - Add guess attempt</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">add_chat_message(message:</span> <span class="pre">ChatMessage)</span></code> - Add chat message</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">calculate_points(time_elapsed:</span> <span class="pre">float,</span> <span class="pre">max_points:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1000)</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> - Calculate points based on time</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reveal_hint(reveal_count:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1)</span> <span class="pre">-&gt;</span> <span class="pre">str</span></code> - Reveal letters in hint</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">is_expired()</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code> - Check if time expired</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">time_remaining()</span> <span class="pre">-&gt;</span> <span class="pre">float</span></code> - Get remaining seconds</p></li>
+</ul>
+</section>
+<section id="gamesettings">
+<h4>GameSettings<a class="headerlink" href="#gamesettings" title="Link to this heading">¶</a></h4>
+<p>Configurable game settings.</p>
+<p><strong>Attributes:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">id:</span> <span class="pre">UUID</span></code> - Unique identifier</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">round_duration_seconds:</span> <span class="pre">int</span></code> - Time limit per round (60-120)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rounds_per_game:</span> <span class="pre">int</span></code> - Total rounds</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_players:</span> <span class="pre">int</span></code> - Max players (2-12)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">word_bank_ids:</span> <span class="pre">list[UUID]</span></code> - Word banks to use</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">allow_custom_words:</span> <span class="pre">bool</span></code> - Custom words allowed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">custom_words:</span> <span class="pre">list[str]</span></code> - Custom word list</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hints_enabled:</span> <span class="pre">bool</span></code> - Show hints during rounds</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hint_intervals:</span> <span class="pre">list[int]</span></code> - Seconds when to show hints</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">drawer_points_multiplier:</span> <span class="pre">float</span></code> - Drawer points multiplier</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">close_guess_threshold:</span> <span class="pre">int</span></code> - Max edit distance for “close”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">require_exact_match:</span> <span class="pre">bool</span></code> - Exact spelling required</p></li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">add_custom_word(word:</span> <span class="pre">str)</span></code> - Add custom word</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">remove_custom_word(word:</span> <span class="pre">str)</span></code> - Remove custom word</p></li>
+</ul>
+</section>
+<section id="gameroom">
+<h4>GameRoom<a class="headerlink" href="#gameroom" title="Link to this heading">¶</a></h4>
+<p>Game lobby/room for Skribbl mode.</p>
+<p><strong>Attributes:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">id:</span> <span class="pre">UUID</span></code> - Unique identifier</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">room_code:</span> <span class="pre">str</span></code> - Short join code (e.g., “ABCD1234”)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">name:</span> <span class="pre">str</span></code> - Display name</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">game_mode:</span> <span class="pre">GameMode</span></code> - Game mode type</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">game_state:</span> <span class="pre">GameState</span></code> - Current state</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">settings:</span> <span class="pre">GameSettings</span></code> - Game settings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">host_id:</span> <span class="pre">UUID</span> <span class="pre">|</span> <span class="pre">None</span></code> - Host player ID</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">players:</span> <span class="pre">list[Player]</span></code> - All players</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">current_round:</span> <span class="pre">Round</span> <span class="pre">|</span> <span class="pre">None</span></code> - Active round</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">round_history:</span> <span class="pre">list[Round]</span></code> - Completed rounds</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">current_round_number:</span> <span class="pre">int</span></code> - Current round index</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">canvas_id:</span> <span class="pre">UUID</span> <span class="pre">|</span> <span class="pre">None</span></code> - Active canvas ID</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">created_at:</span> <span class="pre">datetime</span></code> - Creation timestamp</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">started_at:</span> <span class="pre">datetime</span> <span class="pre">|</span> <span class="pre">None</span></code> - Game start time</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ended_at:</span> <span class="pre">datetime</span> <span class="pre">|</span> <span class="pre">None</span></code> - Game end time</p></li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">add_player(player:</span> <span class="pre">Player)</span></code> - Add player to room</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">remove_player(player_id:</span> <span class="pre">UUID)</span></code> - Remove player</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_player(player_id:</span> <span class="pre">UUID)</span> <span class="pre">-&gt;</span> <span class="pre">Player</span> <span class="pre">|</span> <span class="pre">None</span></code> - Get player by ID</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">active_players()</span> <span class="pre">-&gt;</span> <span class="pre">list[Player]</span></code> - Get connected players</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start_game()</span></code> - Start game from lobby</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">next_round()</span> <span class="pre">-&gt;</span> <span class="pre">Round</span></code> - Create next round</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">end_round()</span></code> - End current round</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_leaderboard()</span> <span class="pre">-&gt;</span> <span class="pre">list[tuple[Player,</span> <span class="pre">int]]</span></code> - Get sorted leaderboard</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">is_game_over()</span> <span class="pre">-&gt;</span> <span class="pre">bool</span></code> - Check if game finished</p></li>
+</ul>
+<p><strong>Post Init:</strong></p>
+<ul class="simple">
+<li><p>Automatically generates 6-character alphanumeric room code if not provided</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="example-usage">
+<h2>Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading">¶</a></h2>
+<section id="creating-a-game-room">
+<h3>Creating a Game Room<a class="headerlink" href="#creating-a-game-room" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.game</span><span class="w"> </span><span class="kn">import</span> <span class="n">GameRoom</span><span class="p">,</span> <span class="n">GameSettings</span><span class="p">,</span> <span class="n">Player</span><span class="p">,</span> <span class="n">WordBank</span><span class="p">,</span> <span class="n">WordCategory</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="c1"># Create game settings</span>
+</span><span data-line="4"><span class="n">settings</span> <span class="o">=</span> <span class="n">GameSettings</span><span class="p">(</span>
+</span><span data-line="5">    <span class="n">round_duration_seconds</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+</span><span data-line="6">    <span class="n">rounds_per_game</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+</span><span data-line="7">    <span class="n">max_players</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+</span><span data-line="8">    <span class="n">hints_enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span data-line="9"><span class="p">)</span>
+</span><span data-line="10">
+</span><span data-line="11"><span class="c1"># Create game room (auto-generates room code)</span>
+</span><span data-line="12"><span class="n">room</span> <span class="o">=</span> <span class="n">GameRoom</span><span class="p">(</span>
+</span><span data-line="13">    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Epic Drawing Game&quot;</span><span class="p">,</span>
+</span><span data-line="14">    <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span>
+</span><span data-line="15"><span class="p">)</span>
+</span><span data-line="16">
+</span><span data-line="17"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Room code: </span><span class="si">{</span><span class="n">room</span><span class="o">.</span><span class="n">room_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># e.g., &quot;A3X7K9&quot;</span>
+</span></pre></div>
+</div>
+</section>
+<section id="adding-players">
+<h3>Adding Players<a class="headerlink" href="#adding-players" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Create host player</span>
+</span><span data-line="2"><span class="n">host</span> <span class="o">=</span> <span class="n">Player</span><span class="p">(</span>
+</span><span data-line="3">    <span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;user123&quot;</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">user_name</span><span class="o">=</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span>
+</span><span data-line="5">    <span class="n">is_host</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span data-line="6"><span class="p">)</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="n">room</span><span class="o">.</span><span class="n">add_player</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+</span><span data-line="9">
+</span><span data-line="10"><span class="c1"># Add more players</span>
+</span><span data-line="11"><span class="n">player2</span> <span class="o">=</span> <span class="n">Player</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;user456&quot;</span><span class="p">,</span> <span class="n">user_name</span><span class="o">=</span><span class="s2">&quot;Bob&quot;</span><span class="p">)</span>
+</span><span data-line="12"><span class="n">player3</span> <span class="o">=</span> <span class="n">Player</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;user789&quot;</span><span class="p">,</span> <span class="n">user_name</span><span class="o">=</span><span class="s2">&quot;Charlie&quot;</span><span class="p">)</span>
+</span><span data-line="13">
+</span><span data-line="14"><span class="n">room</span><span class="o">.</span><span class="n">add_player</span><span class="p">(</span><span class="n">player2</span><span class="p">)</span>
+</span><span data-line="15"><span class="n">room</span><span class="o">.</span><span class="n">add_player</span><span class="p">(</span><span class="n">player3</span><span class="p">)</span>
+</span><span data-line="16">
+</span><span data-line="17"><span class="c1"># Check active players</span>
+</span><span data-line="18"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Players: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">room</span><span class="o">.</span><span class="n">active_players</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># 3</span>
+</span></pre></div>
+</div>
+</section>
+<section id="starting-a-game">
+<h3>Starting a Game<a class="headerlink" href="#starting-a-game" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Start the game</span>
+</span><span data-line="2"><span class="n">room</span><span class="o">.</span><span class="n">start_game</span><span class="p">()</span>
+</span><span data-line="3"><span class="nb">print</span><span class="p">(</span><span class="n">room</span><span class="o">.</span><span class="n">game_state</span><span class="p">)</span>  <span class="c1"># GameState.WORD_SELECTION</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="c1"># Create next round</span>
+</span><span data-line="6"><span class="n">current_round</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">next_round</span><span class="p">()</span>
+</span><span data-line="7"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Round </span><span class="si">{</span><span class="n">current_round</span><span class="o">.</span><span class="n">round_number</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span data-line="8"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Drawer: </span><span class="si">{</span><span class="n">room</span><span class="o">.</span><span class="n">get_player</span><span class="p">(</span><span class="n">current_round</span><span class="o">.</span><span class="n">drawer_id</span><span class="p">)</span><span class="o">.</span><span class="n">user_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="word-selection-and-round-start">
+<h3>Word Selection and Round Start<a class="headerlink" href="#word-selection-and-round-start" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Create word bank</span>
+</span><span data-line="2"><span class="n">word_bank</span> <span class="o">=</span> <span class="n">WordBank</span><span class="p">(</span>
+</span><span data-line="3">    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Animals&quot;</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">category</span><span class="o">=</span><span class="n">WordCategory</span><span class="o">.</span><span class="n">ANIMALS</span><span class="p">,</span>
+</span><span data-line="5">    <span class="n">words</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;dog&quot;</span><span class="p">,</span> <span class="s2">&quot;elephant&quot;</span><span class="p">,</span> <span class="s2">&quot;giraffe&quot;</span><span class="p">,</span> <span class="s2">&quot;penguin&quot;</span><span class="p">],</span>
+</span><span data-line="6"><span class="p">)</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="c1"># Get word options for drawer</span>
+</span><span data-line="9"><span class="n">word_options</span> <span class="o">=</span> <span class="n">word_bank</span><span class="o">.</span><span class="n">get_random_words</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</span><span data-line="10"><span class="n">current_round</span><span class="o">.</span><span class="n">word_options</span> <span class="o">=</span> <span class="n">word_options</span>
+</span><span data-line="11">
+</span><span data-line="12"><span class="c1"># Drawer selects word</span>
+</span><span data-line="13"><span class="n">selected_word</span> <span class="o">=</span> <span class="n">word_options</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="14"><span class="n">current_round</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">selected_word</span><span class="p">)</span>
+</span><span data-line="15">
+</span><span data-line="16"><span class="n">room</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">DRAWING</span>
+</span><span data-line="17"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Word: </span><span class="si">{</span><span class="n">current_round</span><span class="o">.</span><span class="n">word</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Hidden from guessers</span>
+</span><span data-line="18"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hint: </span><span class="si">{</span><span class="n">current_round</span><span class="o">.</span><span class="n">word_hint</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># &quot;_ _ _ &quot;</span>
+</span><span data-line="19"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time remaining: </span><span class="si">{</span><span class="n">current_round</span><span class="o">.</span><span class="n">time_remaining</span><span class="p">()</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="handling-guesses">
+<h3>Handling Guesses<a class="headerlink" href="#handling-guesses" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.game</span><span class="w"> </span><span class="kn">import</span> <span class="n">Guess</span><span class="p">,</span> <span class="n">GuessResult</span><span class="p">,</span> <span class="n">ChatMessage</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="c1"># Player makes a guess</span>
+</span><span data-line="4"><span class="n">time_elapsed</span> <span class="o">=</span> <span class="mf">5.2</span>  <span class="c1"># seconds since round start</span>
+</span><span data-line="5"><span class="n">guess_text</span> <span class="o">=</span> <span class="s2">&quot;cat&quot;</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="c1"># Calculate points</span>
+</span><span data-line="8"><span class="n">is_correct</span> <span class="o">=</span> <span class="n">guess_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">current_round</span><span class="o">.</span><span class="n">word</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+</span><span data-line="9"><span class="n">points</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="10">
+</span><span data-line="11"><span class="k">if</span> <span class="n">is_correct</span><span class="p">:</span>
+</span><span data-line="12">    <span class="n">points</span> <span class="o">=</span> <span class="n">current_round</span><span class="o">.</span><span class="n">calculate_points</span><span class="p">(</span><span class="n">time_elapsed</span><span class="p">)</span>
+</span><span data-line="13">    <span class="n">result</span> <span class="o">=</span> <span class="n">GuessResult</span><span class="o">.</span><span class="n">CORRECT</span>
+</span><span data-line="14">
+</span><span data-line="15">    <span class="c1"># Update player</span>
+</span><span data-line="16">    <span class="n">player2</span><span class="o">.</span><span class="n">has_guessed</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="17">    <span class="n">player2</span><span class="o">.</span><span class="n">guess_time</span> <span class="o">=</span> <span class="n">time_elapsed</span>
+</span><span data-line="18">    <span class="n">player2</span><span class="o">.</span><span class="n">award_points</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+</span><span data-line="19"><span class="k">else</span><span class="p">:</span>
+</span><span data-line="20">    <span class="n">result</span> <span class="o">=</span> <span class="n">GuessResult</span><span class="o">.</span><span class="n">WRONG</span>
+</span><span data-line="21">
+</span><span data-line="22"><span class="c1"># Record guess</span>
+</span><span data-line="23"><span class="n">guess</span> <span class="o">=</span> <span class="n">Guess</span><span class="p">(</span>
+</span><span data-line="24">    <span class="n">player_id</span><span class="o">=</span><span class="n">player2</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span data-line="25">    <span class="n">player_name</span><span class="o">=</span><span class="n">player2</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="26">    <span class="n">guess_text</span><span class="o">=</span><span class="n">guess_text</span><span class="p">,</span>
+</span><span data-line="27">    <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span>
+</span><span data-line="28">    <span class="n">points_awarded</span><span class="o">=</span><span class="n">points</span><span class="p">,</span>
+</span><span data-line="29">    <span class="n">time_elapsed</span><span class="o">=</span><span class="n">time_elapsed</span><span class="p">,</span>
+</span><span data-line="30"><span class="p">)</span>
+</span><span data-line="31"><span class="n">current_round</span><span class="o">.</span><span class="n">add_guess</span><span class="p">(</span><span class="n">guess</span><span class="p">)</span>
+</span><span data-line="32">
+</span><span data-line="33"><span class="c1"># Add chat message</span>
+</span><span data-line="34"><span class="k">if</span> <span class="n">is_correct</span><span class="p">:</span>
+</span><span data-line="35">    <span class="n">msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span>
+</span><span data-line="36">        <span class="n">message_type</span><span class="o">=</span><span class="n">ChatMessageType</span><span class="o">.</span><span class="n">CORRECT</span><span class="p">,</span>
+</span><span data-line="37">        <span class="n">sender_id</span><span class="o">=</span><span class="n">player2</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span data-line="38">        <span class="n">sender_name</span><span class="o">=</span><span class="n">player2</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="39">        <span class="n">content</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">player2</span><span class="o">.</span><span class="n">user_name</span><span class="si">}</span><span class="s2"> guessed correctly! (+</span><span class="si">{</span><span class="n">points</span><span class="si">}</span><span class="s2"> points)&quot;</span><span class="p">,</span>
+</span><span data-line="40">        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;points&quot;</span><span class="p">:</span> <span class="n">points</span><span class="p">},</span>
+</span><span data-line="41">    <span class="p">)</span>
+</span><span data-line="42"><span class="k">else</span><span class="p">:</span>
+</span><span data-line="43">    <span class="n">msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span>
+</span><span data-line="44">        <span class="n">message_type</span><span class="o">=</span><span class="n">ChatMessageType</span><span class="o">.</span><span class="n">GUESS</span><span class="p">,</span>
+</span><span data-line="45">        <span class="n">sender_id</span><span class="o">=</span><span class="n">player2</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span data-line="46">        <span class="n">sender_name</span><span class="o">=</span><span class="n">player2</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="47">        <span class="n">content</span><span class="o">=</span><span class="n">guess_text</span><span class="p">,</span>
+</span><span data-line="48">    <span class="p">)</span>
+</span><span data-line="49">
+</span><span data-line="50"><span class="n">current_round</span><span class="o">.</span><span class="n">add_chat_message</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="revealing-hints">
+<h3>Revealing Hints<a class="headerlink" href="#revealing-hints" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Reveal 1 letter</span>
+</span><span data-line="2"><span class="n">current_round</span><span class="o">.</span><span class="n">reveal_hint</span><span class="p">(</span><span class="n">reveal_count</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="3"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updated hint: </span><span class="si">{</span><span class="n">current_round</span><span class="o">.</span><span class="n">word_hint</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># &quot;c _ _ &quot;</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="c1"># System message for hint</span>
+</span><span data-line="6"><span class="n">hint_msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="o">.</span><span class="n">system</span><span class="p">(</span>
+</span><span data-line="7">    <span class="sa">f</span><span class="s2">&quot;Hint: </span><span class="si">{</span><span class="n">current_round</span><span class="o">.</span><span class="n">word_hint</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span data-line="8">    <span class="n">hint_type</span><span class="o">=</span><span class="s2">&quot;letter_reveal&quot;</span><span class="p">,</span>
+</span><span data-line="9"><span class="p">)</span>
+</span><span data-line="10"><span class="n">current_round</span><span class="o">.</span><span class="n">add_chat_message</span><span class="p">(</span><span class="n">hint_msg</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="ending-a-round">
+<h3>Ending a Round<a class="headerlink" href="#ending-a-round" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># End the round</span>
+</span><span data-line="2"><span class="n">current_round</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+</span><span data-line="3"><span class="n">room</span><span class="o">.</span><span class="n">end_round</span><span class="p">()</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="n">room</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">ROUND_END</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="c1"># Get leaderboard</span>
+</span><span data-line="8"><span class="n">leaderboard</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">get_leaderboard</span><span class="p">()</span>
+</span><span data-line="9"><span class="k">for</span> <span class="n">player</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">leaderboard</span><span class="p">:</span>
+</span><span data-line="10">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">player</span><span class="o">.</span><span class="n">user_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">score</span><span class="si">}</span><span class="s2"> points&quot;</span><span class="p">)</span>
+</span><span data-line="11">
+</span><span data-line="12"><span class="c1"># Check if game over</span>
+</span><span data-line="13"><span class="k">if</span> <span class="n">room</span><span class="o">.</span><span class="n">is_game_over</span><span class="p">():</span>
+</span><span data-line="14">    <span class="n">room</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">GAME_OVER</span>
+</span><span data-line="15">    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Game finished!&quot;</span><span class="p">)</span>
+</span><span data-line="16"><span class="k">else</span><span class="p">:</span>
+</span><span data-line="17">    <span class="c1"># Start next round</span>
+</span><span data-line="18">    <span class="n">room</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">WORD_SELECTION</span>
+</span><span data-line="19">    <span class="n">next_round</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">next_round</span><span class="p">()</span>
+</span></pre></div>
+</div>
+</section>
+<section id="close-guess-hints">
+<h3>Close Guess Hints<a class="headerlink" href="#close-guess-hints" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">Levenshtein</span><span class="w"> </span><span class="kn">import</span> <span class="n">distance</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="c1"># Check if guess is close</span>
+</span><span data-line="4"><span class="k">def</span><span class="w"> </span><span class="nf">is_close_guess</span><span class="p">(</span><span class="n">guess</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="5">    <span class="k">return</span> <span class="n">distance</span><span class="p">(</span><span class="n">guess</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">word</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="o">&lt;=</span> <span class="n">threshold</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="c1"># Player guesses &quot;cta&quot; (close to &quot;cat&quot;)</span>
+</span><span data-line="8"><span class="n">guess_text</span> <span class="o">=</span> <span class="s2">&quot;cta&quot;</span>
+</span><span data-line="9"><span class="n">time_elapsed</span> <span class="o">=</span> <span class="mf">8.5</span>
+</span><span data-line="10">
+</span><span data-line="11"><span class="k">if</span> <span class="n">is_close_guess</span><span class="p">(</span><span class="n">guess_text</span><span class="p">,</span> <span class="n">current_round</span><span class="o">.</span><span class="n">word</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+</span><span data-line="12">    <span class="c1"># Send hint</span>
+</span><span data-line="13">    <span class="n">hint_msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="o">.</span><span class="n">hint</span><span class="p">(</span>
+</span><span data-line="14">        <span class="n">player_name</span><span class="o">=</span><span class="n">player3</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="15">        <span class="n">guess_text</span><span class="o">=</span><span class="n">guess_text</span><span class="p">,</span>
+</span><span data-line="16">    <span class="p">)</span>
+</span><span data-line="17">    <span class="n">current_round</span><span class="o">.</span><span class="n">add_chat_message</span><span class="p">(</span><span class="n">hint_msg</span><span class="p">)</span>
+</span><span data-line="18">
+</span><span data-line="19">    <span class="n">guess</span> <span class="o">=</span> <span class="n">Guess</span><span class="p">(</span>
+</span><span data-line="20">        <span class="n">player_id</span><span class="o">=</span><span class="n">player3</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span data-line="21">        <span class="n">player_name</span><span class="o">=</span><span class="n">player3</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="22">        <span class="n">guess_text</span><span class="o">=</span><span class="n">guess_text</span><span class="p">,</span>
+</span><span data-line="23">        <span class="n">result</span><span class="o">=</span><span class="n">GuessResult</span><span class="o">.</span><span class="n">CLOSE</span><span class="p">,</span>
+</span><span data-line="24">        <span class="n">points_awarded</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+</span><span data-line="25">        <span class="n">time_elapsed</span><span class="o">=</span><span class="n">time_elapsed</span><span class="p">,</span>
+</span><span data-line="26">    <span class="p">)</span>
+</span><span data-line="27">    <span class="n">current_round</span><span class="o">.</span><span class="n">add_guess</span><span class="p">(</span><span class="n">guess</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="custom-words">
+<h3>Custom Words<a class="headerlink" href="#custom-words" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Add custom words to settings</span>
+</span><span data-line="2"><span class="n">room</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">add_custom_word</span><span class="p">(</span><span class="s2">&quot;skateboard&quot;</span><span class="p">)</span>
+</span><span data-line="3"><span class="n">room</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">add_custom_word</span><span class="p">(</span><span class="s2">&quot;headphones&quot;</span><span class="p">)</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="c1"># Create custom word bank</span>
+</span><span data-line="6"><span class="n">custom_bank</span> <span class="o">=</span> <span class="n">WordBank</span><span class="p">(</span>
+</span><span data-line="7">    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;My Words&quot;</span><span class="p">,</span>
+</span><span data-line="8">    <span class="n">category</span><span class="o">=</span><span class="n">WordCategory</span><span class="o">.</span><span class="n">CUSTOM</span><span class="p">,</span>
+</span><span data-line="9">    <span class="n">words</span><span class="o">=</span><span class="n">room</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">custom_words</span><span class="p">,</span>
+</span><span data-line="10">    <span class="n">is_default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span data-line="11">    <span class="n">created_by</span><span class="o">=</span><span class="n">host</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span>
+</span><span data-line="12"><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="drawer-points">
+<h3>Drawer Points<a class="headerlink" href="#drawer-points" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># At round end, award drawer points based on guesser scores</span>
+</span><span data-line="2"><span class="n">drawer</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">get_player</span><span class="p">(</span><span class="n">current_round</span><span class="o">.</span><span class="n">drawer_id</span><span class="p">)</span>
+</span><span data-line="3"><span class="n">total_guesser_points</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">points_awarded</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">current_round</span><span class="o">.</span><span class="n">guesses</span><span class="p">)</span>
+</span><span data-line="4"><span class="n">drawer_points</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">total_guesser_points</span> <span class="o">*</span> <span class="n">room</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">drawer_points_multiplier</span><span class="p">)</span>
+</span><span data-line="5">
+</span><span data-line="6"><span class="n">drawer</span><span class="o">.</span><span class="n">award_points</span><span class="p">(</span><span class="n">drawer_points</span><span class="p">)</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="n">current_round</span><span class="o">.</span><span class="n">scores</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">drawer</span><span class="o">.</span><span class="n">id</span><span class="p">)]</span> <span class="o">=</span> <span class="n">drawer_points</span>
+</span></pre></div>
+</div>
+</section>
+</section>
+<section id="integration-points">
+<h2>Integration Points<a class="headerlink" href="#integration-points" title="Link to this heading">¶</a></h2>
+<section id="with-existing-canvas-system">
+<h3>With Existing Canvas System<a class="headerlink" href="#with-existing-canvas-system" title="Link to this heading">¶</a></h3>
+<p>Each round creates a new canvas for drawing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Canvas</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="c1"># When starting a round</span>
+</span><span data-line="4"><span class="n">canvas</span> <span class="o">=</span> <span class="n">Canvas</span><span class="p">(</span>
+</span><span data-line="5">    <span class="nb">id</span><span class="o">=</span><span class="n">current_round</span><span class="o">.</span><span class="n">canvas_id</span><span class="p">,</span>
+</span><span data-line="6">    <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Round </span><span class="si">{</span><span class="n">current_round</span><span class="o">.</span><span class="n">round_number</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">current_round</span><span class="o">.</span><span class="n">word</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span data-line="7"><span class="p">)</span>
+</span><span data-line="8">
+</span><span data-line="9"><span class="c1"># Only drawer can draw, guessers see read-only view</span>
+</span></pre></div>
+</div>
+</section>
+<section id="with-websocket-system">
+<h3>With WebSocket System<a class="headerlink" href="#with-websocket-system" title="Link to this heading">¶</a></h3>
+<p>Game events can be broadcast via existing WebSocket infrastructure:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.realtime.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">MessageType</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="c1"># Broadcast game state changes</span>
+</span><span data-line="4"><span class="k">await</span> <span class="n">connection_manager</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span>
+</span><span data-line="5">    <span class="n">room_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">room</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+</span><span data-line="6">    <span class="n">message</span><span class="o">=</span><span class="p">{</span>
+</span><span data-line="7">        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;game_state_changed&quot;</span><span class="p">,</span>
+</span><span data-line="8">        <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="n">room</span><span class="o">.</span><span class="n">game_state</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+</span><span data-line="9">        <span class="s2">&quot;round_number&quot;</span><span class="p">:</span> <span class="n">room</span><span class="o">.</span><span class="n">current_round_number</span><span class="p">,</span>
+</span><span data-line="10">    <span class="p">}</span>
+</span><span data-line="11"><span class="p">)</span>
+</span><span data-line="12">
+</span><span data-line="13"><span class="c1"># Broadcast guess results</span>
+</span><span data-line="14"><span class="k">await</span> <span class="n">connection_manager</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span>
+</span><span data-line="15">    <span class="n">room_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">room</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+</span><span data-line="16">    <span class="n">message</span><span class="o">=</span><span class="p">{</span>
+</span><span data-line="17">        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;player_guessed&quot;</span><span class="p">,</span>
+</span><span data-line="18">        <span class="s2">&quot;player_name&quot;</span><span class="p">:</span> <span class="n">player</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="19">        <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">guess</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+</span><span data-line="20">        <span class="s2">&quot;points&quot;</span><span class="p">:</span> <span class="n">guess</span><span class="o">.</span><span class="n">points_awarded</span><span class="p">,</span>
+</span><span data-line="21">    <span class="p">}</span>
+</span><span data-line="22"><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+</section>
+<section id="scoring-algorithm">
+<h2>Scoring Algorithm<a class="headerlink" href="#scoring-algorithm" title="Link to this heading">¶</a></h2>
+<p>Points are calculated using exponential decay:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">points</span> <span class="o">=</span> <span class="n">max_points</span> <span class="o">*</span> <span class="n">e</span><span class="o">^</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">time_elapsed</span> <span class="o">/</span> <span class="n">duration</span><span class="p">))</span>
+</span><span data-line="2"><span class="n">minimum</span> <span class="o">=</span> <span class="mi">100</span> <span class="n">points</span> <span class="k">for</span> <span class="n">correct</span> <span class="n">guess</span>
+</span></pre></div>
+</div>
+<p>Examples:</p>
+<ul class="simple">
+<li><p>Instant guess (0s): 1000 points</p></li>
+<li><p>10s (1/8 duration): ~779 points</p></li>
+<li><p>20s (1/4 duration): ~607 points</p></li>
+<li><p>40s (1/2 duration): ~368 points</p></li>
+<li><p>60s (3/4 duration): ~223 points</p></li>
+<li><p>80s (full duration): ~135 points (clamped to 100)</p></li>
+</ul>
+</section>
+<section id="state-machine">
+<h2>State Machine<a class="headerlink" href="#state-machine" title="Link to this heading">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1">LOBBY
+</span><span data-line="2">  ├─&gt; [start_game()] -&gt; WORD_SELECTION
+</span><span data-line="3">
+</span><span data-line="4">WORD_SELECTION
+</span><span data-line="5">  ├─&gt; [drawer selects word] -&gt; DRAWING
+</span><span data-line="6">
+</span><span data-line="7">DRAWING
+</span><span data-line="8">  ├─&gt; [time expires or all guessed] -&gt; ROUND_END
+</span><span data-line="9">
+</span><span data-line="10">ROUND_END
+</span><span data-line="11">  ├─&gt; [is_game_over() = False] -&gt; WORD_SELECTION (next round)
+</span><span data-line="12">  └─&gt; [is_game_over() = True] -&gt; GAME_OVER
+</span><span data-line="13">
+</span><span data-line="14">GAME_OVER
+</span><span data-line="15">  └─&gt; [final scores displayed]
+</span></pre></div>
+</div>
+</section>
+<section id="file-locations">
+<h2>File Locations<a class="headerlink" href="#file-locations" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Models: <code class="docutils literal notranslate"><span class="pre">/Users/coffee/git/public/JacobCoffee/scribbl-py/src/scribbl_py/game/models.py</span></code></p></li>
+<li><p>Package Init: <code class="docutils literal notranslate"><span class="pre">/Users/coffee/git/public/JacobCoffee/scribbl-py/src/scribbl_py/game/__init__.py</span></code></p></li>
+</ul>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">¶</a></h2>
+<p>To implement Phase 9.1 Skribbl Mode:</p>
+<ol class="arabic simple">
+<li><p><strong>Create game service</strong> (<code class="docutils literal notranslate"><span class="pre">src/scribbl_py/services/game.py</span></code>)</p>
+<ul class="simple">
+<li><p>Game room management</p></li>
+<li><p>Player join/leave handling</p></li>
+<li><p>Round progression logic</p></li>
+<li><p>Guess evaluation with Levenshtein distance</p></li>
+<li><p>Word bank loading</p></li>
+</ul>
+</li>
+<li><p><strong>Create WebSocket handlers</strong> (<code class="docutils literal notranslate"><span class="pre">src/scribbl_py/realtime/game_handler.py</span></code>)</p>
+<ul class="simple">
+<li><p>Game state synchronization</p></li>
+<li><p>Real-time guess broadcasts</p></li>
+<li><p>Chat message distribution</p></li>
+<li><p>Hint reveals</p></li>
+<li><p>Timer synchronization</p></li>
+</ul>
+</li>
+<li><p><strong>Create REST API endpoints</strong> (<code class="docutils literal notranslate"><span class="pre">src/scribbl_py/web/game_controllers.py</span></code>)</p>
+<ul class="simple">
+<li><p>Create/join/leave game rooms</p></li>
+<li><p>Get room state</p></li>
+<li><p>Update settings</p></li>
+<li><p>Manage word banks</p></li>
+</ul>
+</li>
+<li><p><strong>Create frontend components</strong> (<code class="docutils literal notranslate"><span class="pre">frontend/src/game/</span></code>)</p>
+<ul class="simple">
+<li><p>Lobby UI</p></li>
+<li><p>Word selection modal</p></li>
+<li><p>Game board with canvas + chat</p></li>
+<li><p>Round end overlay</p></li>
+<li><p>Scoreboard</p></li>
+</ul>
+</li>
+<li><p><strong>Database persistence</strong> (optional)</p>
+<ul class="simple">
+<li><p>Game room storage</p></li>
+<li><p>Word bank management</p></li>
+<li><p>Game history</p></li>
+<li><p>Statistics</p></li>
+</ul>
+</li>
+<li><p><strong>Default word banks</strong></p>
+<ul class="simple">
+<li><p>Create JSON files with categorized words</p></li>
+<li><p>Seed database with default banks</p></li>
+<li><p>Word difficulty ratings</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2025, Jacob Coffee</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=30646c52"></script>
+      <script src="_static/design-tabs.js?v=f930bc37"></script>
+      <script src="_static/shibuya.js?v=c1cf1a6b"></script></body>
+</html>

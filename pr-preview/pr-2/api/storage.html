@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="cyan" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Storage - scribbl-py</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Services" href="services.html" /><link rel="prev" title="Core" href="core.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=14737038" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_paramlinks.css" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=fc559bc7" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="Storage"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      
+      
+      <strong>scribbl-py</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link">
+          <a href="https://litestar.dev/">
+            <span>Litestar</span></a>
+        </li><li class="link">
+          <a href="https://pypi.org/project/scribbl-py/">
+            <span>PyPI</span></a>
+        </li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Learn</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/index.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guides/configuration.html">Configuration Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/development.html">Development Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/deployment.html">Deployment Guide</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plugin.html">Plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="services.html">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="realtime.html">Realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auth.html">Auth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web.html">Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="game.html">Game</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/JacobCoffee/scribbl-py">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/litestar">Discord</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#storageprotocol">StorageProtocol</a><ul>
+<li><a class="reference internal" href="#scribbl_py.StorageProtocol"><code class="docutils literal notranslate"><span class="pre">StorageProtocol</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.StorageProtocol.create_canvas"><code class="docutils literal notranslate">create_canvas()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.StorageProtocol.get_canvas"><code class="docutils literal notranslate">get_canvas()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.StorageProtocol.list_canvases"><code class="docutils literal notranslate">list_canvases()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.StorageProtocol.update_canvas"><code class="docutils literal notranslate">update_canvas()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.StorageProtocol.delete_canvas"><code class="docutils literal notranslate">delete_canvas()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.StorageProtocol.add_element"><code class="docutils literal notranslate">add_element()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.StorageProtocol.get_element"><code class="docutils literal notranslate">get_element()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.StorageProtocol.update_element"><code class="docutils literal notranslate">update_element()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.StorageProtocol.delete_element"><code class="docutils literal notranslate">delete_element()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.StorageProtocol.list_elements"><code class="docutils literal notranslate">list_elements()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.StorageProtocol.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#inmemorystorage">InMemoryStorage</a><ul>
+<li><a class="reference internal" href="#scribbl_py.InMemoryStorage"><code class="docutils literal notranslate"><span class="pre">InMemoryStorage</span></code></a><ul>
+<li><a class="reference internal" href="#scribbl_py.InMemoryStorage.__init__"><code class="docutils literal notranslate">__init__()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.InMemoryStorage.create_canvas"><code class="docutils literal notranslate">create_canvas()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.InMemoryStorage.get_canvas"><code class="docutils literal notranslate">get_canvas()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.InMemoryStorage.list_canvases"><code class="docutils literal notranslate">list_canvases()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.InMemoryStorage.update_canvas"><code class="docutils literal notranslate">update_canvas()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.InMemoryStorage.delete_canvas"><code class="docutils literal notranslate">delete_canvas()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.InMemoryStorage.add_element"><code class="docutils literal notranslate">add_element()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.InMemoryStorage.get_element"><code class="docutils literal notranslate">get_element()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.InMemoryStorage.update_element"><code class="docutils literal notranslate">update_element()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.InMemoryStorage.delete_element"><code class="docutils literal notranslate">delete_element()</span></code></a></li>
+<li><a class="reference internal" href="#scribbl_py.InMemoryStorage.list_elements"><code class="docutils literal notranslate">list_elements()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#database-storage-optional">Database Storage (Optional)</a><ul>
+<li><a class="reference internal" href="#databasestorage">DatabaseStorage</a></li>
+<li><a class="reference internal" href="#sqlalchemy-models">SQLAlchemy Models</a></li>
+</ul>
+</li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">scribbl-py</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">API Reference</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Storage</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <section id="storage">
+<h1>Storage<a class="headerlink" href="#storage" title="Link to this heading">¶</a></h1>
+<p>The storage module provides backends for persisting canvas and element data.</p>
+<section id="storageprotocol">
+<h2>StorageProtocol<a class="headerlink" href="#storageprotocol" title="Link to this heading">¶</a></h2>
+<p>The base protocol that all storage backends must implement:</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.StorageProtocol">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">StorageProtocol</span></span><a class="reference internal" href="../_modules/scribbl_py/storage/base.html#StorageProtocol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.StorageProtocol" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></a></p>
+<p>Protocol defining the storage interface for scribbl-py.</p>
+<p>This protocol defines the contract that all storage backends must implement
+to provide persistence for canvases and elements.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.StorageProtocol.create_canvas">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_canvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/base.html#StorageProtocol.create_canvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.StorageProtocol.create_canvas" title="Link to this definition">¶</a></dt>
+<dd><p>Create a new canvas in storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.StorageProtocol.create_canvas.params.canvas"></span><strong>canvas</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.StorageProtocol.create_canvas.params.canvas">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a></span>) – The canvas to create.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The created canvas with any storage-specific modifications.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>StorageError</strong> – If the canvas cannot be created.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.StorageProtocol.get_canvas">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_canvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/base.html#StorageProtocol.get_canvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.StorageProtocol.get_canvas" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve a canvas by its ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.StorageProtocol.get_canvas.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.StorageProtocol.get_canvas.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The canvas if found, None otherwise.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>StorageError</strong> – If the retrieval operation fails.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.StorageProtocol.list_canvases">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_canvases</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/base.html#StorageProtocol.list_canvases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.StorageProtocol.list_canvases" title="Link to this definition">¶</a></dt>
+<dd><p>List all canvases in storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of all canvases, ordered by creation date (newest first).</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>StorageError</strong> – If the list operation fails.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.StorageProtocol.update_canvas">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_canvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/base.html#StorageProtocol.update_canvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.StorageProtocol.update_canvas" title="Link to this definition">¶</a></dt>
+<dd><p>Update an existing canvas in storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.StorageProtocol.update_canvas.params.canvas"></span><strong>canvas</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.StorageProtocol.update_canvas.params.canvas">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a></span>) – The canvas with updated data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The updated canvas.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p></li>
+<li><p><strong>StorageError</strong> – If the update operation fails.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.StorageProtocol.delete_canvas">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_canvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/base.html#StorageProtocol.delete_canvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.StorageProtocol.delete_canvas" title="Link to this definition">¶</a></dt>
+<dd><p>Delete a canvas from storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.StorageProtocol.delete_canvas.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.StorageProtocol.delete_canvas.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas to delete.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the canvas was deleted, False if it did not exist.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>StorageError</strong> – If the delete operation fails.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.StorageProtocol.add_element">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/base.html#StorageProtocol.add_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.StorageProtocol.add_element" title="Link to this definition">¶</a></dt>
+<dd><p>Add an element to a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.StorageProtocol.add_element.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.StorageProtocol.add_element.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p></li>
+<li><p><span class="target" id="scribbl_py.StorageProtocol.add_element.params.element"></span><strong>element</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.StorageProtocol.add_element.params.element">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></span>) – The element to add.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The added element.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p></li>
+<li><p><strong>StorageError</strong> – If the add operation fails.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.StorageProtocol.get_element">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/base.html#StorageProtocol.get_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.StorageProtocol.get_element" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve an element from a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.StorageProtocol.get_element.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.StorageProtocol.get_element.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p></li>
+<li><p><span class="target" id="scribbl_py.StorageProtocol.get_element.params.element_id"></span><strong>element_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.StorageProtocol.get_element.params.element_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the element.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The element if found, None otherwise.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p></li>
+<li><p><strong>StorageError</strong> – If the retrieval operation fails.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.StorageProtocol.update_element">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/base.html#StorageProtocol.update_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.StorageProtocol.update_element" title="Link to this definition">¶</a></dt>
+<dd><p>Update an element on a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.StorageProtocol.update_element.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.StorageProtocol.update_element.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p></li>
+<li><p><span class="target" id="scribbl_py.StorageProtocol.update_element.params.element"></span><strong>element</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.StorageProtocol.update_element.params.element">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></span>) – The element with updated data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The updated element.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p></li>
+<li><p><a class="reference internal" href="core.html#scribbl_py.exceptions.ElementNotFoundError" title="scribbl_py.exceptions.ElementNotFoundError"><strong>ElementNotFoundError</strong></a> – If the element does not exist.</p></li>
+<li><p><strong>StorageError</strong> – If the update operation fails.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.StorageProtocol.delete_element">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/base.html#StorageProtocol.delete_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.StorageProtocol.delete_element" title="Link to this definition">¶</a></dt>
+<dd><p>Delete an element from a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.StorageProtocol.delete_element.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.StorageProtocol.delete_element.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p></li>
+<li><p><span class="target" id="scribbl_py.StorageProtocol.delete_element.params.element_id"></span><strong>element_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.StorageProtocol.delete_element.params.element_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the element to delete.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the element was deleted, False if it did not exist.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p></li>
+<li><p><strong>StorageError</strong> – If the delete operation fails.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.StorageProtocol.list_elements">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/base.html#StorageProtocol.list_elements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.StorageProtocol.list_elements" title="Link to this definition">¶</a></dt>
+<dd><p>List all elements on a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.StorageProtocol.list_elements.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.StorageProtocol.list_elements.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of all elements on the canvas, ordered by creation date.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p></li>
+<li><p><strong>StorageError</strong> – If the list operation fails.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.StorageProtocol.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scribbl_py.StorageProtocol.__init__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="inmemorystorage">
+<h2>InMemoryStorage<a class="headerlink" href="#inmemorystorage" title="Link to this heading">¶</a></h2>
+<p>A simple in-memory storage backend, useful for development and testing:</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="scribbl_py.InMemoryStorage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.</span></span><span class="sig-name descname"><span class="pre">InMemoryStorage</span></span><a class="reference internal" href="../_modules/scribbl_py/storage/memory.html#InMemoryStorage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.InMemoryStorage" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Thread-safe in-memory storage implementation.</p>
+<p>This storage backend maintains all data in memory using a dictionary. It provides
+thread safety through asyncio locks and returns immutable copies of data to prevent
+external modification.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All data is lost when the application stops. This storage is suitable for
+development, testing, or ephemeral sessions.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>_canvases</strong> – Internal dictionary mapping canvas IDs to Canvas instances.</p></li>
+<li><p><strong>_lock</strong> – Asyncio lock for thread-safe operations.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.InMemoryStorage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/memory.html#InMemoryStorage.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.InMemoryStorage.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialize the in-memory storage with an empty canvas dictionary.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.InMemoryStorage.create_canvas">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_canvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/memory.html#InMemoryStorage.create_canvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.InMemoryStorage.create_canvas" title="Link to this definition">¶</a></dt>
+<dd><p>Create a new canvas in storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.InMemoryStorage.create_canvas.params.canvas"></span><strong>canvas</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.InMemoryStorage.create_canvas.params.canvas">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a></span>) – The canvas to create.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A copy of the created canvas.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.InMemoryStorage.get_canvas">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_canvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/memory.html#InMemoryStorage.get_canvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.InMemoryStorage.get_canvas" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve a canvas by its ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.InMemoryStorage.get_canvas.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.InMemoryStorage.get_canvas.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A copy of the canvas if found, None otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.InMemoryStorage.list_canvases">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_canvases</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/memory.html#InMemoryStorage.list_canvases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.InMemoryStorage.list_canvases" title="Link to this definition">¶</a></dt>
+<dd><p>List all canvases in storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of canvas copies, ordered by creation date (newest first).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.InMemoryStorage.update_canvas">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_canvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/memory.html#InMemoryStorage.update_canvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.InMemoryStorage.update_canvas" title="Link to this definition">¶</a></dt>
+<dd><p>Update an existing canvas in storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.InMemoryStorage.update_canvas.params.canvas"></span><strong>canvas</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.InMemoryStorage.update_canvas.params.canvas">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a></span>) – The canvas with updated data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A copy of the updated canvas.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.InMemoryStorage.delete_canvas">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_canvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/memory.html#InMemoryStorage.delete_canvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.InMemoryStorage.delete_canvas" title="Link to this definition">¶</a></dt>
+<dd><p>Delete a canvas from storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.InMemoryStorage.delete_canvas.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.InMemoryStorage.delete_canvas.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas to delete.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the canvas was deleted, False if it did not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.InMemoryStorage.add_element">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/memory.html#InMemoryStorage.add_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.InMemoryStorage.add_element" title="Link to this definition">¶</a></dt>
+<dd><p>Add an element to a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.InMemoryStorage.add_element.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.InMemoryStorage.add_element.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p></li>
+<li><p><span class="target" id="scribbl_py.InMemoryStorage.add_element.params.element"></span><strong>element</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.InMemoryStorage.add_element.params.element">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></span>) – The element to add.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A copy of the added element.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.InMemoryStorage.get_element">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/memory.html#InMemoryStorage.get_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.InMemoryStorage.get_element" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve an element from a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.InMemoryStorage.get_element.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.InMemoryStorage.get_element.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p></li>
+<li><p><span class="target" id="scribbl_py.InMemoryStorage.get_element.params.element_id"></span><strong>element_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.InMemoryStorage.get_element.params.element_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the element.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A copy of the element if found, None otherwise.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.InMemoryStorage.update_element">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/memory.html#InMemoryStorage.update_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.InMemoryStorage.update_element" title="Link to this definition">¶</a></dt>
+<dd><p>Update an element on a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.InMemoryStorage.update_element.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.InMemoryStorage.update_element.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p></li>
+<li><p><span class="target" id="scribbl_py.InMemoryStorage.update_element.params.element"></span><strong>element</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.InMemoryStorage.update_element.params.element">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></span>) – The element with updated data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A copy of the updated element.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p></li>
+<li><p><a class="reference internal" href="core.html#scribbl_py.exceptions.ElementNotFoundError" title="scribbl_py.exceptions.ElementNotFoundError"><strong>ElementNotFoundError</strong></a> – If the element does not exist.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.InMemoryStorage.delete_element">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/memory.html#InMemoryStorage.delete_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.InMemoryStorage.delete_element" title="Link to this definition">¶</a></dt>
+<dd><p>Delete an element from a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.InMemoryStorage.delete_element.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.InMemoryStorage.delete_element.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p></li>
+<li><p><span class="target" id="scribbl_py.InMemoryStorage.delete_element.params.element_id"></span><strong>element_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.InMemoryStorage.delete_element.params.element_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the element to delete.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the element was deleted, False if it did not exist.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="scribbl_py.InMemoryStorage.list_elements">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/memory.html#InMemoryStorage.list_elements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scribbl_py.InMemoryStorage.list_elements" title="Link to this definition">¶</a></dt>
+<dd><p>List all elements on a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.InMemoryStorage.list_elements.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.InMemoryStorage.list_elements.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of element copies, ordered by creation date.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="database-storage-optional">
+<h2>Database Storage (Optional)<a class="headerlink" href="#database-storage-optional" title="Link to this heading">¶</a></h2>
+<p>Available with the <code class="docutils literal notranslate"><span class="pre">[db]</span></code> extra. Install with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">uv<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;scribbl-py[db]&quot;</span>
+</span></pre></div>
+</div>
+<section id="databasestorage">
+<h3>DatabaseStorage<a class="headerlink" href="#databasestorage" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.storage.db.</span></span><span class="sig-name descname"><span class="pre">DatabaseStorage</span></span><a class="reference internal" href="../_modules/scribbl_py/storage/db/storage.html#DatabaseStorage"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Async database storage implementation using SQLAlchemy.</p>
+<p>This storage backend persists canvases and elements to a relational database
+using SQLAlchemy’s async session. It implements the StorageProtocol interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>_session</strong> – SQLAlchemy async session for database operations.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="target" id="scribbl_py.storage.db.DatabaseStorage.params.session"></span><strong>session</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.DatabaseStorage.params.session">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#sqlalchemy.ext.asyncio.AsyncSession" title="(in SQLAlchemy v2.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncSession</span></code></a></span>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/db/storage.html#DatabaseStorage.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialize the database storage with an async session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.storage.db.DatabaseStorage.params.session"></span><strong>session</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.DatabaseStorage.params.session">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#sqlalchemy.ext.asyncio.AsyncSession" title="(in SQLAlchemy v2.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncSession</span></code></a></span>) – SQLAlchemy async session for database operations.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_canvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/db/storage.html#DatabaseStorage.create_canvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Create a new canvas in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.storage.db.DatabaseStorage.create_canvas.params.canvas"></span><strong>canvas</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.DatabaseStorage.create_canvas.params.canvas">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a></span>) – The canvas to create.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The created canvas with database-assigned timestamps.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_canvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/db/storage.html#DatabaseStorage.get_canvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Retrieve a canvas by its ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.storage.db.DatabaseStorage.get_canvas.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.DatabaseStorage.get_canvas.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The canvas if found, None otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_canvases</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/db/storage.html#DatabaseStorage.list_canvases"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>List all canvases in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of all canvases, ordered by creation date (newest first).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_canvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/db/storage.html#DatabaseStorage.update_canvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Update an existing canvas in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.storage.db.DatabaseStorage.update_canvas.params.canvas"></span><strong>canvas</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.DatabaseStorage.update_canvas.params.canvas">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a></span>) – The canvas with updated data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Canvas" title="scribbl_py.core.models.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The updated canvas.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_canvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/db/storage.html#DatabaseStorage.delete_canvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Delete a canvas from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.storage.db.DatabaseStorage.delete_canvas.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.DatabaseStorage.delete_canvas.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas to delete.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the canvas was deleted, False if it did not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/db/storage.html#DatabaseStorage.add_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add an element to a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.storage.db.DatabaseStorage.add_element.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.DatabaseStorage.add_element.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p></li>
+<li><p><span class="target" id="scribbl_py.storage.db.DatabaseStorage.add_element.params.element"></span><strong>element</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.DatabaseStorage.add_element.params.element">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></span>) – The element to add.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The added element.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/db/storage.html#DatabaseStorage.get_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Retrieve an element from a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.storage.db.DatabaseStorage.get_element.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.DatabaseStorage.get_element.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p></li>
+<li><p><span class="target" id="scribbl_py.storage.db.DatabaseStorage.get_element.params.element_id"></span><strong>element_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.DatabaseStorage.get_element.params.element_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the element.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The element if found, None otherwise.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/db/storage.html#DatabaseStorage.update_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Update an element on a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.storage.db.DatabaseStorage.update_element.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.DatabaseStorage.update_element.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p></li>
+<li><p><span class="target" id="scribbl_py.storage.db.DatabaseStorage.update_element.params.element"></span><strong>element</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.DatabaseStorage.update_element.params.element">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></span>) – The element with updated data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The updated element.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p></li>
+<li><p><a class="reference internal" href="core.html#scribbl_py.exceptions.ElementNotFoundError" title="scribbl_py.exceptions.ElementNotFoundError"><strong>ElementNotFoundError</strong></a> – If the element does not exist.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/db/storage.html#DatabaseStorage.delete_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Delete an element from a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.storage.db.DatabaseStorage.delete_element.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.DatabaseStorage.delete_element.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p></li>
+<li><p><span class="target" id="scribbl_py.storage.db.DatabaseStorage.delete_element.params.element_id"></span><strong>element_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.DatabaseStorage.delete_element.params.element_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the element to delete.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the element was deleted, False if it did not exist.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/db/storage.html#DatabaseStorage.list_elements"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>List all elements on a canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.storage.db.DatabaseStorage.list_elements.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.DatabaseStorage.list_elements.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – The unique identifier of the canvas.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference internal" href="core.html#scribbl_py.Element" title="scribbl_py.core.models.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of all elements on the canvas, ordered by creation date.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="core.html#scribbl_py.exceptions.CanvasNotFoundError" title="scribbl_py.exceptions.CanvasNotFoundError"><strong>CanvasNotFoundError</strong></a> – If the canvas does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="sqlalchemy-models">
+<h3>SQLAlchemy Models<a class="headerlink" href="#sqlalchemy-models" title="Link to this heading">¶</a></h3>
+<p>SQLAlchemy models for scribbl-py database storage.</p>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.storage.db.models.</span></span><span class="sig-name descname"><span class="pre">CanvasModel</span></span><a class="reference internal" href="../_modules/scribbl_py/storage/db/models.html#CanvasModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">UUIDAuditBase</span></code></p>
+<p>SQLAlchemy model for Canvas entities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> – UUID primary key (from UUIDAuditBase).</p></li>
+<li><p><strong>name</strong> – Display name for the canvas.</p></li>
+<li><p><strong>width</strong> – Canvas width in pixels.</p></li>
+<li><p><strong>height</strong> – Canvas height in pixels.</p></li>
+<li><p><strong>background_color</strong> – Background color in hex format.</p></li>
+<li><p><strong>elements</strong> – Related element records.</p></li>
+<li><p><strong>created_at</strong> – Creation timestamp (from UUIDAuditBase).</p></li>
+<li><p><strong>updated_at</strong> – Last update timestamp (from UUIDAuditBase).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[str]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">width</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[int]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[int]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">background_color</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[str]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">elements</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[list[ElementModel]]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>A simple constructor that allows initialization from kwargs.</p>
+<p>Sets attributes on the constructed instance using the names and
+values in <code class="docutils literal notranslate"><span class="pre">kwargs</span></code>.</p>
+<p>Only keys that are present as
+attributes of the instance’s class are allowed. These could be,
+for example, any mapped columns or relationships.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">created_at</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[datetime.datetime]</span></em></dt>
+<dd><p>Date/time of instance creation.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[UUID]</span></em></dt>
+<dd><p>UUID Primary key column.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">updated_at</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[datetime.datetime]</span></em></dt>
+<dd><p>Date/time of instance last update.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scribbl_py.storage.db.models.</span></span><span class="sig-name descname"><span class="pre">ElementModel</span></span><a class="reference internal" href="../_modules/scribbl_py/storage/db/models.html#ElementModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">UUIDAuditBase</span></code></p>
+<p>SQLAlchemy model for Element entities.</p>
+<p>This model stores all element types (Stroke, Shape, Text, Group) in a single table
+using a discriminator column (element_type) and JSON columns for type-specific data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> – UUID primary key (from UUIDAuditBase).</p></li>
+<li><p><strong>canvas_id</strong> – Foreign key to parent canvas.</p></li>
+<li><p><strong>element_type</strong> – Discriminator for element type (stroke, shape, text, group).</p></li>
+<li><p><strong>position_x</strong> – X-coordinate position.</p></li>
+<li><p><strong>position_y</strong> – Y-coordinate position.</p></li>
+<li><p><strong>position_pressure</strong> – Pressure value for position point.</p></li>
+<li><p><strong>z_index</strong> – Layer ordering (higher values rendered on top).</p></li>
+<li><p><strong>group_id</strong> – Parent group ID if this element is grouped.</p></li>
+<li><p><strong>style_data</strong> – JSON blob for ElementStyle fields.</p></li>
+<li><p><strong>element_data</strong> – JSON blob for type-specific data (points, shape_type, content, etc.).</p></li>
+<li><p><strong>created_at</strong> – Creation timestamp (from UUIDAuditBase).</p></li>
+<li><p><strong>updated_at</strong> – Last update timestamp (from UUIDAuditBase).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">canvas_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[UUID]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">element_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[str]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">position_x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[float]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">position_y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[float]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">position_pressure</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[float]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">z_index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[int]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">group_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[UUID</span> <span class="pre">|</span> <span class="pre">None]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">style_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[dict[str,</span> <span class="pre">Any]]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">element_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[dict[str,</span> <span class="pre">Any]]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">canvas</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[CanvasModel]</span></em></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>A simple constructor that allows initialization from kwargs.</p>
+<p>Sets attributes on the constructed instance using the names and
+values in <code class="docutils literal notranslate"><span class="pre">kwargs</span></code>.</p>
+<p>Only keys that are present as
+attributes of the instance’s class are allowed. These could be,
+for example, any mapped columns or relationships.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">created_at</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[datetime.datetime]</span></em></dt>
+<dd><p>Date/time of instance creation.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[UUID]</span></em></dt>
+<dd><p>UUID Primary key column.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">updated_at</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapped[datetime.datetime]</span></em></dt>
+<dd><p>Date/time of instance last update.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">scribbl_py.storage.db.models.</span></span><span class="sig-name descname"><span class="pre">canvas_to_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/db/models.html#canvas_to_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert a domain Canvas to a CanvasModel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.storage.db.models.canvas_to_model.params.canvas"></span><strong>canvas</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.models.canvas_to_model.params.canvas">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a></span>) – Domain Canvas dataclass instance.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">CanvasModel</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CanvasModel instance ready for database insertion.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">scribbl_py.storage.db.models.</span></span><span class="sig-name descname"><span class="pre">canvas_from_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_elements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/db/models.html#canvas_from_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert a CanvasModel to a domain Canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.storage.db.models.canvas_from_model.params.model"></span><strong>model</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.models.canvas_from_model.params.model">¶</a> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">CanvasModel</span></code></span>) – SQLAlchemy CanvasModel instance.</p></li>
+<li><p><span class="target" id="scribbl_py.storage.db.models.canvas_from_model.params.include_elements"></span><strong>include_elements</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.models.canvas_from_model.params.include_elements">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Whether to include elements in the conversion.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Domain Canvas dataclass instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">scribbl_py.storage.db.models.</span></span><span class="sig-name descname"><span class="pre">element_to_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">canvas_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/db/models.html#element_to_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert a domain Element to an ElementModel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="scribbl_py.storage.db.models.element_to_model.params.element"></span><strong>element</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.models.element_to_model.params.element">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a></span>) – Domain Element (Stroke, Shape, Text, or Group) dataclass instance.</p></li>
+<li><p><span class="target" id="scribbl_py.storage.db.models.element_to_model.params.canvas_id"></span><strong>canvas_id</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.models.element_to_model.params.canvas_id">¶</a> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUID</span></code></a></span>) – UUID of the parent canvas.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElementModel</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ElementModel instance ready for database insertion.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">scribbl_py.storage.db.models.</span></span><span class="sig-name descname"><span class="pre">element_from_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scribbl_py/storage/db/models.html#element_from_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert an ElementModel to a domain Element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="target" id="scribbl_py.storage.db.models.element_from_model.params.model"></span><strong>model</strong><a class="paramlink headerlink reference internal" href="#scribbl_py.storage.db.models.element_from_model.params.model">¶</a> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElementModel</span></code></span>) – SQLAlchemy ElementModel instance.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Domain Element (Stroke, Shape, Text, or Group) dataclass instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="core.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Core</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="services.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Services</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2025, Jacob Coffee</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=30646c52"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../_static/shibuya.js?v=c1cf1a6b"></script></body>
+</html>

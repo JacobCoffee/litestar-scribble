@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="cyan" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Development Guide - scribbl-py</title><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Deployment Guide" href="deployment.html" /><link rel="prev" title="Configuration Guide" href="configuration.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=14737038" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_paramlinks.css" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=fc559bc7" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="Development Guide"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      
+      
+      <strong>scribbl-py</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link">
+          <a href="https://litestar.dev/">
+            <span>Litestar</span></a>
+        </li><li class="link">
+          <a href="https://pypi.org/project/scribbl-py/">
+            <span>PyPI</span></a>
+        </li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Learn</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="configuration.html">Configuration Guide</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Development Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployment.html">Deployment Guide</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/plugin.html">Plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/storage.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/services.html">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/realtime.html">Realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/auth.html">Auth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/web.html">Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/game.html">Game</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/JacobCoffee/scribbl-py">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/litestar">Discord</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#quick-start">Quick Start</a></li>
+<li><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li><a class="reference internal" href="#makefile-commands">Makefile Commands</a><ul>
+<li><a class="reference internal" href="#setup-installation">Setup &amp; Installation</a></li>
+<li><a class="reference internal" href="#code-quality">Code Quality</a></li>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+<li><a class="reference internal" href="#documentation">Documentation</a></li>
+<li><a class="reference internal" href="#frontend">Frontend</a></li>
+<li><a class="reference internal" href="#application">Application</a></li>
+<li><a class="reference internal" href="#testing-multiplayer">Testing Multiplayer</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#running-tests">Running Tests</a><ul>
+<li><a class="reference internal" href="#test-categories">Test Categories</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id1">Code Quality</a><ul>
+<li><a class="reference internal" href="#linting-with-ruff">Linting with Ruff</a></li>
+<li><a class="reference internal" href="#type-checking">Type Checking</a></li>
+<li><a class="reference internal" href="#pre-commit-hooks">Pre-commit Hooks</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#database-development">Database Development</a><ul>
+<li><a class="reference internal" href="#creating-migrations">Creating Migrations</a></li>
+<li><a class="reference internal" href="#query-cli">Query CLI</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#websocket-development">WebSocket Development</a><ul>
+<li><a class="reference internal" href="#canvas-collaboration">Canvas Collaboration</a></li>
+<li><a class="reference internal" href="#game-websocket">Game WebSocket</a></li>
+<li><a class="reference internal" href="#testing-websockets">Testing WebSockets</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#frontend-development">Frontend Development</a><ul>
+<li><a class="reference internal" href="#build-system">Build System</a></li>
+<li><a class="reference internal" href="#stack">Stack</a></li>
+<li><a class="reference internal" href="#hot-reload">Hot Reload</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#git-worktrees">Git Worktrees</a></li>
+<li><a class="reference internal" href="#ci-cd">CI/CD</a><ul>
+<li><a class="reference internal" href="#running-ci-locally">Running CI Locally</a></li>
+<li><a class="reference internal" href="#ci-checks">CI Checks</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#contributing">Contributing</a><ul>
+<li><a class="reference internal" href="#workflow">Workflow</a></li>
+<li><a class="reference internal" href="#commit-convention">Commit Convention</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li><a class="reference internal" href="#common-issues">Common Issues</a></li>
+</ul>
+</li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">scribbl-py</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="index.html"><span itemprop="name">Guides</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Development Guide</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <section id="development-guide">
+<h1>Development Guide<a class="headerlink" href="#development-guide" title="Link to this heading">¶</a></h1>
+<p>This guide covers setting up a local development environment for scribbl-py.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Python 3.10+</strong> - scribbl-py supports Python 3.10, 3.11, 3.12, and 3.13</p></li>
+<li><p><strong>uv</strong> - Fast Python package manager (<a class="reference external" href="https://docs.astral.sh/uv/getting-started/installation/">install</a>)</p></li>
+<li><p><strong>Bun</strong> - Fast JavaScript runtime for frontend builds (<a class="reference external" href="https://bun.sh/">install</a>)</p></li>
+<li><p><strong>Git</strong> - Version control</p></li>
+</ul>
+</section>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Clone the repository</span>
+</span><span data-line="2">git<span class="w"> </span>clone<span class="w"> </span>https://github.com/JacobCoffee/scribbl-py.git
+</span><span data-line="3"><span class="nb">cd</span><span class="w"> </span>scribbl-py
+</span><span data-line="4">
+</span><span data-line="5"><span class="c1"># Install Python dependencies</span>
+</span><span data-line="6">make<span class="w"> </span>dev
+</span><span data-line="7">
+</span><span data-line="8"><span class="c1"># Install frontend dependencies</span>
+</span><span data-line="9">make<span class="w"> </span>frontend-install
+</span><span data-line="10">
+</span><span data-line="11"><span class="c1"># Build frontend assets</span>
+</span><span data-line="12">make<span class="w"> </span>frontend-build
+</span><span data-line="13">
+</span><span data-line="14"><span class="c1"># Run the application</span>
+</span><span data-line="15">make<span class="w"> </span>serve
+</span></pre></div>
+</div>
+<p>The application will be available at http://127.0.0.1:8000.</p>
+</section>
+<hr class="docutils" />
+<section id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1">scribbl-py/
+</span><span data-line="2">├── src/scribbl_py/      # Main package
+</span><span data-line="3">│   ├── __init__.py      # Public API exports
+</span><span data-line="4">│   ├── app.py           # Litestar application
+</span><span data-line="5">│   ├── plugin.py        # ScribblPlugin and ScribblConfig
+</span><span data-line="6">│   ├── exceptions.py    # Custom exceptions
+</span><span data-line="7">│   ├── core/            # Domain models and types
+</span><span data-line="8">│   │   ├── models.py    # Canvas, Element, Stroke, etc.
+</span><span data-line="9">│   │   ├── types.py     # Type aliases and enums
+</span><span data-line="10">│   │   ├── style.py     # ElementStyle dataclass
+</span><span data-line="11">│   │   ├── logging.py   # Structured logging setup
+</span><span data-line="12">│   │   ├── error_handling.py  # Exception handlers
+</span><span data-line="13">│   │   └── rate_limit.py      # Rate limiting config
+</span><span data-line="14">│   ├── auth/            # Authentication
+</span><span data-line="15">│   │   ├── config.py    # OAuth configuration
+</span><span data-line="16">│   │   ├── models.py    # User, Session, UserStats
+</span><span data-line="17">│   │   ├── service.py   # AuthService
+</span><span data-line="18">│   │   └── controller.py # Auth endpoints
+</span><span data-line="19">│   ├── game/            # Canvas Clash game
+</span><span data-line="20">│   │   ├── models.py    # Room, Player, Round, etc.
+</span><span data-line="21">│   │   ├── wordbank.py  # Word selection system
+</span><span data-line="22">│   │   ├── moderation.py # Content moderation
+</span><span data-line="23">│   │   └── word_lists.py # Default word lists
+</span><span data-line="24">│   ├── services/        # Business logic
+</span><span data-line="25">│   │   ├── canvas.py    # CanvasService
+</span><span data-line="26">│   │   ├── export.py    # ExportService (JSON, SVG, PNG)
+</span><span data-line="27">│   │   ├── game.py      # GameService
+</span><span data-line="28">│   │   └── telemetry.py # TelemetryService
+</span><span data-line="29">│   ├── storage/         # Data persistence
+</span><span data-line="30">│   │   ├── base.py      # StorageProtocol
+</span><span data-line="31">│   │   ├── memory.py    # InMemoryStorage
+</span><span data-line="32">│   │   └── db/          # Database storage
+</span><span data-line="33">│   │       ├── models.py      # SQLAlchemy models
+</span><span data-line="34">│   │       ├── storage.py     # DatabaseStorage
+</span><span data-line="35">│   │       └── migrations/    # Alembic migrations
+</span><span data-line="36">│   ├── realtime/        # WebSocket handlers
+</span><span data-line="37">│   │   ├── handler.py   # CanvasWebSocketHandler
+</span><span data-line="38">│   │   ├── game_handler.py # GameWebSocketHandler
+</span><span data-line="39">│   │   ├── manager.py   # ConnectionManager
+</span><span data-line="40">│   │   └── messages.py  # Message types
+</span><span data-line="41">│   ├── web/             # HTTP layer
+</span><span data-line="42">│   │   ├── controllers.py # Canvas/Element controllers
+</span><span data-line="43">│   │   ├── health.py    # Health check endpoints
+</span><span data-line="44">│   │   ├── ui.py        # UI controller
+</span><span data-line="45">│   │   └── dto.py       # Data transfer objects
+</span><span data-line="46">│   ├── cli/             # CLI commands
+</span><span data-line="47">│   │   └── database.py  # Query commands
+</span><span data-line="48">│   └── templates/       # Jinja2 templates
+</span><span data-line="49">├── frontend/            # Frontend assets
+</span><span data-line="50">│   ├── src/
+</span><span data-line="51">│   │   ├── css/         # Tailwind CSS
+</span><span data-line="52">│   │   └── js/          # JavaScript
+</span><span data-line="53">│   └── dist/            # Built assets
+</span><span data-line="54">├── tests/               # Test suite
+</span><span data-line="55">├── docs/                # Documentation
+</span><span data-line="56">└── examples/            # Example applications
+</span></pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="makefile-commands">
+<h2>Makefile Commands<a class="headerlink" href="#makefile-commands" title="Link to this heading">¶</a></h2>
+<p>scribbl-py includes a comprehensive Makefile for common development tasks.</p>
+<section id="setup-installation">
+<h3>Setup &amp; Installation<a class="headerlink" href="#setup-installation" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">make<span class="w"> </span>install-uv<span class="w">      </span><span class="c1"># Install uv package manager</span>
+</span><span data-line="2">make<span class="w"> </span>dev<span class="w">             </span><span class="c1"># Install dev dependencies</span>
+</span><span data-line="3">make<span class="w"> </span>install<span class="w">         </span><span class="c1"># Production install (no dev deps)</span>
+</span><span data-line="4">make<span class="w"> </span>upgrade<span class="w">         </span><span class="c1"># Upgrade dependencies</span>
+</span><span data-line="5">make<span class="w"> </span>install-prek<span class="w">    </span><span class="c1"># Install prek git hooks</span>
+</span></pre></div>
+</div>
+</section>
+<section id="code-quality">
+<h3>Code Quality<a class="headerlink" href="#code-quality" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">make<span class="w"> </span>lint<span class="w">            </span><span class="c1"># Run prek hooks on all files</span>
+</span><span data-line="2">make<span class="w"> </span>fmt<span class="w">             </span><span class="c1"># Format code with ruff</span>
+</span><span data-line="3">make<span class="w"> </span>fmt-check<span class="w">       </span><span class="c1"># Check formatting without changes</span>
+</span><span data-line="4">make<span class="w"> </span>fmt-fix<span class="w">         </span><span class="c1"># Auto-fix ruff issues</span>
+</span><span data-line="5">make<span class="w"> </span>ruff<span class="w">            </span><span class="c1"># Run ruff with unsafe fixes</span>
+</span><span data-line="6">make<span class="w"> </span>type-check<span class="w">      </span><span class="c1"># Run ty type checker</span>
+</span></pre></div>
+</div>
+</section>
+<section id="testing">
+<h3>Testing<a class="headerlink" href="#testing" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">make<span class="w"> </span><span class="nb">test</span><span class="w">            </span><span class="c1"># Run pytest</span>
+</span><span data-line="2">make<span class="w"> </span>test-cov<span class="w">        </span><span class="c1"># Run tests with coverage report</span>
+</span><span data-line="3">make<span class="w"> </span>test-fast<span class="w">       </span><span class="c1"># Quick tests (exit on first failure)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="documentation">
+<h3>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">make<span class="w"> </span>docs<span class="w">            </span><span class="c1"># Build documentation</span>
+</span><span data-line="2">make<span class="w"> </span>docs-serve<span class="w">      </span><span class="c1"># Serve docs with live reload (port 8001)</span>
+</span><span data-line="3">make<span class="w"> </span>docs-clean<span class="w">      </span><span class="c1"># Clean build artifacts</span>
+</span></pre></div>
+</div>
+</section>
+<section id="frontend">
+<h3>Frontend<a class="headerlink" href="#frontend" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">make<span class="w"> </span>frontend-install<span class="w">  </span><span class="c1"># Install frontend dependencies</span>
+</span><span data-line="2">make<span class="w"> </span>frontend-build<span class="w">    </span><span class="c1"># Build frontend for production</span>
+</span><span data-line="3">make<span class="w"> </span>frontend-dev<span class="w">      </span><span class="c1"># Watch mode for development</span>
+</span></pre></div>
+</div>
+</section>
+<section id="application">
+<h3>Application<a class="headerlink" href="#application" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">make<span class="w"> </span>serve<span class="w">           </span><span class="c1"># Run full app (builds frontend first)</span>
+</span><span data-line="2">make<span class="w"> </span>serve-dev<span class="w">       </span><span class="c1"># Run app with hot reload</span>
+</span><span data-line="3">make<span class="w"> </span>serve-api<span class="w">       </span><span class="c1"># Run API only (no UI)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="testing-multiplayer">
+<h3>Testing Multiplayer<a class="headerlink" href="#testing-multiplayer" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">make<span class="w"> </span>game-test<span class="w">       </span><span class="c1"># Open two browser windows for testing</span>
+</span><span data-line="2">make<span class="w"> </span>game-serve<span class="w">      </span><span class="c1"># Start server and open test browsers</span>
+</span></pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="running-tests">
+<h2>Running Tests<a class="headerlink" href="#running-tests" title="Link to this heading">¶</a></h2>
+<p>scribbl-py uses pytest with pytest-asyncio for async test support.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Run all tests</span>
+</span><span data-line="2">make<span class="w"> </span><span class="nb">test</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="c1"># Run with coverage</span>
+</span><span data-line="5">make<span class="w"> </span>test-cov
+</span><span data-line="6">
+</span><span data-line="7"><span class="c1"># Run specific test file</span>
+</span><span data-line="8">uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/test_canvas.py
+</span><span data-line="9">
+</span><span data-line="10"><span class="c1"># Run specific test</span>
+</span><span data-line="11">uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/test_canvas.py::test_create_canvas<span class="w"> </span>-v
+</span><span data-line="12">
+</span><span data-line="13"><span class="c1"># Run tests matching a pattern</span>
+</span><span data-line="14">uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;canvas&quot;</span><span class="w"> </span>-v
+</span></pre></div>
+</div>
+<section id="test-categories">
+<h3>Test Categories<a class="headerlink" href="#test-categories" title="Link to this heading">¶</a></h3>
+<p>Tests are marked with pytest markers:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Run only unit tests</span>
+</span><span data-line="2">uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-m<span class="w"> </span>unit
+</span><span data-line="3">
+</span><span data-line="4"><span class="c1"># Run integration tests</span>
+</span><span data-line="5">uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-m<span class="w"> </span>integration
+</span><span data-line="6">
+</span><span data-line="7"><span class="c1"># Run database tests</span>
+</span><span data-line="8">uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-m<span class="w"> </span>db
+</span></pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="id1">
+<h2>Code Quality<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<section id="linting-with-ruff">
+<h3>Linting with Ruff<a class="headerlink" href="#linting-with-ruff" title="Link to this heading">¶</a></h3>
+<p>scribbl-py uses <a class="reference external" href="https://docs.astral.sh/ruff/">ruff</a> for linting and formatting:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Check for issues</span>
+</span><span data-line="2">make<span class="w"> </span>ruff-check
+</span><span data-line="3">
+</span><span data-line="4"><span class="c1"># Fix issues automatically</span>
+</span><span data-line="5">make<span class="w"> </span>fmt-fix
+</span><span data-line="6">
+</span><span data-line="7"><span class="c1"># Format code</span>
+</span><span data-line="8">make<span class="w"> </span>fmt
+</span></pre></div>
+</div>
+</section>
+<section id="type-checking">
+<h3>Type Checking<a class="headerlink" href="#type-checking" title="Link to this heading">¶</a></h3>
+<p>Type checking uses <a class="reference external" href="https://github.com/astral-sh/ty">ty</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">make<span class="w"> </span>type-check
+</span></pre></div>
+</div>
+</section>
+<section id="pre-commit-hooks">
+<h3>Pre-commit Hooks<a class="headerlink" href="#pre-commit-hooks" title="Link to this heading">¶</a></h3>
+<p>The project uses <a class="reference external" href="https://prek.dev/">prek</a> for git hooks:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Install hooks</span>
+</span><span data-line="2">make<span class="w"> </span>install-prek
+</span><span data-line="3">
+</span><span data-line="4"><span class="c1"># Run hooks manually</span>
+</span><span data-line="5">make<span class="w"> </span>lint
+</span></pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="database-development">
+<h2>Database Development<a class="headerlink" href="#database-development" title="Link to this heading">¶</a></h2>
+<section id="creating-migrations">
+<h3>Creating Migrations<a class="headerlink" href="#creating-migrations" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Generate a migration from model changes</span>
+</span><span data-line="2">litestar<span class="w"> </span>database<span class="w"> </span>make-migrations<span class="w"> </span><span class="s2">&quot;add user preferences&quot;</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="c1"># Apply migrations</span>
+</span><span data-line="5">litestar<span class="w"> </span>database<span class="w"> </span>upgrade
+</span><span data-line="6">
+</span><span data-line="7"><span class="c1"># Rollback</span>
+</span><span data-line="8">litestar<span class="w"> </span>database<span class="w"> </span>downgrade
+</span></pre></div>
+</div>
+</section>
+<section id="query-cli">
+<h3>Query CLI<a class="headerlink" href="#query-cli" title="Link to this heading">¶</a></h3>
+<p>scribbl-py includes CLI commands for querying the database:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># List users</span>
+</span><span data-line="2">litestar<span class="w"> </span>query<span class="w"> </span>users
+</span><span data-line="3">
+</span><span data-line="4"><span class="c1"># Search users</span>
+</span><span data-line="5">litestar<span class="w"> </span>query<span class="w"> </span>users<span class="w"> </span>--search<span class="w"> </span><span class="s2">&quot;john&quot;</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="c1"># Show stats</span>
+</span><span data-line="8">litestar<span class="w"> </span>query<span class="w"> </span>stats
+</span><span data-line="9">
+</span><span data-line="10"><span class="c1"># List active sessions</span>
+</span><span data-line="11">litestar<span class="w"> </span>query<span class="w"> </span>sessions<span class="w"> </span>--active
+</span><span data-line="12">
+</span><span data-line="13"><span class="c1"># Show leaderboard</span>
+</span><span data-line="14">litestar<span class="w"> </span>query<span class="w"> </span>leaderboard<span class="w"> </span>--by<span class="w"> </span>wins
+</span><span data-line="15">
+</span><span data-line="16"><span class="c1"># List tables</span>
+</span><span data-line="17">litestar<span class="w"> </span>query<span class="w"> </span>tables
+</span><span data-line="18">
+</span><span data-line="19"><span class="c1"># Execute raw SQL</span>
+</span><span data-line="20">litestar<span class="w"> </span>query<span class="w"> </span>sql<span class="w"> </span><span class="s2">&quot;SELECT * FROM users LIMIT 10&quot;</span>
+</span></pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="websocket-development">
+<h2>WebSocket Development<a class="headerlink" href="#websocket-development" title="Link to this heading">¶</a></h2>
+<section id="canvas-collaboration">
+<h3>Canvas Collaboration<a class="headerlink" href="#canvas-collaboration" title="Link to this heading">¶</a></h3>
+<p>The canvas WebSocket endpoint (<code class="docutils literal notranslate"><span class="pre">/ws/canvas/{id}</span></code>) handles:</p>
+<ul class="simple">
+<li><p>Element operations (add, update, delete)</p></li>
+<li><p>Cursor position sync</p></li>
+<li><p>User presence (join/leave)</p></li>
+<li><p>Full canvas sync on connect</p></li>
+</ul>
+</section>
+<section id="game-websocket">
+<h3>Game WebSocket<a class="headerlink" href="#game-websocket" title="Link to this heading">¶</a></h3>
+<p>The game WebSocket endpoint (<code class="docutils literal notranslate"><span class="pre">/ws/game/{room_id}</span></code>) handles:</p>
+<ul class="simple">
+<li><p>Room management (join, leave)</p></li>
+<li><p>Game lifecycle (start, round start, round end)</p></li>
+<li><p>Drawing updates</p></li>
+<li><p>Chat and guessing</p></li>
+<li><p>Scoreboard updates</p></li>
+</ul>
+</section>
+<section id="testing-websockets">
+<h3>Testing WebSockets<a class="headerlink" href="#testing-websockets" title="Link to this heading">¶</a></h3>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">game-test</span></code> command to open two browser windows for multiplayer testing.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="frontend-development">
+<h2>Frontend Development<a class="headerlink" href="#frontend-development" title="Link to this heading">¶</a></h2>
+<section id="build-system">
+<h3>Build System<a class="headerlink" href="#build-system" title="Link to this heading">¶</a></h3>
+<p>The frontend uses Bun for package management and builds:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Install dependencies</span>
+</span><span data-line="2"><span class="nb">cd</span><span class="w"> </span>frontend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>bun<span class="w"> </span>install
+</span><span data-line="3">
+</span><span data-line="4"><span class="c1"># Development build (watch mode)</span>
+</span><span data-line="5">bun<span class="w"> </span>run<span class="w"> </span>dev
+</span><span data-line="6">
+</span><span data-line="7"><span class="c1"># Production build</span>
+</span><span data-line="8">bun<span class="w"> </span>run<span class="w"> </span>build
+</span></pre></div>
+</div>
+</section>
+<section id="stack">
+<h3>Stack<a class="headerlink" href="#stack" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>HTMX</strong> - Dynamic HTML updates</p></li>
+<li><p><strong>Alpine.js</strong> - Client-side interactivity</p></li>
+<li><p><strong>Tailwind CSS</strong> - Utility-first CSS</p></li>
+<li><p><strong>DaisyUI</strong> - Component library</p></li>
+</ul>
+</section>
+<section id="hot-reload">
+<h3>Hot Reload<a class="headerlink" href="#hot-reload" title="Link to this heading">¶</a></h3>
+<p>For development with hot reload:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Terminal 1: Start the server</span>
+</span><span data-line="2">make<span class="w"> </span>serve-dev
+</span><span data-line="3">
+</span><span data-line="4"><span class="c1"># Terminal 2: Watch frontend changes</span>
+</span><span data-line="5">make<span class="w"> </span>frontend-dev
+</span></pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="git-worktrees">
+<h2>Git Worktrees<a class="headerlink" href="#git-worktrees" title="Link to this heading">¶</a></h2>
+<p>scribbl-py supports git worktrees for parallel development:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Create a new worktree</span>
+</span><span data-line="2">make<span class="w"> </span>wt<span class="w"> </span><span class="nv">NAME</span><span class="o">=</span>feature-name
+</span><span data-line="3">
+</span><span data-line="4"><span class="c1"># List worktrees</span>
+</span><span data-line="5">make<span class="w"> </span>wt-ls
+</span><span data-line="6">
+</span><span data-line="7"><span class="c1"># Prune stale worktrees</span>
+</span><span data-line="8">make<span class="w"> </span>worktree-prune
+</span></pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="ci-cd">
+<h2>CI/CD<a class="headerlink" href="#ci-cd" title="Link to this heading">¶</a></h2>
+<section id="running-ci-locally">
+<h3>Running CI Locally<a class="headerlink" href="#running-ci-locally" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Run all CI checks</span>
+</span><span data-line="2">make<span class="w"> </span>ci
+</span><span data-line="3">
+</span><span data-line="4"><span class="c1"># Run with act (local GitHub Actions)</span>
+</span><span data-line="5">make<span class="w"> </span>act-ci
+</span></pre></div>
+</div>
+</section>
+<section id="ci-checks">
+<h3>CI Checks<a class="headerlink" href="#ci-checks" title="Link to this heading">¶</a></h3>
+<p>The CI pipeline runs:</p>
+<ol class="arabic simple">
+<li><p>Linting (<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">lint</span></code>)</p></li>
+<li><p>Type checking (<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">type-check</span></code>)</p></li>
+<li><p>Format checking (<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">fmt-check</span></code>)</p></li>
+<li><p>Tests (<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code>)</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">¶</a></h2>
+<section id="workflow">
+<h3>Workflow<a class="headerlink" href="#workflow" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Fork the repository</p></li>
+<li><p>Create a feature branch: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">feature/my-feature</span></code></p></li>
+<li><p>Make your changes</p></li>
+<li><p>Run tests: <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code></p></li>
+<li><p>Run linting: <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">lint</span></code></p></li>
+<li><p>Commit with conventional commits: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span> <span class="pre">-m</span> <span class="pre">&quot;feat:</span> <span class="pre">add</span> <span class="pre">my</span> <span class="pre">feature&quot;</span></code></p></li>
+<li><p>Push and create a pull request</p></li>
+</ol>
+</section>
+<section id="commit-convention">
+<h3>Commit Convention<a class="headerlink" href="#commit-convention" title="Link to this heading">¶</a></h3>
+<p>Follow <a class="reference external" href="https://www.conventionalcommits.org/">Conventional Commits</a>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">feat:</span></code> - New features</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fix:</span></code> - Bug fixes</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs:</span></code> - Documentation changes</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">refactor:</span></code> - Code refactoring</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test:</span></code> - Test additions/changes</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chore:</span></code> - Maintenance tasks</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">¶</a></h2>
+<section id="common-issues">
+<h3>Common Issues<a class="headerlink" href="#common-issues" title="Link to this heading">¶</a></h3>
+<p><strong>UV not found</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">make<span class="w"> </span>install-uv
+</span></pre></div>
+</div>
+<p><strong>Bun not found</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">curl<span class="w"> </span>-fsSL<span class="w"> </span>https://bun.sh/install<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+</span></pre></div>
+</div>
+<p><strong>Database locked (SQLite)</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Kill any running processes</span>
+</span><span data-line="2">pkill<span class="w"> </span>-f<span class="w"> </span>uvicorn
+</span><span data-line="3"><span class="c1"># Delete the database and migrate fresh</span>
+</span><span data-line="4">rm<span class="w"> </span>scribbl.db
+</span><span data-line="5">litestar<span class="w"> </span>database<span class="w"> </span>upgrade
+</span></pre></div>
+</div>
+<p><strong>Port already in use</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Find process on port 8000</span>
+</span><span data-line="2">lsof<span class="w"> </span>-i<span class="w"> </span>:8000
+</span><span data-line="3"><span class="c1"># Kill it</span>
+</span><span data-line="4"><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>&lt;PID&gt;
+</span></pre></div>
+</div>
+<p><strong>Frontend assets not loading</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">make<span class="w"> </span>frontend-build
+</span></pre></div>
+</div>
+</section>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="configuration.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Configuration Guide</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="deployment.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Deployment Guide</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2025, Jacob Coffee</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=30646c52"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../_static/shibuya.js?v=c1cf1a6b"></script></body>
+</html>

@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="cyan" data-content_root="../../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>scribbl_py.services.game - scribbl-py</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=14737038" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_paramlinks.css" />
+    <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=fc559bc7" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="scribbl_py.services.game"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../../../index.html">
+      
+      
+      <strong>scribbl-py</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link">
+          <a href="https://litestar.dev/">
+            <span>Litestar</span></a>
+        </li><li class="link">
+          <a href="https://pypi.org/project/scribbl-py/">
+            <span>PyPI</span></a>
+        </li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Learn</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/index.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/configuration.html">Configuration Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/development.html">Development Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/deployment.html">Deployment Guide</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/plugin.html">Plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/storage.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/services.html">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/realtime.html">Realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/auth.html">Auth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/web.html">Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/game.html">Game</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/JacobCoffee/scribbl-py">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/litestar">Discord</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../../index.html"><span itemprop="name">scribbl-py</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../index.html"><span itemprop="name">Module code</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">scribbl_py.services.game</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <h1>Source code for scribbl_py.services.game</h1><div class="highlight"><pre>
+<span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;Game service for managing CanvasClash mode game rooms.&quot;&quot;&quot;</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+</span><span data-line="6"><span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
+</span><span data-line="7"><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">UUID</span>
+</span><span data-line="8">
+</span><span data-line="9"><span class="kn">import</span><span class="w"> </span><span class="nn">structlog</span>
+</span><span data-line="10">
+</span><span data-line="11"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.game.models</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span data-line="12">    <span class="n">ChatMessage</span><span class="p">,</span>
+</span><span data-line="13">    <span class="n">ChatMessageType</span><span class="p">,</span>
+</span><span data-line="14">    <span class="n">GameRoom</span><span class="p">,</span>
+</span><span data-line="15">    <span class="n">GameSettings</span><span class="p">,</span>
+</span><span data-line="16">    <span class="n">GameState</span><span class="p">,</span>
+</span><span data-line="17">    <span class="n">Guess</span><span class="p">,</span>
+</span><span data-line="18">    <span class="n">GuessResult</span><span class="p">,</span>
+</span><span data-line="19">    <span class="n">Player</span><span class="p">,</span>
+</span><span data-line="20">    <span class="n">PlayerState</span><span class="p">,</span>
+</span><span data-line="21">    <span class="n">Round</span><span class="p">,</span>
+</span><span data-line="22"><span class="p">)</span>
+</span><span data-line="23"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.game.wordbank</span><span class="w"> </span><span class="kn">import</span> <span class="n">WordBank</span>
+</span><span data-line="24">
+</span><span data-line="25"><span class="n">logger</span> <span class="o">=</span> <span class="n">structlog</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span><span data-line="26">
+</span><span data-line="27">
+<div class="viewcode-block" id="GameNotFoundError">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameNotFoundError">[docs]</a>
+</span><span data-line="28"><span class="k">class</span><span class="w"> </span><span class="nc">GameNotFoundError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</span><span data-line="29"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when a game room is not found.&quot;&quot;&quot;</span>
+</span><span data-line="30">
+<div class="viewcode-block" id="GameNotFoundError.__init__">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameNotFoundError.__init__">[docs]</a>
+</span><span data-line="31">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">room_id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="32">        <span class="bp">self</span><span class="o">.</span><span class="n">room_id</span> <span class="o">=</span> <span class="n">room_id</span>
+</span><span data-line="33">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Game room not found: </span><span class="si">{</span><span class="n">room_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</div>
+
+</span><span data-line="34">
+</span><span data-line="35">
+<div class="viewcode-block" id="PlayerNotFoundError">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.PlayerNotFoundError">[docs]</a>
+</span><span data-line="36"><span class="k">class</span><span class="w"> </span><span class="nc">PlayerNotFoundError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</span><span data-line="37"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when a player is not found in a game.&quot;&quot;&quot;</span>
+</span><span data-line="38">
+<div class="viewcode-block" id="PlayerNotFoundError.__init__">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.PlayerNotFoundError.__init__">[docs]</a>
+</span><span data-line="39">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">player_id</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="40">        <span class="bp">self</span><span class="o">.</span><span class="n">player_id</span> <span class="o">=</span> <span class="n">player_id</span>
+</span><span data-line="41">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Player not found: </span><span class="si">{</span><span class="n">player_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</div>
+
+</span><span data-line="42">
+</span><span data-line="43">
+<div class="viewcode-block" id="GameStateError">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameStateError">[docs]</a>
+</span><span data-line="44"><span class="k">class</span><span class="w"> </span><span class="nc">GameStateError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</span><span data-line="45"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when a game action is invalid for current state.&quot;&quot;&quot;</span>
+</span><span data-line="46">
+<div class="viewcode-block" id="GameStateError.__init__">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameStateError.__init__">[docs]</a>
+</span><span data-line="47">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="48">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+</div>
+
+</span><span data-line="49">
+</span><span data-line="50">
+<div class="viewcode-block" id="GameService">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService">[docs]</a>
+</span><span data-line="51"><span class="k">class</span><span class="w"> </span><span class="nc">GameService</span><span class="p">:</span>
+</span><span data-line="52"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Service for managing game rooms and gameplay logic.</span>
+</span><span data-line="53">
+</span><span data-line="54"><span class="sd">    Provides business logic for:</span>
+</span><span data-line="55"><span class="sd">    - Creating and managing game rooms</span>
+</span><span data-line="56"><span class="sd">    - Player join/leave operations</span>
+</span><span data-line="57"><span class="sd">    - Game lifecycle (start, rounds, scoring)</span>
+</span><span data-line="58"><span class="sd">    - Guess validation and scoring</span>
+</span><span data-line="59"><span class="sd">    - Word selection and hints</span>
+</span><span data-line="60"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="61">
+<div class="viewcode-block" id="GameService.__init__">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.__init__">[docs]</a>
+</span><span data-line="62">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word_bank</span><span class="p">:</span> <span class="n">WordBank</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="63"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the game service.</span>
+</span><span data-line="64">
+</span><span data-line="65"><span class="sd">        Args:</span>
+</span><span data-line="66"><span class="sd">            word_bank: Word bank for word selection. Uses default if None.</span>
+</span><span data-line="67"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="68">        <span class="bp">self</span><span class="o">.</span><span class="n">_rooms</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">UUID</span><span class="p">,</span> <span class="n">GameRoom</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span data-line="69">        <span class="bp">self</span><span class="o">.</span><span class="n">_room_codes</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">UUID</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># code -&gt; room_id mapping</span>
+</span><span data-line="70">        <span class="bp">self</span><span class="o">.</span><span class="n">_word_bank</span> <span class="o">=</span> <span class="n">word_bank</span> <span class="ow">or</span> <span class="n">WordBank</span><span class="p">()</span></div>
+
+</span><span data-line="71">
+</span><span data-line="72">    <span class="c1"># Room Management</span>
+</span><span data-line="73">
+<div class="viewcode-block" id="GameService.create_room">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.create_room">[docs]</a>
+</span><span data-line="74">    <span class="k">def</span><span class="w"> </span><span class="nf">create_room</span><span class="p">(</span>
+</span><span data-line="75">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="76">        <span class="n">host_user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span data-line="77">        <span class="n">host_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span data-line="78">        <span class="n">room_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Untitled Game&quot;</span><span class="p">,</span>
+</span><span data-line="79">        <span class="n">settings</span><span class="p">:</span> <span class="n">GameSettings</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="80">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GameRoom</span><span class="p">:</span>
+</span><span data-line="81"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new game room.</span>
+</span><span data-line="82">
+</span><span data-line="83"><span class="sd">        Args:</span>
+</span><span data-line="84"><span class="sd">            host_user_id: User ID of the room creator.</span>
+</span><span data-line="85"><span class="sd">            host_name: Display name of the host.</span>
+</span><span data-line="86"><span class="sd">            room_name: Name for the room.</span>
+</span><span data-line="87"><span class="sd">            settings: Game settings (uses defaults if None).</span>
+</span><span data-line="88">
+</span><span data-line="89"><span class="sd">        Returns:</span>
+</span><span data-line="90"><span class="sd">            The created game room.</span>
+</span><span data-line="91"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="92">        <span class="c1"># Generate unique room code</span>
+</span><span data-line="93">        <span class="n">room_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_room_code</span><span class="p">()</span>
+</span><span data-line="94">
+</span><span data-line="95">        <span class="c1"># Create host player</span>
+</span><span data-line="96">        <span class="n">host</span> <span class="o">=</span> <span class="n">Player</span><span class="p">(</span>
+</span><span data-line="97">            <span class="n">user_id</span><span class="o">=</span><span class="n">host_user_id</span><span class="p">,</span>
+</span><span data-line="98">            <span class="n">user_name</span><span class="o">=</span><span class="n">host_name</span><span class="p">,</span>
+</span><span data-line="99">            <span class="n">is_host</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span data-line="100">        <span class="p">)</span>
+</span><span data-line="101">
+</span><span data-line="102">        <span class="c1"># Create room</span>
+</span><span data-line="103">        <span class="n">room</span> <span class="o">=</span> <span class="n">GameRoom</span><span class="p">(</span>
+</span><span data-line="104">            <span class="n">room_code</span><span class="o">=</span><span class="n">room_code</span><span class="p">,</span>
+</span><span data-line="105">            <span class="n">name</span><span class="o">=</span><span class="n">room_name</span><span class="p">,</span>
+</span><span data-line="106">            <span class="n">settings</span><span class="o">=</span><span class="n">settings</span> <span class="ow">or</span> <span class="n">GameSettings</span><span class="p">(),</span>
+</span><span data-line="107">            <span class="n">host_id</span><span class="o">=</span><span class="n">host</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span data-line="108">        <span class="p">)</span>
+</span><span data-line="109">        <span class="n">room</span><span class="o">.</span><span class="n">players</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+</span><span data-line="110">
+</span><span data-line="111">        <span class="c1"># Store room</span>
+</span><span data-line="112">        <span class="bp">self</span><span class="o">.</span><span class="n">_rooms</span><span class="p">[</span><span class="n">room</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">room</span>
+</span><span data-line="113">        <span class="bp">self</span><span class="o">.</span><span class="n">_room_codes</span><span class="p">[</span><span class="n">room_code</span><span class="p">]</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">id</span>
+</span><span data-line="114">
+</span><span data-line="115">        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+</span><span data-line="116">            <span class="s2">&quot;Game room created&quot;</span><span class="p">,</span>
+</span><span data-line="117">            <span class="n">room_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">room</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+</span><span data-line="118">            <span class="n">room_code</span><span class="o">=</span><span class="n">room_code</span><span class="p">,</span>
+</span><span data-line="119">            <span class="n">host_name</span><span class="o">=</span><span class="n">host_name</span><span class="p">,</span>
+</span><span data-line="120">        <span class="p">)</span>
+</span><span data-line="121">
+</span><span data-line="122">        <span class="k">return</span> <span class="n">room</span></div>
+
+</span><span data-line="123">
+<div class="viewcode-block" id="GameService.get_room">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.get_room">[docs]</a>
+</span><span data-line="124">    <span class="k">def</span><span class="w"> </span><span class="nf">get_room</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">room_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GameRoom</span><span class="p">:</span>
+</span><span data-line="125"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a game room by ID.</span>
+</span><span data-line="126">
+</span><span data-line="127"><span class="sd">        Args:</span>
+</span><span data-line="128"><span class="sd">            room_id: The room UUID.</span>
+</span><span data-line="129">
+</span><span data-line="130"><span class="sd">        Returns:</span>
+</span><span data-line="131"><span class="sd">            The game room.</span>
+</span><span data-line="132">
+</span><span data-line="133"><span class="sd">        Raises:</span>
+</span><span data-line="134"><span class="sd">            GameNotFoundError: If room doesn&#39;t exist.</span>
+</span><span data-line="135"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="136">        <span class="n">room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rooms</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span>
+</span><span data-line="137">        <span class="k">if</span> <span class="ow">not</span> <span class="n">room</span><span class="p">:</span>
+</span><span data-line="138">            <span class="k">raise</span> <span class="n">GameNotFoundError</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span>
+</span><span data-line="139">        <span class="k">return</span> <span class="n">room</span></div>
+
+</span><span data-line="140">
+<div class="viewcode-block" id="GameService.get_room_by_code">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.get_room_by_code">[docs]</a>
+</span><span data-line="141">    <span class="k">def</span><span class="w"> </span><span class="nf">get_room_by_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GameRoom</span><span class="p">:</span>
+</span><span data-line="142"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a game room by join code.</span>
+</span><span data-line="143">
+</span><span data-line="144"><span class="sd">        Args:</span>
+</span><span data-line="145"><span class="sd">            code: The room join code.</span>
+</span><span data-line="146">
+</span><span data-line="147"><span class="sd">        Returns:</span>
+</span><span data-line="148"><span class="sd">            The game room.</span>
+</span><span data-line="149">
+</span><span data-line="150"><span class="sd">        Raises:</span>
+</span><span data-line="151"><span class="sd">            GameNotFoundError: If room doesn&#39;t exist.</span>
+</span><span data-line="152"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="153">        <span class="n">room_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_room_codes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">code</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+</span><span data-line="154">        <span class="k">if</span> <span class="ow">not</span> <span class="n">room_id</span><span class="p">:</span>
+</span><span data-line="155">            <span class="k">raise</span> <span class="n">GameNotFoundError</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+</span><span data-line="156">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_room</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span></div>
+
+</span><span data-line="157">
+<div class="viewcode-block" id="GameService.delete_room">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.delete_room">[docs]</a>
+</span><span data-line="158">    <span class="k">def</span><span class="w"> </span><span class="nf">delete_room</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">room_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="159"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete a game room.</span>
+</span><span data-line="160">
+</span><span data-line="161"><span class="sd">        Args:</span>
+</span><span data-line="162"><span class="sd">            room_id: The room to delete.</span>
+</span><span data-line="163"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="164">        <span class="n">room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rooms</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">room_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</span><span data-line="165">        <span class="k">if</span> <span class="n">room</span><span class="p">:</span>
+</span><span data-line="166">            <span class="bp">self</span><span class="o">.</span><span class="n">_room_codes</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">room</span><span class="o">.</span><span class="n">room_code</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</span><span data-line="167">            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Game room deleted&quot;</span><span class="p">,</span> <span class="n">room_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">room_id</span><span class="p">))</span></div>
+
+</span><span data-line="168">
+</span><span data-line="169">    <span class="c1"># Player Management</span>
+</span><span data-line="170">
+<div class="viewcode-block" id="GameService.join_room">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.join_room">[docs]</a>
+</span><span data-line="171">    <span class="k">def</span><span class="w"> </span><span class="nf">join_room</span><span class="p">(</span>
+</span><span data-line="172">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="173">        <span class="n">room_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="174">        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span data-line="175">        <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span data-line="176">        <span class="n">avatar_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="177">        <span class="n">as_spectator</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span data-line="178">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Player</span><span class="p">:</span>
+</span><span data-line="179"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a player to a game room.</span>
+</span><span data-line="180">
+</span><span data-line="181"><span class="sd">        Args:</span>
+</span><span data-line="182"><span class="sd">            room_id: The room to join.</span>
+</span><span data-line="183"><span class="sd">            user_id: User&#39;s identifier.</span>
+</span><span data-line="184"><span class="sd">            user_name: Display name.</span>
+</span><span data-line="185"><span class="sd">            avatar_url: Optional avatar URL.</span>
+</span><span data-line="186"><span class="sd">            as_spectator: If True, join as spectator (can watch but not play).</span>
+</span><span data-line="187">
+</span><span data-line="188"><span class="sd">        Returns:</span>
+</span><span data-line="189"><span class="sd">            The created Player instance.</span>
+</span><span data-line="190">
+</span><span data-line="191"><span class="sd">        Raises:</span>
+</span><span data-line="192"><span class="sd">            GameNotFoundError: If room doesn&#39;t exist.</span>
+</span><span data-line="193"><span class="sd">            GameStateError: If room is full or game already started (non-spectators only).</span>
+</span><span data-line="194"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="195">        <span class="n">room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_room</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span>
+</span><span data-line="196">
+</span><span data-line="197">        <span class="c1"># Check if player already in room (reconnect case)</span>
+</span><span data-line="198">        <span class="n">existing</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">room</span><span class="o">.</span><span class="n">players</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">user_id</span> <span class="o">==</span> <span class="n">user_id</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+</span><span data-line="199">        <span class="k">if</span> <span class="n">existing</span><span class="p">:</span>
+</span><span data-line="200">            <span class="n">existing</span><span class="o">.</span><span class="n">connection_state</span> <span class="o">=</span> <span class="n">PlayerState</span><span class="o">.</span><span class="n">CONNECTED</span>
+</span><span data-line="201">            <span class="n">existing</span><span class="o">.</span><span class="n">mark_active</span><span class="p">()</span>
+</span><span data-line="202">            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+</span><span data-line="203">                <span class="s2">&quot;Player reconnected&quot;</span><span class="p">,</span>
+</span><span data-line="204">                <span class="n">room_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">room_id</span><span class="p">),</span>
+</span><span data-line="205">                <span class="n">player_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">existing</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+</span><span data-line="206">                <span class="n">user_name</span><span class="o">=</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="207">                <span class="n">is_spectator</span><span class="o">=</span><span class="n">existing</span><span class="o">.</span><span class="n">is_spectator</span><span class="p">,</span>
+</span><span data-line="208">            <span class="p">)</span>
+</span><span data-line="209">            <span class="k">return</span> <span class="n">existing</span>
+</span><span data-line="210">
+</span><span data-line="211">        <span class="c1"># Create new player</span>
+</span><span data-line="212">        <span class="n">player</span> <span class="o">=</span> <span class="n">Player</span><span class="p">(</span>
+</span><span data-line="213">            <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
+</span><span data-line="214">            <span class="n">user_name</span><span class="o">=</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="215">            <span class="n">avatar_url</span><span class="o">=</span><span class="n">avatar_url</span><span class="p">,</span>
+</span><span data-line="216">            <span class="n">is_spectator</span><span class="o">=</span><span class="n">as_spectator</span><span class="p">,</span>
+</span><span data-line="217">        <span class="p">)</span>
+</span><span data-line="218">
+</span><span data-line="219">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="220">            <span class="n">room</span><span class="o">.</span><span class="n">add_player</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+</span><span data-line="221">        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="222">            <span class="k">raise</span> <span class="n">GameStateError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+</span><span data-line="223">
+</span><span data-line="224">        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+</span><span data-line="225">            <span class="s2">&quot;Player joined room&quot;</span><span class="p">,</span>
+</span><span data-line="226">            <span class="n">room_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">room_id</span><span class="p">),</span>
+</span><span data-line="227">            <span class="n">player_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">player</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+</span><span data-line="228">            <span class="n">user_name</span><span class="o">=</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="229">            <span class="n">is_spectator</span><span class="o">=</span><span class="n">as_spectator</span><span class="p">,</span>
+</span><span data-line="230">        <span class="p">)</span>
+</span><span data-line="231">
+</span><span data-line="232">        <span class="k">return</span> <span class="n">player</span></div>
+
+</span><span data-line="233">
+<div class="viewcode-block" id="GameService.leave_room">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.leave_room">[docs]</a>
+</span><span data-line="234">    <span class="k">def</span><span class="w"> </span><span class="nf">leave_room</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">room_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">player_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="235"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a player from a game room.</span>
+</span><span data-line="236">
+</span><span data-line="237"><span class="sd">        Args:</span>
+</span><span data-line="238"><span class="sd">            room_id: The room ID.</span>
+</span><span data-line="239"><span class="sd">            player_id: The player to remove.</span>
+</span><span data-line="240">
+</span><span data-line="241"><span class="sd">        Returns:</span>
+</span><span data-line="242"><span class="sd">            True if player was removed, False if not found.</span>
+</span><span data-line="243"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="244">        <span class="n">room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_room</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span>
+</span><span data-line="245">        <span class="n">player</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">get_player</span><span class="p">(</span><span class="n">player_id</span><span class="p">)</span>
+</span><span data-line="246">
+</span><span data-line="247">        <span class="k">if</span> <span class="ow">not</span> <span class="n">player</span><span class="p">:</span>
+</span><span data-line="248">            <span class="k">return</span> <span class="kc">False</span>
+</span><span data-line="249">
+</span><span data-line="250">        <span class="n">room</span><span class="o">.</span><span class="n">remove_player</span><span class="p">(</span><span class="n">player_id</span><span class="p">)</span>
+</span><span data-line="251">
+</span><span data-line="252">        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+</span><span data-line="253">            <span class="s2">&quot;Player left room&quot;</span><span class="p">,</span>
+</span><span data-line="254">            <span class="n">room_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">room_id</span><span class="p">),</span>
+</span><span data-line="255">            <span class="n">player_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">player_id</span><span class="p">),</span>
+</span><span data-line="256">            <span class="n">user_name</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="257">        <span class="p">)</span>
+</span><span data-line="258">
+</span><span data-line="259">        <span class="c1"># Delete room if empty</span>
+</span><span data-line="260">        <span class="k">if</span> <span class="ow">not</span> <span class="n">room</span><span class="o">.</span><span class="n">active_players</span><span class="p">():</span>
+</span><span data-line="261">            <span class="bp">self</span><span class="o">.</span><span class="n">delete_room</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span>
+</span><span data-line="262">
+</span><span data-line="263">        <span class="k">return</span> <span class="kc">True</span></div>
+
+</span><span data-line="264">
+<div class="viewcode-block" id="GameService.get_player">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.get_player">[docs]</a>
+</span><span data-line="265">    <span class="k">def</span><span class="w"> </span><span class="nf">get_player</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">room_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">player_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Player</span><span class="p">:</span>
+</span><span data-line="266"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a player from a room.</span>
+</span><span data-line="267">
+</span><span data-line="268"><span class="sd">        Args:</span>
+</span><span data-line="269"><span class="sd">            room_id: The room ID.</span>
+</span><span data-line="270"><span class="sd">            player_id: The player ID.</span>
+</span><span data-line="271">
+</span><span data-line="272"><span class="sd">        Returns:</span>
+</span><span data-line="273"><span class="sd">            The player instance.</span>
+</span><span data-line="274">
+</span><span data-line="275"><span class="sd">        Raises:</span>
+</span><span data-line="276"><span class="sd">            GameNotFoundError: If room doesn&#39;t exist.</span>
+</span><span data-line="277"><span class="sd">            PlayerNotFoundError: If player doesn&#39;t exist.</span>
+</span><span data-line="278"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="279">        <span class="n">room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_room</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span>
+</span><span data-line="280">        <span class="n">player</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">get_player</span><span class="p">(</span><span class="n">player_id</span><span class="p">)</span>
+</span><span data-line="281">        <span class="k">if</span> <span class="ow">not</span> <span class="n">player</span><span class="p">:</span>
+</span><span data-line="282">            <span class="k">raise</span> <span class="n">PlayerNotFoundError</span><span class="p">(</span><span class="n">player_id</span><span class="p">)</span>
+</span><span data-line="283">        <span class="k">return</span> <span class="n">player</span></div>
+
+</span><span data-line="284">
+</span><span data-line="285">    <span class="c1"># Game Flow</span>
+</span><span data-line="286">
+<div class="viewcode-block" id="GameService.start_game">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.start_game">[docs]</a>
+</span><span data-line="287">    <span class="k">def</span><span class="w"> </span><span class="nf">start_game</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">room_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">player_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Round</span><span class="p">:</span>
+</span><span data-line="288"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Start the game (host only).</span>
+</span><span data-line="289">
+</span><span data-line="290"><span class="sd">        Args:</span>
+</span><span data-line="291"><span class="sd">            room_id: The room to start.</span>
+</span><span data-line="292"><span class="sd">            player_id: Player requesting start (must be host).</span>
+</span><span data-line="293">
+</span><span data-line="294"><span class="sd">        Returns:</span>
+</span><span data-line="295"><span class="sd">            The first round.</span>
+</span><span data-line="296">
+</span><span data-line="297"><span class="sd">        Raises:</span>
+</span><span data-line="298"><span class="sd">            GameNotFoundError: If room doesn&#39;t exist.</span>
+</span><span data-line="299"><span class="sd">            GameStateError: If not host or invalid state.</span>
+</span><span data-line="300"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="301">        <span class="n">room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_room</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span>
+</span><span data-line="302">        <span class="n">player</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">get_player</span><span class="p">(</span><span class="n">player_id</span><span class="p">)</span>
+</span><span data-line="303">
+</span><span data-line="304">        <span class="k">if</span> <span class="ow">not</span> <span class="n">player</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">player</span><span class="o">.</span><span class="n">is_host</span><span class="p">:</span>
+</span><span data-line="305">            <span class="k">raise</span> <span class="n">GameStateError</span><span class="p">(</span><span class="s2">&quot;Only the host can start the game&quot;</span><span class="p">)</span>
+</span><span data-line="306">
+</span><span data-line="307">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="308">            <span class="n">room</span><span class="o">.</span><span class="n">start_game</span><span class="p">()</span>
+</span><span data-line="309">        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="310">            <span class="k">raise</span> <span class="n">GameStateError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+</span><span data-line="311">
+</span><span data-line="312">        <span class="c1"># Create first round</span>
+</span><span data-line="313">        <span class="n">new_round</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">next_round</span><span class="p">()</span>
+</span><span data-line="314">
+</span><span data-line="315">        <span class="c1"># Generate word options for drawer (including custom words from host)</span>
+</span><span data-line="316">        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+</span><span data-line="317">            <span class="s2">&quot;Generating word options&quot;</span><span class="p">,</span>
+</span><span data-line="318">            <span class="n">room_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">room_id</span><span class="p">),</span>
+</span><span data-line="319">            <span class="n">custom_words</span><span class="o">=</span><span class="n">room</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">custom_words</span><span class="p">,</span>
+</span><span data-line="320">            <span class="n">custom_words_only</span><span class="o">=</span><span class="n">room</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">custom_words_only</span><span class="p">,</span>
+</span><span data-line="321">        <span class="p">)</span>
+</span><span data-line="322">        <span class="n">new_round</span><span class="o">.</span><span class="n">word_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_word_bank</span><span class="o">.</span><span class="n">get_word_options</span><span class="p">(</span>
+</span><span data-line="323">            <span class="n">game_id</span><span class="o">=</span><span class="n">room</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span data-line="324">            <span class="n">count</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+</span><span data-line="325">            <span class="n">custom_words</span><span class="o">=</span><span class="n">room</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">custom_words</span> <span class="k">if</span> <span class="n">room</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">custom_words</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="326">            <span class="n">custom_words_only</span><span class="o">=</span><span class="n">room</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">custom_words_only</span><span class="p">,</span>
+</span><span data-line="327">        <span class="p">)</span>
+</span><span data-line="328">
+</span><span data-line="329">        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+</span><span data-line="330">            <span class="s2">&quot;Game started&quot;</span><span class="p">,</span>
+</span><span data-line="331">            <span class="n">room_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">room_id</span><span class="p">),</span>
+</span><span data-line="332">            <span class="n">total_rounds</span><span class="o">=</span><span class="n">room</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">rounds_per_game</span><span class="p">,</span>
+</span><span data-line="333">            <span class="n">word_options</span><span class="o">=</span><span class="n">new_round</span><span class="o">.</span><span class="n">word_options</span><span class="p">,</span>
+</span><span data-line="334">        <span class="p">)</span>
+</span><span data-line="335">
+</span><span data-line="336">        <span class="k">return</span> <span class="n">new_round</span></div>
+
+</span><span data-line="337">
+<div class="viewcode-block" id="GameService.select_word">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.select_word">[docs]</a>
+</span><span data-line="338">    <span class="k">def</span><span class="w"> </span><span class="nf">select_word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">room_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">player_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Round</span><span class="p">:</span>
+</span><span data-line="339"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Select word for drawing (drawer only).</span>
+</span><span data-line="340">
+</span><span data-line="341"><span class="sd">        Args:</span>
+</span><span data-line="342"><span class="sd">            room_id: The room ID.</span>
+</span><span data-line="343"><span class="sd">            player_id: Player selecting (must be drawer).</span>
+</span><span data-line="344"><span class="sd">            word: The selected word.</span>
+</span><span data-line="345">
+</span><span data-line="346"><span class="sd">        Returns:</span>
+</span><span data-line="347"><span class="sd">            The updated round.</span>
+</span><span data-line="348">
+</span><span data-line="349"><span class="sd">        Raises:</span>
+</span><span data-line="350"><span class="sd">            GameStateError: If not drawer or invalid state.</span>
+</span><span data-line="351"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="352">        <span class="n">room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_room</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span>
+</span><span data-line="353">
+</span><span data-line="354">        <span class="k">if</span> <span class="n">room</span><span class="o">.</span><span class="n">game_state</span> <span class="o">!=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">WORD_SELECTION</span><span class="p">:</span>
+</span><span data-line="355">            <span class="k">raise</span> <span class="n">GameStateError</span><span class="p">(</span><span class="s2">&quot;Not in word selection phase&quot;</span><span class="p">)</span>
+</span><span data-line="356">
+</span><span data-line="357">        <span class="k">if</span> <span class="ow">not</span> <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="p">:</span>
+</span><span data-line="358">            <span class="k">raise</span> <span class="n">GameStateError</span><span class="p">(</span><span class="s2">&quot;No active round&quot;</span><span class="p">)</span>
+</span><span data-line="359">
+</span><span data-line="360">        <span class="k">if</span> <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="o">.</span><span class="n">drawer_id</span> <span class="o">!=</span> <span class="n">player_id</span><span class="p">:</span>
+</span><span data-line="361">            <span class="k">raise</span> <span class="n">GameStateError</span><span class="p">(</span><span class="s2">&quot;Only the drawer can select the word&quot;</span><span class="p">)</span>
+</span><span data-line="362">
+</span><span data-line="363">        <span class="c1"># Validate word is one of the options</span>
+</span><span data-line="364">        <span class="k">if</span> <span class="n">word</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="o">.</span><span class="n">word_options</span><span class="p">]:</span>
+</span><span data-line="365">            <span class="k">raise</span> <span class="n">GameStateError</span><span class="p">(</span><span class="s2">&quot;Invalid word selection&quot;</span><span class="p">)</span>
+</span><span data-line="366">
+</span><span data-line="367">        <span class="c1"># Start the round</span>
+</span><span data-line="368">        <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+</span><span data-line="369">        <span class="n">room</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">DRAWING</span>
+</span><span data-line="370">
+</span><span data-line="371">        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+</span><span data-line="372">            <span class="s2">&quot;Word selected, round started&quot;</span><span class="p">,</span>
+</span><span data-line="373">            <span class="n">room_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">room_id</span><span class="p">),</span>
+</span><span data-line="374">            <span class="nb">round</span><span class="o">=</span><span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="o">.</span><span class="n">round_number</span><span class="p">,</span>
+</span><span data-line="375">        <span class="p">)</span>
+</span><span data-line="376">
+</span><span data-line="377">        <span class="k">return</span> <span class="n">room</span><span class="o">.</span><span class="n">current_round</span></div>
+
+</span><span data-line="378">
+<div class="viewcode-block" id="GameService.submit_guess">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.submit_guess">[docs]</a>
+</span><span data-line="379">    <span class="k">def</span><span class="w"> </span><span class="nf">submit_guess</span><span class="p">(</span>
+</span><span data-line="380">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="381">        <span class="n">room_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="382">        <span class="n">player_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="383">        <span class="n">guess_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span data-line="384">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Guess</span><span class="p">,</span> <span class="n">ChatMessage</span><span class="p">]:</span>
+</span><span data-line="385"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Submit a guess for the current word.</span>
+</span><span data-line="386">
+</span><span data-line="387"><span class="sd">        Args:</span>
+</span><span data-line="388"><span class="sd">            room_id: The room ID.</span>
+</span><span data-line="389"><span class="sd">            player_id: Player guessing.</span>
+</span><span data-line="390"><span class="sd">            guess_text: The guess attempt.</span>
+</span><span data-line="391">
+</span><span data-line="392"><span class="sd">        Returns:</span>
+</span><span data-line="393"><span class="sd">            Tuple of (Guess result, ChatMessage to broadcast).</span>
+</span><span data-line="394">
+</span><span data-line="395"><span class="sd">        Raises:</span>
+</span><span data-line="396"><span class="sd">            GameStateError: If not in drawing phase or invalid player.</span>
+</span><span data-line="397"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="398">        <span class="n">room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_room</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span>
+</span><span data-line="399">        <span class="n">player</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">get_player</span><span class="p">(</span><span class="n">player_id</span><span class="p">)</span>
+</span><span data-line="400">
+</span><span data-line="401">        <span class="k">if</span> <span class="ow">not</span> <span class="n">player</span><span class="p">:</span>
+</span><span data-line="402">            <span class="k">raise</span> <span class="n">PlayerNotFoundError</span><span class="p">(</span><span class="n">player_id</span><span class="p">)</span>
+</span><span data-line="403">
+</span><span data-line="404">        <span class="k">if</span> <span class="n">room</span><span class="o">.</span><span class="n">game_state</span> <span class="o">!=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">DRAWING</span><span class="p">:</span>
+</span><span data-line="405">            <span class="k">raise</span> <span class="n">GameStateError</span><span class="p">(</span><span class="s2">&quot;Not in drawing phase&quot;</span><span class="p">)</span>
+</span><span data-line="406">
+</span><span data-line="407">        <span class="k">if</span> <span class="ow">not</span> <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="p">:</span>
+</span><span data-line="408">            <span class="k">raise</span> <span class="n">GameStateError</span><span class="p">(</span><span class="s2">&quot;No active round&quot;</span><span class="p">)</span>
+</span><span data-line="409">
+</span><span data-line="410">        <span class="c1"># Spectators cannot guess</span>
+</span><span data-line="411">        <span class="k">if</span> <span class="n">player</span><span class="o">.</span><span class="n">is_spectator</span><span class="p">:</span>
+</span><span data-line="412">            <span class="n">guess</span> <span class="o">=</span> <span class="n">Guess</span><span class="p">(</span>
+</span><span data-line="413">                <span class="n">player_id</span><span class="o">=</span><span class="n">player_id</span><span class="p">,</span>
+</span><span data-line="414">                <span class="n">player_name</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="415">                <span class="n">guess_text</span><span class="o">=</span><span class="n">guess_text</span><span class="p">,</span>
+</span><span data-line="416">                <span class="n">result</span><span class="o">=</span><span class="n">GuessResult</span><span class="o">.</span><span class="n">INVALID</span><span class="p">,</span>
+</span><span data-line="417">            <span class="p">)</span>
+</span><span data-line="418">            <span class="n">msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span>
+</span><span data-line="419">                <span class="n">message_type</span><span class="o">=</span><span class="n">ChatMessageType</span><span class="o">.</span><span class="n">SYSTEM</span><span class="p">,</span>
+</span><span data-line="420">                <span class="n">sender_id</span><span class="o">=</span><span class="n">player_id</span><span class="p">,</span>
+</span><span data-line="421">                <span class="n">sender_name</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="422">                <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Spectators cannot guess!&quot;</span><span class="p">,</span>
+</span><span data-line="423">            <span class="p">)</span>
+</span><span data-line="424">            <span class="k">return</span> <span class="n">guess</span><span class="p">,</span> <span class="n">msg</span>
+</span><span data-line="425">
+</span><span data-line="426">        <span class="c1"># Drawer cannot guess</span>
+</span><span data-line="427">        <span class="k">if</span> <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="o">.</span><span class="n">drawer_id</span> <span class="o">==</span> <span class="n">player_id</span><span class="p">:</span>
+</span><span data-line="428">            <span class="n">guess</span> <span class="o">=</span> <span class="n">Guess</span><span class="p">(</span>
+</span><span data-line="429">                <span class="n">player_id</span><span class="o">=</span><span class="n">player_id</span><span class="p">,</span>
+</span><span data-line="430">                <span class="n">player_name</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="431">                <span class="n">guess_text</span><span class="o">=</span><span class="n">guess_text</span><span class="p">,</span>
+</span><span data-line="432">                <span class="n">result</span><span class="o">=</span><span class="n">GuessResult</span><span class="o">.</span><span class="n">DRAWER</span><span class="p">,</span>
+</span><span data-line="433">            <span class="p">)</span>
+</span><span data-line="434">            <span class="n">msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span>
+</span><span data-line="435">                <span class="n">message_type</span><span class="o">=</span><span class="n">ChatMessageType</span><span class="o">.</span><span class="n">SYSTEM</span><span class="p">,</span>
+</span><span data-line="436">                <span class="n">sender_id</span><span class="o">=</span><span class="n">player_id</span><span class="p">,</span>
+</span><span data-line="437">                <span class="n">sender_name</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="438">                <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Drawer cannot guess!&quot;</span><span class="p">,</span>
+</span><span data-line="439">            <span class="p">)</span>
+</span><span data-line="440">            <span class="k">return</span> <span class="n">guess</span><span class="p">,</span> <span class="n">msg</span>
+</span><span data-line="441">
+</span><span data-line="442">        <span class="c1"># Already guessed correctly</span>
+</span><span data-line="443">        <span class="k">if</span> <span class="n">player</span><span class="o">.</span><span class="n">has_guessed</span><span class="p">:</span>
+</span><span data-line="444">            <span class="n">guess</span> <span class="o">=</span> <span class="n">Guess</span><span class="p">(</span>
+</span><span data-line="445">                <span class="n">player_id</span><span class="o">=</span><span class="n">player_id</span><span class="p">,</span>
+</span><span data-line="446">                <span class="n">player_name</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="447">                <span class="n">guess_text</span><span class="o">=</span><span class="n">guess_text</span><span class="p">,</span>
+</span><span data-line="448">                <span class="n">result</span><span class="o">=</span><span class="n">GuessResult</span><span class="o">.</span><span class="n">ALREADY_GUESSED</span><span class="p">,</span>
+</span><span data-line="449">            <span class="p">)</span>
+</span><span data-line="450">            <span class="n">msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span>
+</span><span data-line="451">                <span class="n">message_type</span><span class="o">=</span><span class="n">ChatMessageType</span><span class="o">.</span><span class="n">SYSTEM</span><span class="p">,</span>
+</span><span data-line="452">                <span class="n">sender_id</span><span class="o">=</span><span class="n">player_id</span><span class="p">,</span>
+</span><span data-line="453">                <span class="n">sender_name</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="454">                <span class="n">content</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">player</span><span class="o">.</span><span class="n">user_name</span><span class="si">}</span><span class="s2"> has already guessed!&quot;</span><span class="p">,</span>
+</span><span data-line="455">            <span class="p">)</span>
+</span><span data-line="456">            <span class="k">return</span> <span class="n">guess</span><span class="p">,</span> <span class="n">msg</span>
+</span><span data-line="457">
+</span><span data-line="458">        <span class="c1"># Calculate time elapsed</span>
+</span><span data-line="459">        <span class="n">time_elapsed</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span data-line="460">        <span class="k">if</span> <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="o">.</span><span class="n">start_time</span><span class="p">:</span>
+</span><span data-line="461">            <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">UTC</span><span class="p">,</span> <span class="n">datetime</span>
+</span><span data-line="462">
+</span><span data-line="463">            <span class="n">time_elapsed</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">UTC</span><span class="p">)</span> <span class="o">-</span> <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="o">.</span><span class="n">start_time</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+</span><span data-line="464">
+</span><span data-line="465">        <span class="c1"># Check the guess (returns GuessResult.CORRECT, .CLOSE, or .WRONG)</span>
+</span><span data-line="466">        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_word_bank</span><span class="o">.</span><span class="n">check_guess</span><span class="p">(</span>
+</span><span data-line="467">            <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="o">.</span><span class="n">word</span><span class="p">,</span>
+</span><span data-line="468">            <span class="n">guess_text</span><span class="p">,</span>
+</span><span data-line="469">        <span class="p">)</span>
+</span><span data-line="470">
+</span><span data-line="471">        <span class="n">points</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="472">        <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="n">GuessResult</span><span class="o">.</span><span class="n">CORRECT</span><span class="p">:</span>
+</span><span data-line="473">            <span class="n">points</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="o">.</span><span class="n">calculate_points</span><span class="p">(</span><span class="n">time_elapsed</span><span class="p">)</span>
+</span><span data-line="474">            <span class="n">player</span><span class="o">.</span><span class="n">has_guessed</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="475">            <span class="n">player</span><span class="o">.</span><span class="n">guess_time</span> <span class="o">=</span> <span class="n">time_elapsed</span>
+</span><span data-line="476">            <span class="n">player</span><span class="o">.</span><span class="n">award_points</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+</span><span data-line="477">
+</span><span data-line="478">            <span class="c1"># Award drawer points</span>
+</span><span data-line="479">            <span class="n">drawer</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">get_player</span><span class="p">(</span><span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="o">.</span><span class="n">drawer_id</span><span class="p">)</span>
+</span><span data-line="480">            <span class="k">if</span> <span class="n">drawer</span><span class="p">:</span>
+</span><span data-line="481">                <span class="n">drawer_points</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">points</span> <span class="o">*</span> <span class="n">room</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">drawer_points_multiplier</span><span class="p">)</span>
+</span><span data-line="482">                <span class="n">drawer</span><span class="o">.</span><span class="n">award_points</span><span class="p">(</span><span class="n">drawer_points</span><span class="p">)</span>
+</span><span data-line="483">
+</span><span data-line="484">        <span class="c1"># Create guess record</span>
+</span><span data-line="485">        <span class="n">guess</span> <span class="o">=</span> <span class="n">Guess</span><span class="p">(</span>
+</span><span data-line="486">            <span class="n">player_id</span><span class="o">=</span><span class="n">player_id</span><span class="p">,</span>
+</span><span data-line="487">            <span class="n">player_name</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="488">            <span class="n">guess_text</span><span class="o">=</span><span class="n">guess_text</span><span class="p">,</span>
+</span><span data-line="489">            <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span>
+</span><span data-line="490">            <span class="n">points_awarded</span><span class="o">=</span><span class="n">points</span><span class="p">,</span>
+</span><span data-line="491">            <span class="n">time_elapsed</span><span class="o">=</span><span class="n">time_elapsed</span><span class="p">,</span>
+</span><span data-line="492">        <span class="p">)</span>
+</span><span data-line="493">        <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="o">.</span><span class="n">add_guess</span><span class="p">(</span><span class="n">guess</span><span class="p">)</span>
+</span><span data-line="494">
+</span><span data-line="495">        <span class="c1"># Create chat message</span>
+</span><span data-line="496">        <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="n">GuessResult</span><span class="o">.</span><span class="n">CORRECT</span><span class="p">:</span>
+</span><span data-line="497">            <span class="n">msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span>
+</span><span data-line="498">                <span class="n">message_type</span><span class="o">=</span><span class="n">ChatMessageType</span><span class="o">.</span><span class="n">CORRECT</span><span class="p">,</span>
+</span><span data-line="499">                <span class="n">sender_id</span><span class="o">=</span><span class="n">player_id</span><span class="p">,</span>
+</span><span data-line="500">                <span class="n">sender_name</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="501">                <span class="n">content</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">player</span><span class="o">.</span><span class="n">user_name</span><span class="si">}</span><span class="s2"> guessed the word! (+</span><span class="si">{</span><span class="n">points</span><span class="si">}</span><span class="s2"> points)&quot;</span><span class="p">,</span>
+</span><span data-line="502">                <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;points&quot;</span><span class="p">:</span> <span class="n">points</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">time_elapsed</span><span class="p">},</span>
+</span><span data-line="503">            <span class="p">)</span>
+</span><span data-line="504">        <span class="k">elif</span> <span class="n">result</span> <span class="o">==</span> <span class="n">GuessResult</span><span class="o">.</span><span class="n">CLOSE</span><span class="p">:</span>
+</span><span data-line="505">            <span class="n">msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="o">.</span><span class="n">hint</span><span class="p">(</span><span class="n">player</span><span class="o">.</span><span class="n">user_name</span><span class="p">)</span>
+</span><span data-line="506">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="507">            <span class="c1"># Regular guess shown to everyone</span>
+</span><span data-line="508">            <span class="n">msg</span> <span class="o">=</span> <span class="n">ChatMessage</span><span class="p">(</span>
+</span><span data-line="509">                <span class="n">message_type</span><span class="o">=</span><span class="n">ChatMessageType</span><span class="o">.</span><span class="n">GUESS</span><span class="p">,</span>
+</span><span data-line="510">                <span class="n">sender_id</span><span class="o">=</span><span class="n">player_id</span><span class="p">,</span>
+</span><span data-line="511">                <span class="n">sender_name</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="512">                <span class="n">content</span><span class="o">=</span><span class="n">guess_text</span><span class="p">,</span>
+</span><span data-line="513">            <span class="p">)</span>
+</span><span data-line="514">
+</span><span data-line="515">        <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="o">.</span><span class="n">add_chat_message</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</span><span data-line="516">
+</span><span data-line="517">        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+</span><span data-line="518">            <span class="s2">&quot;Guess submitted&quot;</span><span class="p">,</span>
+</span><span data-line="519">            <span class="n">room_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">room_id</span><span class="p">),</span>
+</span><span data-line="520">            <span class="n">player</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">user_name</span><span class="p">,</span>
+</span><span data-line="521">            <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+</span><span data-line="522">            <span class="n">points</span><span class="o">=</span><span class="n">points</span><span class="p">,</span>
+</span><span data-line="523">        <span class="p">)</span>
+</span><span data-line="524">
+</span><span data-line="525">        <span class="k">return</span> <span class="n">guess</span><span class="p">,</span> <span class="n">msg</span></div>
+
+</span><span data-line="526">
+<div class="viewcode-block" id="GameService.end_round">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.end_round">[docs]</a>
+</span><span data-line="527">    <span class="k">def</span><span class="w"> </span><span class="nf">end_round</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">room_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span data-line="528"><span class="w">        </span><span class="sd">&quot;&quot;&quot;End the current round and prepare results.</span>
+</span><span data-line="529">
+</span><span data-line="530"><span class="sd">        Args:</span>
+</span><span data-line="531"><span class="sd">            room_id: The room ID.</span>
+</span><span data-line="532">
+</span><span data-line="533"><span class="sd">        Returns:</span>
+</span><span data-line="534"><span class="sd">            Round results including word, scores, drawer info, and next state.</span>
+</span><span data-line="535"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="536">        <span class="n">room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_room</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span>
+</span><span data-line="537">
+</span><span data-line="538">        <span class="k">if</span> <span class="ow">not</span> <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="p">:</span>
+</span><span data-line="539">            <span class="k">raise</span> <span class="n">GameStateError</span><span class="p">(</span><span class="s2">&quot;No active round&quot;</span><span class="p">)</span>
+</span><span data-line="540">
+</span><span data-line="541">        <span class="n">word</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="o">.</span><span class="n">word</span>
+</span><span data-line="542">        <span class="n">round_number</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="o">.</span><span class="n">round_number</span>
+</span><span data-line="543">        <span class="n">drawer_id</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="o">.</span><span class="n">drawer_id</span>
+</span><span data-line="544">
+</span><span data-line="545">        <span class="c1"># Get drawer name before moving round to history</span>
+</span><span data-line="546">        <span class="n">drawer</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">get_player</span><span class="p">(</span><span class="n">drawer_id</span><span class="p">)</span>
+</span><span data-line="547">        <span class="n">drawer_name</span> <span class="o">=</span> <span class="n">drawer</span><span class="o">.</span><span class="n">user_name</span> <span class="k">if</span> <span class="n">drawer</span> <span class="k">else</span> <span class="s2">&quot;Unknown&quot;</span>
+</span><span data-line="548">
+</span><span data-line="549">        <span class="n">room</span><span class="o">.</span><span class="n">end_round</span><span class="p">()</span>
+</span><span data-line="550">
+</span><span data-line="551">        <span class="c1"># Check if game is over</span>
+</span><span data-line="552">        <span class="n">is_game_over</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">is_game_over</span><span class="p">()</span>
+</span><span data-line="553">        <span class="k">if</span> <span class="n">is_game_over</span><span class="p">:</span>
+</span><span data-line="554">            <span class="n">room</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">GAME_OVER</span>
+</span><span data-line="555">
+</span><span data-line="556">        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+</span><span data-line="557">            <span class="s2">&quot;Round ended&quot;</span><span class="p">,</span>
+</span><span data-line="558">            <span class="n">room_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">room_id</span><span class="p">),</span>
+</span><span data-line="559">            <span class="nb">round</span><span class="o">=</span><span class="n">round_number</span><span class="p">,</span>
+</span><span data-line="560">            <span class="n">word</span><span class="o">=</span><span class="n">word</span><span class="p">,</span>
+</span><span data-line="561">            <span class="n">game_over</span><span class="o">=</span><span class="n">is_game_over</span><span class="p">,</span>
+</span><span data-line="562">        <span class="p">)</span>
+</span><span data-line="563">
+</span><span data-line="564">        <span class="k">return</span> <span class="p">{</span>
+</span><span data-line="565">            <span class="s2">&quot;word&quot;</span><span class="p">:</span> <span class="n">word</span><span class="p">,</span>
+</span><span data-line="566">            <span class="s2">&quot;round_number&quot;</span><span class="p">:</span> <span class="n">round_number</span><span class="p">,</span>
+</span><span data-line="567">            <span class="s2">&quot;drawer_id&quot;</span><span class="p">:</span> <span class="n">drawer_id</span><span class="p">,</span>
+</span><span data-line="568">            <span class="s2">&quot;drawer_name&quot;</span><span class="p">:</span> <span class="n">drawer_name</span><span class="p">,</span>
+</span><span data-line="569">            <span class="s2">&quot;leaderboard&quot;</span><span class="p">:</span> <span class="n">room</span><span class="o">.</span><span class="n">get_leaderboard</span><span class="p">(),</span>
+</span><span data-line="570">            <span class="s2">&quot;is_game_over&quot;</span><span class="p">:</span> <span class="n">is_game_over</span><span class="p">,</span>
+</span><span data-line="571">        <span class="p">}</span></div>
+
+</span><span data-line="572">
+<div class="viewcode-block" id="GameService.next_round">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.next_round">[docs]</a>
+</span><span data-line="573">    <span class="k">def</span><span class="w"> </span><span class="nf">next_round</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">room_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Round</span><span class="p">:</span>
+</span><span data-line="574"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Start the next round.</span>
+</span><span data-line="575">
+</span><span data-line="576"><span class="sd">        Args:</span>
+</span><span data-line="577"><span class="sd">            room_id: The room ID.</span>
+</span><span data-line="578">
+</span><span data-line="579"><span class="sd">        Returns:</span>
+</span><span data-line="580"><span class="sd">            The new round.</span>
+</span><span data-line="581">
+</span><span data-line="582"><span class="sd">        Raises:</span>
+</span><span data-line="583"><span class="sd">            GameStateError: If game is over or invalid state.</span>
+</span><span data-line="584"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="585">        <span class="n">room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_room</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span>
+</span><span data-line="586">
+</span><span data-line="587">        <span class="k">if</span> <span class="n">room</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">GAME_OVER</span><span class="p">:</span>
+</span><span data-line="588">            <span class="k">raise</span> <span class="n">GameStateError</span><span class="p">(</span><span class="s2">&quot;Game is already over&quot;</span><span class="p">)</span>
+</span><span data-line="589">
+</span><span data-line="590">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="591">            <span class="n">new_round</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">next_round</span><span class="p">()</span>
+</span><span data-line="592">        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="593">            <span class="k">raise</span> <span class="n">GameStateError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+</span><span data-line="594">
+</span><span data-line="595">        <span class="c1"># Generate word options (including custom words from host)</span>
+</span><span data-line="596">        <span class="n">new_round</span><span class="o">.</span><span class="n">word_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_word_bank</span><span class="o">.</span><span class="n">get_word_options</span><span class="p">(</span>
+</span><span data-line="597">            <span class="n">game_id</span><span class="o">=</span><span class="n">room</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span data-line="598">            <span class="n">count</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+</span><span data-line="599">            <span class="n">custom_words</span><span class="o">=</span><span class="n">room</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">custom_words</span> <span class="k">if</span> <span class="n">room</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">custom_words</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="600">            <span class="n">custom_words_only</span><span class="o">=</span><span class="n">room</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">custom_words_only</span><span class="p">,</span>
+</span><span data-line="601">        <span class="p">)</span>
+</span><span data-line="602">
+</span><span data-line="603">        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+</span><span data-line="604">            <span class="s2">&quot;Next round started&quot;</span><span class="p">,</span>
+</span><span data-line="605">            <span class="n">room_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">room_id</span><span class="p">),</span>
+</span><span data-line="606">            <span class="nb">round</span><span class="o">=</span><span class="n">new_round</span><span class="o">.</span><span class="n">round_number</span><span class="p">,</span>
+</span><span data-line="607">        <span class="p">)</span>
+</span><span data-line="608">
+</span><span data-line="609">        <span class="k">return</span> <span class="n">new_round</span></div>
+
+</span><span data-line="610">
+<div class="viewcode-block" id="GameService.reveal_hint">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.reveal_hint">[docs]</a>
+</span><span data-line="611">    <span class="k">def</span><span class="w"> </span><span class="nf">reveal_hint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">room_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="612"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Reveal a letter in the word hint.</span>
+</span><span data-line="613">
+</span><span data-line="614"><span class="sd">        Args:</span>
+</span><span data-line="615"><span class="sd">            room_id: The room ID.</span>
+</span><span data-line="616">
+</span><span data-line="617"><span class="sd">        Returns:</span>
+</span><span data-line="618"><span class="sd">            Updated hint string, or None if no active round.</span>
+</span><span data-line="619"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="620">        <span class="n">room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_room</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span>
+</span><span data-line="621">
+</span><span data-line="622">        <span class="k">if</span> <span class="ow">not</span> <span class="n">room</span><span class="o">.</span><span class="n">current_round</span> <span class="ow">or</span> <span class="n">room</span><span class="o">.</span><span class="n">game_state</span> <span class="o">!=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">DRAWING</span><span class="p">:</span>
+</span><span data-line="623">            <span class="k">return</span> <span class="kc">None</span>
+</span><span data-line="624">
+</span><span data-line="625">        <span class="k">return</span> <span class="n">room</span><span class="o">.</span><span class="n">current_round</span><span class="o">.</span><span class="n">reveal_hint</span><span class="p">()</span></div>
+
+</span><span data-line="626">
+<div class="viewcode-block" id="GameService.reset_game">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.reset_game">[docs]</a>
+</span><span data-line="627">    <span class="k">def</span><span class="w"> </span><span class="nf">reset_game</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">room_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GameRoom</span><span class="p">:</span>
+</span><span data-line="628"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset game to lobby state for replay.</span>
+</span><span data-line="629">
+</span><span data-line="630"><span class="sd">        Args:</span>
+</span><span data-line="631"><span class="sd">            room_id: The room ID.</span>
+</span><span data-line="632">
+</span><span data-line="633"><span class="sd">        Returns:</span>
+</span><span data-line="634"><span class="sd">            The reset game room.</span>
+</span><span data-line="635"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="636">        <span class="n">room</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_room</span><span class="p">(</span><span class="n">room_id</span><span class="p">)</span>
+</span><span data-line="637">
+</span><span data-line="638">        <span class="n">room</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">LOBBY</span>
+</span><span data-line="639">        <span class="n">room</span><span class="o">.</span><span class="n">current_round</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="640">        <span class="n">room</span><span class="o">.</span><span class="n">round_history</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="641">        <span class="n">room</span><span class="o">.</span><span class="n">current_round_number</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="642">        <span class="n">room</span><span class="o">.</span><span class="n">started_at</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="643">        <span class="n">room</span><span class="o">.</span><span class="n">ended_at</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="644">
+</span><span data-line="645">        <span class="c1"># Reset player scores</span>
+</span><span data-line="646">        <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="n">room</span><span class="o">.</span><span class="n">players</span><span class="p">:</span>
+</span><span data-line="647">            <span class="n">player</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="648">            <span class="n">player</span><span class="o">.</span><span class="n">reset_round_state</span><span class="p">()</span>
+</span><span data-line="649">
+</span><span data-line="650">        <span class="c1"># Reset word bank used words</span>
+</span><span data-line="651">        <span class="bp">self</span><span class="o">.</span><span class="n">_word_bank</span><span class="o">.</span><span class="n">reset_game_words</span><span class="p">(</span><span class="n">room</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</span><span data-line="652">
+</span><span data-line="653">        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Game reset to lobby&quot;</span><span class="p">,</span> <span class="n">room_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">room_id</span><span class="p">))</span>
+</span><span data-line="654">
+</span><span data-line="655">        <span class="k">return</span> <span class="n">room</span></div>
+
+</span><span data-line="656">
+</span><span data-line="657">    <span class="c1"># Utility Methods</span>
+</span><span data-line="658">
+</span><span data-line="659">    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_room_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="660"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a unique room join code.</span>
+</span><span data-line="661">
+</span><span data-line="662"><span class="sd">        Args:</span>
+</span><span data-line="663"><span class="sd">            length: Code length.</span>
+</span><span data-line="664">
+</span><span data-line="665"><span class="sd">        Returns:</span>
+</span><span data-line="666"><span class="sd">            Unique alphanumeric code.</span>
+</span><span data-line="667"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="668">        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span><span data-line="669">            <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">length</span><span class="p">))</span>
+</span><span data-line="670">            <span class="k">if</span> <span class="n">code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_room_codes</span><span class="p">:</span>
+</span><span data-line="671">                <span class="k">return</span> <span class="n">code</span>
+</span><span data-line="672">
+<div class="viewcode-block" id="GameService.get_all_rooms">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.get_all_rooms">[docs]</a>
+</span><span data-line="673">    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_rooms</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">GameRoom</span><span class="p">]:</span>
+</span><span data-line="674"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all active game rooms.</span>
+</span><span data-line="675">
+</span><span data-line="676"><span class="sd">        Returns:</span>
+</span><span data-line="677"><span class="sd">            List of all rooms.</span>
+</span><span data-line="678"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="679">        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rooms</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
+
+</span><span data-line="680">
+<div class="viewcode-block" id="GameService.get_lobby_rooms">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.get_lobby_rooms">[docs]</a>
+</span><span data-line="681">    <span class="k">def</span><span class="w"> </span><span class="nf">get_lobby_rooms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">public_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">GameRoom</span><span class="p">]:</span>
+</span><span data-line="682"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get rooms that are in lobby state (joinable).</span>
+</span><span data-line="683">
+</span><span data-line="684"><span class="sd">        Args:</span>
+</span><span data-line="685"><span class="sd">            public_only: If True, only return public rooms visible in lobby list.</span>
+</span><span data-line="686"><span class="sd">                         If False, return all lobby rooms regardless of visibility.</span>
+</span><span data-line="687">
+</span><span data-line="688"><span class="sd">        Returns:</span>
+</span><span data-line="689"><span class="sd">            List of rooms in LOBBY state.</span>
+</span><span data-line="690"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="691">        <span class="n">rooms</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rooms</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">LOBBY</span><span class="p">]</span>
+</span><span data-line="692">        <span class="k">if</span> <span class="n">public_only</span><span class="p">:</span>
+</span><span data-line="693">            <span class="n">rooms</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rooms</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">is_public</span><span class="p">]</span>
+</span><span data-line="694">        <span class="k">return</span> <span class="n">rooms</span></div>
+
+</span><span data-line="695">
+<div class="viewcode-block" id="GameService.get_active_games">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.services.game.GameService.get_active_games">[docs]</a>
+</span><span data-line="696">    <span class="k">def</span><span class="w"> </span><span class="nf">get_active_games</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">public_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">GameRoom</span><span class="p">]:</span>
+</span><span data-line="697"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get rooms with games in progress (available for spectating).</span>
+</span><span data-line="698">
+</span><span data-line="699"><span class="sd">        Args:</span>
+</span><span data-line="700"><span class="sd">            public_only: If True, only return public rooms.</span>
+</span><span data-line="701">
+</span><span data-line="702"><span class="sd">        Returns:</span>
+</span><span data-line="703"><span class="sd">            List of rooms in DRAWING, WORD_SELECTION, or ROUND_END state.</span>
+</span><span data-line="704"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="705">        <span class="n">active_states</span> <span class="o">=</span> <span class="p">{</span><span class="n">GameState</span><span class="o">.</span><span class="n">DRAWING</span><span class="p">,</span> <span class="n">GameState</span><span class="o">.</span><span class="n">WORD_SELECTION</span><span class="p">,</span> <span class="n">GameState</span><span class="o">.</span><span class="n">ROUND_END</span><span class="p">}</span>
+</span><span data-line="706">        <span class="n">rooms</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rooms</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">game_state</span> <span class="ow">in</span> <span class="n">active_states</span><span class="p">]</span>
+</span><span data-line="707">        <span class="k">if</span> <span class="n">public_only</span><span class="p">:</span>
+</span><span data-line="708">            <span class="n">rooms</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rooms</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">is_public</span><span class="p">]</span>
+</span><span data-line="709">        <span class="k">return</span> <span class="n">rooms</span></div>
+</div>
+
+</span></pre></div>
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2025, Jacob Coffee</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=30646c52"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../../../_static/shibuya.js?v=c1cf1a6b"></script></body>
+</html>

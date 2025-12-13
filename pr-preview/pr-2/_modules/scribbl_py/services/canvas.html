@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="cyan" data-content_root="../../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>scribbl_py.services.canvas - scribbl-py</title><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/shibuya.css?v=14737038" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_paramlinks.css" />
+    <link media="print" rel="stylesheet" type="text/css" href="../../../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=fc559bc7" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="scribbl_py.services.canvas"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../../../index.html">
+      
+      
+      <strong>scribbl-py</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link">
+          <a href="https://litestar.dev/">
+            <span>Litestar</span></a>
+        </li><li class="link">
+          <a href="https://pypi.org/project/scribbl-py/">
+            <span>PyPI</span></a>
+        </li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Learn</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/quickstart.html">Quickstart</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/index.html">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/configuration.html">Configuration Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/development.html">Development Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/deployment.html">Deployment Guide</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/plugin.html">Plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/storage.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/services.html">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/realtime.html">Realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/auth.html">Auth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/web.html">Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/game.html">Game</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+</ul>
+<p class="caption" role="heading" aria-level="3"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/JacobCoffee/scribbl-py">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/litestar">Discord</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../../index.html"><span itemprop="name">scribbl-py</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../../index.html"><span itemprop="name">Module code</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">scribbl_py.services.canvas</strong>
+        <meta itemprop="position" content="3" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <h1>Source code for scribbl_py.services.canvas</h1><div class="highlight"><pre>
+<span></span><span data-line="1"><span class="sd">&quot;&quot;&quot;Canvas service providing business logic for canvas operations.&quot;&quot;&quot;</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
+</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">replace</span>
+</span><span data-line="7"><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">UTC</span><span class="p">,</span> <span class="n">datetime</span>
+</span><span data-line="8"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+</span><span data-line="9"><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+</span><span data-line="10">
+</span><span data-line="11"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.core.commands</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span data-line="12">    <span class="n">AddElementCommand</span><span class="p">,</span>
+</span><span data-line="13">    <span class="n">CommandHistoryManager</span><span class="p">,</span>
+</span><span data-line="14">    <span class="n">DeleteElementCommand</span><span class="p">,</span>
+</span><span data-line="15">    <span class="n">GroupElementsCommand</span><span class="p">,</span>
+</span><span data-line="16">    <span class="n">MoveElementCommand</span><span class="p">,</span>
+</span><span data-line="17">    <span class="n">ReorderElementCommand</span><span class="p">,</span>
+</span><span data-line="18">    <span class="n">UngroupElementsCommand</span><span class="p">,</span>
+</span><span data-line="19">    <span class="n">UpdateElementCommand</span><span class="p">,</span>
+</span><span data-line="20"><span class="p">)</span>
+</span><span data-line="21"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.core.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Canvas</span><span class="p">,</span> <span class="n">Element</span><span class="p">,</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Point</span><span class="p">,</span> <span class="n">Shape</span><span class="p">,</span> <span class="n">Stroke</span><span class="p">,</span> <span class="n">Text</span>
+</span><span data-line="22"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.core.style</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElementStyle</span>
+</span><span data-line="23"><span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">CanvasNotFoundError</span><span class="p">,</span> <span class="n">ElementNotFoundError</span>
+</span><span data-line="24">
+</span><span data-line="25"><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+</span><span data-line="26">    <span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">UUID</span>
+</span><span data-line="27">
+</span><span data-line="28">    <span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.core.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShapeType</span>
+</span><span data-line="29">    <span class="kn">from</span><span class="w"> </span><span class="nn">scribbl_py.storage.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">StorageProtocol</span>
+</span><span data-line="30">
+</span><span data-line="31">
+<div class="viewcode-block" id="CanvasService">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService">[docs]</a>
+</span><span data-line="32"><span class="k">class</span><span class="w"> </span><span class="nc">CanvasService</span><span class="p">:</span>
+</span><span data-line="33"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Service for managing canvases and their elements.</span>
+</span><span data-line="34">
+</span><span data-line="35"><span class="sd">    This service provides business logic for canvas operations,</span>
+</span><span data-line="36"><span class="sd">    wrapping the storage layer with validation and convenience methods.</span>
+</span><span data-line="37">
+</span><span data-line="38"><span class="sd">    Attributes:</span>
+</span><span data-line="39"><span class="sd">        command_history: Manager for undo/redo command histories.</span>
+</span><span data-line="40"><span class="sd">        clipboard: In-memory clipboard for copy/paste operations.</span>
+</span><span data-line="41"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="42">
+<div class="viewcode-block" id="CanvasService.__init__">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.__init__">[docs]</a>
+</span><span data-line="43">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage</span><span class="p">:</span> <span class="n">StorageProtocol</span><span class="p">,</span> <span class="n">max_history</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="44"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the canvas service.</span>
+</span><span data-line="45">
+</span><span data-line="46"><span class="sd">        Args:</span>
+</span><span data-line="47"><span class="sd">            storage: Storage backend implementing StorageProtocol.</span>
+</span><span data-line="48"><span class="sd">            max_history: Maximum undo history size per canvas.</span>
+</span><span data-line="49"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="50">        <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span> <span class="o">=</span> <span class="n">storage</span>
+</span><span data-line="51">        <span class="bp">self</span><span class="o">.</span><span class="n">command_history</span> <span class="o">=</span> <span class="n">CommandHistoryManager</span><span class="p">(</span><span class="n">max_history</span><span class="p">)</span>
+</span><span data-line="52">        <span class="bp">self</span><span class="o">.</span><span class="n">_clipboard</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Element</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># user_id -&gt; copied elements</span>
+</span><span data-line="53">        <span class="bp">self</span><span class="o">.</span><span class="n">_z_index_counter</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">UUID</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># canvas_id -&gt; next z_index</span></div>
+
+</span><span data-line="54">
+</span><span data-line="55">    <span class="c1"># Canvas operations</span>
+<div class="viewcode-block" id="CanvasService.create_canvas">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.create_canvas">[docs]</a>
+</span><span data-line="56">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_canvas</span><span class="p">(</span>
+</span><span data-line="57">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="58">        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span data-line="59">        <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1920</span><span class="p">,</span>
+</span><span data-line="60">        <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1080</span><span class="p">,</span>
+</span><span data-line="61">        <span class="n">background_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;#ffffff&quot;</span><span class="p">,</span>
+</span><span data-line="62">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas</span><span class="p">:</span>
+</span><span data-line="63"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new canvas.</span>
+</span><span data-line="64">
+</span><span data-line="65"><span class="sd">        Args:</span>
+</span><span data-line="66"><span class="sd">            name: Display name for the canvas.</span>
+</span><span data-line="67"><span class="sd">            width: Canvas width in pixels.</span>
+</span><span data-line="68"><span class="sd">            height: Canvas height in pixels.</span>
+</span><span data-line="69"><span class="sd">            background_color: Background color in hex format.</span>
+</span><span data-line="70">
+</span><span data-line="71"><span class="sd">        Returns:</span>
+</span><span data-line="72"><span class="sd">            The newly created canvas.</span>
+</span><span data-line="73">
+</span><span data-line="74"><span class="sd">        Raises:</span>
+</span><span data-line="75"><span class="sd">            StorageError: If the canvas cannot be created.</span>
+</span><span data-line="76"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="77">        <span class="n">canvas</span> <span class="o">=</span> <span class="n">Canvas</span><span class="p">(</span>
+</span><span data-line="78">            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+</span><span data-line="79">            <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+</span><span data-line="80">            <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+</span><span data-line="81">            <span class="n">background_color</span><span class="o">=</span><span class="n">background_color</span><span class="p">,</span>
+</span><span data-line="82">        <span class="p">)</span>
+</span><span data-line="83">        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">create_canvas</span><span class="p">(</span><span class="n">canvas</span><span class="p">)</span></div>
+
+</span><span data-line="84">
+<div class="viewcode-block" id="CanvasService.get_canvas">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.get_canvas">[docs]</a>
+</span><span data-line="85">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_canvas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas</span><span class="p">:</span>
+</span><span data-line="86"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a canvas by ID.</span>
+</span><span data-line="87">
+</span><span data-line="88"><span class="sd">        Args:</span>
+</span><span data-line="89"><span class="sd">            canvas_id: The unique identifier of the canvas.</span>
+</span><span data-line="90">
+</span><span data-line="91"><span class="sd">        Returns:</span>
+</span><span data-line="92"><span class="sd">            The requested canvas.</span>
+</span><span data-line="93">
+</span><span data-line="94"><span class="sd">        Raises:</span>
+</span><span data-line="95"><span class="sd">            CanvasNotFoundError: If the canvas does not exist.</span>
+</span><span data-line="96"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="97">        <span class="n">canvas</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get_canvas</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">)</span>
+</span><span data-line="98">        <span class="k">if</span> <span class="n">canvas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="99">            <span class="k">raise</span> <span class="n">CanvasNotFoundError</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">)</span>
+</span><span data-line="100">        <span class="k">return</span> <span class="n">canvas</span></div>
+
+</span><span data-line="101">
+<div class="viewcode-block" id="CanvasService.list_canvases">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.list_canvases">[docs]</a>
+</span><span data-line="102">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">list_canvases</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Canvas</span><span class="p">]:</span>
+</span><span data-line="103"><span class="w">        </span><span class="sd">&quot;&quot;&quot;List all canvases.</span>
+</span><span data-line="104">
+</span><span data-line="105"><span class="sd">        Returns:</span>
+</span><span data-line="106"><span class="sd">            A list of all canvases, ordered by creation date (newest first).</span>
+</span><span data-line="107">
+</span><span data-line="108"><span class="sd">        Raises:</span>
+</span><span data-line="109"><span class="sd">            StorageError: If the list operation fails.</span>
+</span><span data-line="110"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="111">        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">list_canvases</span><span class="p">()</span></div>
+
+</span><span data-line="112">
+<div class="viewcode-block" id="CanvasService.update_canvas">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.update_canvas">[docs]</a>
+</span><span data-line="113">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_canvas</span><span class="p">(</span>
+</span><span data-line="114">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="115">        <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="116">        <span class="o">*</span><span class="p">,</span>
+</span><span data-line="117">        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="118">        <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="119">        <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="120">        <span class="n">background_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="121">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas</span><span class="p">:</span>
+</span><span data-line="122"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Update canvas properties.</span>
+</span><span data-line="123">
+</span><span data-line="124"><span class="sd">        Only provided fields are updated. Fields with None values are ignored.</span>
+</span><span data-line="125">
+</span><span data-line="126"><span class="sd">        Args:</span>
+</span><span data-line="127"><span class="sd">            canvas_id: The unique identifier of the canvas.</span>
+</span><span data-line="128"><span class="sd">            name: New display name for the canvas.</span>
+</span><span data-line="129"><span class="sd">            width: New canvas width in pixels.</span>
+</span><span data-line="130"><span class="sd">            height: New canvas height in pixels.</span>
+</span><span data-line="131"><span class="sd">            background_color: New background color in hex format.</span>
+</span><span data-line="132">
+</span><span data-line="133"><span class="sd">        Returns:</span>
+</span><span data-line="134"><span class="sd">            The updated canvas.</span>
+</span><span data-line="135">
+</span><span data-line="136"><span class="sd">        Raises:</span>
+</span><span data-line="137"><span class="sd">            CanvasNotFoundError: If the canvas does not exist.</span>
+</span><span data-line="138"><span class="sd">            StorageError: If the update operation fails.</span>
+</span><span data-line="139"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="140">        <span class="n">canvas</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_canvas</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">)</span>
+</span><span data-line="141">        <span class="n">updates</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span data-line="142">        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="143">            <span class="n">updates</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+</span><span data-line="144">        <span class="k">if</span> <span class="n">width</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="145">            <span class="n">updates</span><span class="p">[</span><span class="s2">&quot;width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">width</span>
+</span><span data-line="146">        <span class="k">if</span> <span class="n">height</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="147">            <span class="n">updates</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">height</span>
+</span><span data-line="148">        <span class="k">if</span> <span class="n">background_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="149">            <span class="n">updates</span><span class="p">[</span><span class="s2">&quot;background_color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">background_color</span>
+</span><span data-line="150">        <span class="k">if</span> <span class="n">updates</span><span class="p">:</span>
+</span><span data-line="151">            <span class="n">updates</span><span class="p">[</span><span class="s2">&quot;updated_at&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">UTC</span><span class="p">)</span>
+</span><span data-line="152">            <span class="n">canvas</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="o">**</span><span class="n">updates</span><span class="p">)</span>
+</span><span data-line="153">            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_canvas</span><span class="p">(</span><span class="n">canvas</span><span class="p">)</span>
+</span><span data-line="154">        <span class="k">return</span> <span class="n">canvas</span></div>
+
+</span><span data-line="155">
+<div class="viewcode-block" id="CanvasService.delete_canvas">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.delete_canvas">[docs]</a>
+</span><span data-line="156">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete_canvas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="157"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete a canvas.</span>
+</span><span data-line="158">
+</span><span data-line="159"><span class="sd">        Args:</span>
+</span><span data-line="160"><span class="sd">            canvas_id: The unique identifier of the canvas to delete.</span>
+</span><span data-line="161">
+</span><span data-line="162"><span class="sd">        Returns:</span>
+</span><span data-line="163"><span class="sd">            True if the canvas was deleted, False if it did not exist.</span>
+</span><span data-line="164">
+</span><span data-line="165"><span class="sd">        Raises:</span>
+</span><span data-line="166"><span class="sd">            StorageError: If the delete operation fails.</span>
+</span><span data-line="167"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="168">        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">delete_canvas</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">)</span></div>
+
+</span><span data-line="169">
+</span><span data-line="170">    <span class="c1"># Element operations</span>
+<div class="viewcode-block" id="CanvasService.add_stroke">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.add_stroke">[docs]</a>
+</span><span data-line="171">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">add_stroke</span><span class="p">(</span>
+</span><span data-line="172">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="173">        <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="174">        <span class="n">points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Point</span><span class="p">],</span>
+</span><span data-line="175">        <span class="o">*</span><span class="p">,</span>
+</span><span data-line="176">        <span class="n">style</span><span class="p">:</span> <span class="n">ElementStyle</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="177">        <span class="n">smoothing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+</span><span data-line="178">        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+</span><span data-line="179">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Stroke</span><span class="p">:</span>
+</span><span data-line="180"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a stroke to a canvas.</span>
+</span><span data-line="181">
+</span><span data-line="182"><span class="sd">        Args:</span>
+</span><span data-line="183"><span class="sd">            canvas_id: The unique identifier of the canvas.</span>
+</span><span data-line="184"><span class="sd">            points: List of points that make up the stroke path.</span>
+</span><span data-line="185"><span class="sd">            style: Visual styling configuration for the stroke.</span>
+</span><span data-line="186"><span class="sd">            smoothing: Smoothing factor applied to the stroke (0.0 to 1.0).</span>
+</span><span data-line="187"><span class="sd">            user_id: ID of the user performing the action.</span>
+</span><span data-line="188">
+</span><span data-line="189"><span class="sd">        Returns:</span>
+</span><span data-line="190"><span class="sd">            The created stroke element.</span>
+</span><span data-line="191">
+</span><span data-line="192"><span class="sd">        Raises:</span>
+</span><span data-line="193"><span class="sd">            CanvasNotFoundError: If the canvas does not exist.</span>
+</span><span data-line="194"><span class="sd">            StorageError: If the add operation fails.</span>
+</span><span data-line="195"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="196">        <span class="n">position</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">points</span> <span class="k">else</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span data-line="197">        <span class="n">stroke</span> <span class="o">=</span> <span class="n">Stroke</span><span class="p">(</span>
+</span><span data-line="198">            <span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span>
+</span><span data-line="199">            <span class="n">points</span><span class="o">=</span><span class="n">points</span><span class="p">,</span>
+</span><span data-line="200">            <span class="n">style</span><span class="o">=</span><span class="n">style</span> <span class="ow">or</span> <span class="n">ElementStyle</span><span class="p">(),</span>
+</span><span data-line="201">            <span class="n">smoothing</span><span class="o">=</span><span class="n">smoothing</span><span class="p">,</span>
+</span><span data-line="202">            <span class="n">z_index</span><span class="o">=</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_z_index</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">),</span>
+</span><span data-line="203">        <span class="p">)</span>
+</span><span data-line="204">        <span class="n">created</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">stroke</span><span class="p">)</span>
+</span><span data-line="205">
+</span><span data-line="206">        <span class="c1"># Record command for undo</span>
+</span><span data-line="207">        <span class="n">cmd</span> <span class="o">=</span> <span class="n">AddElementCommand</span><span class="p">(</span><span class="n">canvas_id</span><span class="o">=</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="n">created</span><span class="p">)</span>
+</span><span data-line="208">        <span class="n">cmd</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+</span><span data-line="209">        <span class="bp">self</span><span class="o">.</span><span class="n">command_history</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+</span><span data-line="210">
+</span><span data-line="211">        <span class="k">return</span> <span class="n">created</span></div>
+
+</span><span data-line="212">
+<div class="viewcode-block" id="CanvasService.add_shape">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.add_shape">[docs]</a>
+</span><span data-line="213">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">add_shape</span><span class="p">(</span>
+</span><span data-line="214">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="215">        <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="216">        <span class="n">shape_type</span><span class="p">:</span> <span class="n">ShapeType</span><span class="p">,</span>
+</span><span data-line="217">        <span class="n">position</span><span class="p">:</span> <span class="n">Point</span><span class="p">,</span>
+</span><span data-line="218">        <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span data-line="219">        <span class="n">height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span data-line="220">        <span class="o">*</span><span class="p">,</span>
+</span><span data-line="221">        <span class="n">style</span><span class="p">:</span> <span class="n">ElementStyle</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="222">        <span class="n">rotation</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+</span><span data-line="223">        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+</span><span data-line="224">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Shape</span><span class="p">:</span>
+</span><span data-line="225"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a shape to a canvas.</span>
+</span><span data-line="226">
+</span><span data-line="227"><span class="sd">        Args:</span>
+</span><span data-line="228"><span class="sd">            canvas_id: The unique identifier of the canvas.</span>
+</span><span data-line="229"><span class="sd">            shape_type: Type of shape (rectangle, ellipse, etc.).</span>
+</span><span data-line="230"><span class="sd">            position: Position of the shape on the canvas.</span>
+</span><span data-line="231"><span class="sd">            width: Width of the shape in pixels.</span>
+</span><span data-line="232"><span class="sd">            height: Height of the shape in pixels.</span>
+</span><span data-line="233"><span class="sd">            style: Visual styling configuration for the shape.</span>
+</span><span data-line="234"><span class="sd">            rotation: Rotation angle in degrees.</span>
+</span><span data-line="235"><span class="sd">            user_id: ID of the user performing the action.</span>
+</span><span data-line="236">
+</span><span data-line="237"><span class="sd">        Returns:</span>
+</span><span data-line="238"><span class="sd">            The created shape element.</span>
+</span><span data-line="239">
+</span><span data-line="240"><span class="sd">        Raises:</span>
+</span><span data-line="241"><span class="sd">            CanvasNotFoundError: If the canvas does not exist.</span>
+</span><span data-line="242"><span class="sd">            StorageError: If the add operation fails.</span>
+</span><span data-line="243"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="244">        <span class="n">shape</span> <span class="o">=</span> <span class="n">Shape</span><span class="p">(</span>
+</span><span data-line="245">            <span class="n">shape_type</span><span class="o">=</span><span class="n">shape_type</span><span class="p">,</span>
+</span><span data-line="246">            <span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span>
+</span><span data-line="247">            <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+</span><span data-line="248">            <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+</span><span data-line="249">            <span class="n">style</span><span class="o">=</span><span class="n">style</span> <span class="ow">or</span> <span class="n">ElementStyle</span><span class="p">(),</span>
+</span><span data-line="250">            <span class="n">rotation</span><span class="o">=</span><span class="n">rotation</span><span class="p">,</span>
+</span><span data-line="251">            <span class="n">z_index</span><span class="o">=</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_z_index</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">),</span>
+</span><span data-line="252">        <span class="p">)</span>
+</span><span data-line="253">        <span class="n">created</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+</span><span data-line="254">
+</span><span data-line="255">        <span class="c1"># Record command for undo</span>
+</span><span data-line="256">        <span class="n">cmd</span> <span class="o">=</span> <span class="n">AddElementCommand</span><span class="p">(</span><span class="n">canvas_id</span><span class="o">=</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="n">created</span><span class="p">)</span>
+</span><span data-line="257">        <span class="n">cmd</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+</span><span data-line="258">        <span class="bp">self</span><span class="o">.</span><span class="n">command_history</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+</span><span data-line="259">
+</span><span data-line="260">        <span class="k">return</span> <span class="n">created</span></div>
+
+</span><span data-line="261">
+<div class="viewcode-block" id="CanvasService.add_text">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.add_text">[docs]</a>
+</span><span data-line="262">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">add_text</span><span class="p">(</span>
+</span><span data-line="263">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="264">        <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="265">        <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span data-line="266">        <span class="n">position</span><span class="p">:</span> <span class="n">Point</span><span class="p">,</span>
+</span><span data-line="267">        <span class="o">*</span><span class="p">,</span>
+</span><span data-line="268">        <span class="n">style</span><span class="p">:</span> <span class="n">ElementStyle</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span data-line="269">        <span class="n">font_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+</span><span data-line="270">        <span class="n">font_family</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sans-serif&quot;</span><span class="p">,</span>
+</span><span data-line="271">        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+</span><span data-line="272">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
+</span><span data-line="273"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Add text to a canvas.</span>
+</span><span data-line="274">
+</span><span data-line="275"><span class="sd">        Args:</span>
+</span><span data-line="276"><span class="sd">            canvas_id: The unique identifier of the canvas.</span>
+</span><span data-line="277"><span class="sd">            content: The text content to display.</span>
+</span><span data-line="278"><span class="sd">            position: Position of the text on the canvas.</span>
+</span><span data-line="279"><span class="sd">            style: Visual styling configuration for the text.</span>
+</span><span data-line="280"><span class="sd">            font_size: Font size in pixels.</span>
+</span><span data-line="281"><span class="sd">            font_family: Font family name.</span>
+</span><span data-line="282"><span class="sd">            user_id: ID of the user performing the action.</span>
+</span><span data-line="283">
+</span><span data-line="284"><span class="sd">        Returns:</span>
+</span><span data-line="285"><span class="sd">            The created text element.</span>
+</span><span data-line="286">
+</span><span data-line="287"><span class="sd">        Raises:</span>
+</span><span data-line="288"><span class="sd">            CanvasNotFoundError: If the canvas does not exist.</span>
+</span><span data-line="289"><span class="sd">            StorageError: If the add operation fails.</span>
+</span><span data-line="290"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="291">        <span class="n">text</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span>
+</span><span data-line="292">            <span class="n">content</span><span class="o">=</span><span class="n">content</span><span class="p">,</span>
+</span><span data-line="293">            <span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span>
+</span><span data-line="294">            <span class="n">style</span><span class="o">=</span><span class="n">style</span> <span class="ow">or</span> <span class="n">ElementStyle</span><span class="p">(),</span>
+</span><span data-line="295">            <span class="n">font_size</span><span class="o">=</span><span class="n">font_size</span><span class="p">,</span>
+</span><span data-line="296">            <span class="n">font_family</span><span class="o">=</span><span class="n">font_family</span><span class="p">,</span>
+</span><span data-line="297">            <span class="n">z_index</span><span class="o">=</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_z_index</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">),</span>
+</span><span data-line="298">        <span class="p">)</span>
+</span><span data-line="299">        <span class="n">created</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+</span><span data-line="300">
+</span><span data-line="301">        <span class="c1"># Record command for undo</span>
+</span><span data-line="302">        <span class="n">cmd</span> <span class="o">=</span> <span class="n">AddElementCommand</span><span class="p">(</span><span class="n">canvas_id</span><span class="o">=</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="n">created</span><span class="p">)</span>
+</span><span data-line="303">        <span class="n">cmd</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+</span><span data-line="304">        <span class="bp">self</span><span class="o">.</span><span class="n">command_history</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+</span><span data-line="305">
+</span><span data-line="306">        <span class="k">return</span> <span class="n">created</span></div>
+
+</span><span data-line="307">
+<div class="viewcode-block" id="CanvasService.get_element">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.get_element">[docs]</a>
+</span><span data-line="308">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">element_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Element</span><span class="p">:</span>
+</span><span data-line="309"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an element from a canvas.</span>
+</span><span data-line="310">
+</span><span data-line="311"><span class="sd">        Args:</span>
+</span><span data-line="312"><span class="sd">            canvas_id: The unique identifier of the canvas.</span>
+</span><span data-line="313"><span class="sd">            element_id: The unique identifier of the element.</span>
+</span><span data-line="314">
+</span><span data-line="315"><span class="sd">        Returns:</span>
+</span><span data-line="316"><span class="sd">            The requested element.</span>
+</span><span data-line="317">
+</span><span data-line="318"><span class="sd">        Raises:</span>
+</span><span data-line="319"><span class="sd">            ElementNotFoundError: If the element does not exist.</span>
+</span><span data-line="320"><span class="sd">            CanvasNotFoundError: If the canvas does not exist.</span>
+</span><span data-line="321"><span class="sd">            StorageError: If the retrieval operation fails.</span>
+</span><span data-line="322"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="323">        <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">element_id</span><span class="p">)</span>
+</span><span data-line="324">        <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="325">            <span class="k">raise</span> <span class="n">ElementNotFoundError</span><span class="p">(</span><span class="n">element_id</span><span class="p">)</span>
+</span><span data-line="326">        <span class="k">return</span> <span class="n">element</span></div>
+
+</span><span data-line="327">
+<div class="viewcode-block" id="CanvasService.list_elements">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.list_elements">[docs]</a>
+</span><span data-line="328">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">list_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Element</span><span class="p">]:</span>
+</span><span data-line="329"><span class="w">        </span><span class="sd">&quot;&quot;&quot;List all elements on a canvas.</span>
+</span><span data-line="330">
+</span><span data-line="331"><span class="sd">        Args:</span>
+</span><span data-line="332"><span class="sd">            canvas_id: The unique identifier of the canvas.</span>
+</span><span data-line="333">
+</span><span data-line="334"><span class="sd">        Returns:</span>
+</span><span data-line="335"><span class="sd">            A list of all elements on the canvas, ordered by creation date.</span>
+</span><span data-line="336">
+</span><span data-line="337"><span class="sd">        Raises:</span>
+</span><span data-line="338"><span class="sd">            CanvasNotFoundError: If the canvas does not exist.</span>
+</span><span data-line="339"><span class="sd">            StorageError: If the list operation fails.</span>
+</span><span data-line="340"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="341">        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">list_elements</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">)</span></div>
+
+</span><span data-line="342">
+<div class="viewcode-block" id="CanvasService.delete_element">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.delete_element">[docs]</a>
+</span><span data-line="343">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">element_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;system&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="344"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete an element from a canvas.</span>
+</span><span data-line="345">
+</span><span data-line="346"><span class="sd">        Args:</span>
+</span><span data-line="347"><span class="sd">            canvas_id: The unique identifier of the canvas.</span>
+</span><span data-line="348"><span class="sd">            element_id: The unique identifier of the element to delete.</span>
+</span><span data-line="349"><span class="sd">            user_id: ID of the user performing the action.</span>
+</span><span data-line="350">
+</span><span data-line="351"><span class="sd">        Returns:</span>
+</span><span data-line="352"><span class="sd">            True if the element was deleted, False if it did not exist.</span>
+</span><span data-line="353">
+</span><span data-line="354"><span class="sd">        Raises:</span>
+</span><span data-line="355"><span class="sd">            CanvasNotFoundError: If the canvas does not exist.</span>
+</span><span data-line="356"><span class="sd">            StorageError: If the delete operation fails.</span>
+</span><span data-line="357"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="358">        <span class="c1"># Get the element before deleting for undo capability</span>
+</span><span data-line="359">        <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">element_id</span><span class="p">)</span>
+</span><span data-line="360">
+</span><span data-line="361">        <span class="c1"># Record command for undo</span>
+</span><span data-line="362">        <span class="n">cmd</span> <span class="o">=</span> <span class="n">DeleteElementCommand</span><span class="p">(</span><span class="n">canvas_id</span><span class="o">=</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">element_id</span><span class="o">=</span><span class="n">element_id</span><span class="p">)</span>
+</span><span data-line="363">        <span class="k">if</span> <span class="n">element</span><span class="p">:</span>
+</span><span data-line="364">            <span class="n">cmd</span><span class="o">.</span><span class="n">set_deleted_element</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+</span><span data-line="365">        <span class="bp">self</span><span class="o">.</span><span class="n">command_history</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+</span><span data-line="366">
+</span><span data-line="367">        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">delete_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">element_id</span><span class="p">)</span></div>
+
+</span><span data-line="368">
+</span><span data-line="369">    <span class="c1"># Z-ordering operations</span>
+</span><span data-line="370">
+</span><span data-line="371">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_get_next_z_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span data-line="372"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the next available z-index for a canvas.</span>
+</span><span data-line="373">
+</span><span data-line="374"><span class="sd">        Args:</span>
+</span><span data-line="375"><span class="sd">            canvas_id: The canvas ID.</span>
+</span><span data-line="376">
+</span><span data-line="377"><span class="sd">        Returns:</span>
+</span><span data-line="378"><span class="sd">            The next z-index value.</span>
+</span><span data-line="379"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="380">        <span class="k">if</span> <span class="n">canvas_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_z_index_counter</span><span class="p">:</span>
+</span><span data-line="381">            <span class="n">elements</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">list_elements</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">)</span>
+</span><span data-line="382">            <span class="n">max_z</span> <span class="o">=</span> <span class="nb">max</span><span class="p">((</span><span class="n">e</span><span class="o">.</span><span class="n">z_index</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">),</span> <span class="n">default</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="383">            <span class="bp">self</span><span class="o">.</span><span class="n">_z_index_counter</span><span class="p">[</span><span class="n">canvas_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_z</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span data-line="384">        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_z_index_counter</span><span class="p">[</span><span class="n">canvas_id</span><span class="p">]</span>
+</span><span data-line="385">        <span class="bp">self</span><span class="o">.</span><span class="n">_z_index_counter</span><span class="p">[</span><span class="n">canvas_id</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span data-line="386">        <span class="k">return</span> <span class="n">result</span>
+</span><span data-line="387">
+<div class="viewcode-block" id="CanvasService.bring_to_front">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.bring_to_front">[docs]</a>
+</span><span data-line="388">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">bring_to_front</span><span class="p">(</span>
+</span><span data-line="389">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="390">        <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="391">        <span class="n">element_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="392">        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+</span><span data-line="393">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Element</span><span class="p">:</span>
+</span><span data-line="394"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Bring an element to the front (highest z-index).</span>
+</span><span data-line="395">
+</span><span data-line="396"><span class="sd">        Args:</span>
+</span><span data-line="397"><span class="sd">            canvas_id: The canvas ID.</span>
+</span><span data-line="398"><span class="sd">            element_id: The element ID.</span>
+</span><span data-line="399"><span class="sd">            user_id: ID of the user performing the action.</span>
+</span><span data-line="400">
+</span><span data-line="401"><span class="sd">        Returns:</span>
+</span><span data-line="402"><span class="sd">            The updated element.</span>
+</span><span data-line="403">
+</span><span data-line="404"><span class="sd">        Raises:</span>
+</span><span data-line="405"><span class="sd">            ElementNotFoundError: If the element does not exist.</span>
+</span><span data-line="406"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="407">        <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">element_id</span><span class="p">)</span>
+</span><span data-line="408">        <span class="n">old_z</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">z_index</span>
+</span><span data-line="409">        <span class="n">new_z</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_z_index</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">)</span>
+</span><span data-line="410">
+</span><span data-line="411">        <span class="c1"># Create command for undo</span>
+</span><span data-line="412">        <span class="n">cmd</span> <span class="o">=</span> <span class="n">ReorderElementCommand</span><span class="p">(</span>
+</span><span data-line="413">            <span class="n">canvas_id</span><span class="o">=</span><span class="n">canvas_id</span><span class="p">,</span>
+</span><span data-line="414">            <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
+</span><span data-line="415">            <span class="n">element_id</span><span class="o">=</span><span class="n">element_id</span><span class="p">,</span>
+</span><span data-line="416">            <span class="n">new_z_index</span><span class="o">=</span><span class="n">new_z</span><span class="p">,</span>
+</span><span data-line="417">        <span class="p">)</span>
+</span><span data-line="418">        <span class="n">cmd</span><span class="o">.</span><span class="n">set_old_z_index</span><span class="p">(</span><span class="n">old_z</span><span class="p">)</span>
+</span><span data-line="419">        <span class="bp">self</span><span class="o">.</span><span class="n">command_history</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+</span><span data-line="420">
+</span><span data-line="421">        <span class="n">updated</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">z_index</span><span class="o">=</span><span class="n">new_z</span><span class="p">)</span>
+</span><span data-line="422">        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">updated</span><span class="p">)</span></div>
+
+</span><span data-line="423">
+<div class="viewcode-block" id="CanvasService.send_to_back">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.send_to_back">[docs]</a>
+</span><span data-line="424">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_to_back</span><span class="p">(</span>
+</span><span data-line="425">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="426">        <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="427">        <span class="n">element_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="428">        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+</span><span data-line="429">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Element</span><span class="p">:</span>
+</span><span data-line="430"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Send an element to the back (lowest z-index).</span>
+</span><span data-line="431">
+</span><span data-line="432"><span class="sd">        Args:</span>
+</span><span data-line="433"><span class="sd">            canvas_id: The canvas ID.</span>
+</span><span data-line="434"><span class="sd">            element_id: The element ID.</span>
+</span><span data-line="435"><span class="sd">            user_id: ID of the user performing the action.</span>
+</span><span data-line="436">
+</span><span data-line="437"><span class="sd">        Returns:</span>
+</span><span data-line="438"><span class="sd">            The updated element.</span>
+</span><span data-line="439">
+</span><span data-line="440"><span class="sd">        Raises:</span>
+</span><span data-line="441"><span class="sd">            ElementNotFoundError: If the element does not exist.</span>
+</span><span data-line="442"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="443">        <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">element_id</span><span class="p">)</span>
+</span><span data-line="444">        <span class="n">old_z</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">z_index</span>
+</span><span data-line="445">        <span class="n">elements</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">list_elements</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">)</span>
+</span><span data-line="446">        <span class="n">min_z</span> <span class="o">=</span> <span class="nb">min</span><span class="p">((</span><span class="n">e</span><span class="o">.</span><span class="n">z_index</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span data-line="447">        <span class="n">new_z</span> <span class="o">=</span> <span class="n">min_z</span> <span class="o">-</span> <span class="mi">1</span>
+</span><span data-line="448">
+</span><span data-line="449">        <span class="n">cmd</span> <span class="o">=</span> <span class="n">ReorderElementCommand</span><span class="p">(</span>
+</span><span data-line="450">            <span class="n">canvas_id</span><span class="o">=</span><span class="n">canvas_id</span><span class="p">,</span>
+</span><span data-line="451">            <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
+</span><span data-line="452">            <span class="n">element_id</span><span class="o">=</span><span class="n">element_id</span><span class="p">,</span>
+</span><span data-line="453">            <span class="n">new_z_index</span><span class="o">=</span><span class="n">new_z</span><span class="p">,</span>
+</span><span data-line="454">        <span class="p">)</span>
+</span><span data-line="455">        <span class="n">cmd</span><span class="o">.</span><span class="n">set_old_z_index</span><span class="p">(</span><span class="n">old_z</span><span class="p">)</span>
+</span><span data-line="456">        <span class="bp">self</span><span class="o">.</span><span class="n">command_history</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+</span><span data-line="457">
+</span><span data-line="458">        <span class="n">updated</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">z_index</span><span class="o">=</span><span class="n">new_z</span><span class="p">)</span>
+</span><span data-line="459">        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">updated</span><span class="p">)</span></div>
+
+</span><span data-line="460">
+<div class="viewcode-block" id="CanvasService.move_forward">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.move_forward">[docs]</a>
+</span><span data-line="461">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">move_forward</span><span class="p">(</span>
+</span><span data-line="462">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="463">        <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="464">        <span class="n">element_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="465">        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+</span><span data-line="466">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Element</span><span class="p">:</span>
+</span><span data-line="467"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Move an element one layer forward.</span>
+</span><span data-line="468">
+</span><span data-line="469"><span class="sd">        Args:</span>
+</span><span data-line="470"><span class="sd">            canvas_id: The canvas ID.</span>
+</span><span data-line="471"><span class="sd">            element_id: The element ID.</span>
+</span><span data-line="472"><span class="sd">            user_id: ID of the user performing the action.</span>
+</span><span data-line="473">
+</span><span data-line="474"><span class="sd">        Returns:</span>
+</span><span data-line="475"><span class="sd">            The updated element.</span>
+</span><span data-line="476"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="477">        <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">element_id</span><span class="p">)</span>
+</span><span data-line="478">        <span class="n">old_z</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">z_index</span>
+</span><span data-line="479">        <span class="n">new_z</span> <span class="o">=</span> <span class="n">old_z</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span data-line="480">
+</span><span data-line="481">        <span class="n">cmd</span> <span class="o">=</span> <span class="n">ReorderElementCommand</span><span class="p">(</span>
+</span><span data-line="482">            <span class="n">canvas_id</span><span class="o">=</span><span class="n">canvas_id</span><span class="p">,</span>
+</span><span data-line="483">            <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
+</span><span data-line="484">            <span class="n">element_id</span><span class="o">=</span><span class="n">element_id</span><span class="p">,</span>
+</span><span data-line="485">            <span class="n">new_z_index</span><span class="o">=</span><span class="n">new_z</span><span class="p">,</span>
+</span><span data-line="486">        <span class="p">)</span>
+</span><span data-line="487">        <span class="n">cmd</span><span class="o">.</span><span class="n">set_old_z_index</span><span class="p">(</span><span class="n">old_z</span><span class="p">)</span>
+</span><span data-line="488">        <span class="bp">self</span><span class="o">.</span><span class="n">command_history</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+</span><span data-line="489">
+</span><span data-line="490">        <span class="n">updated</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">z_index</span><span class="o">=</span><span class="n">new_z</span><span class="p">)</span>
+</span><span data-line="491">        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">updated</span><span class="p">)</span></div>
+
+</span><span data-line="492">
+<div class="viewcode-block" id="CanvasService.move_backward">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.move_backward">[docs]</a>
+</span><span data-line="493">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">move_backward</span><span class="p">(</span>
+</span><span data-line="494">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="495">        <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="496">        <span class="n">element_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="497">        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+</span><span data-line="498">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Element</span><span class="p">:</span>
+</span><span data-line="499"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Move an element one layer backward.</span>
+</span><span data-line="500">
+</span><span data-line="501"><span class="sd">        Args:</span>
+</span><span data-line="502"><span class="sd">            canvas_id: The canvas ID.</span>
+</span><span data-line="503"><span class="sd">            element_id: The element ID.</span>
+</span><span data-line="504"><span class="sd">            user_id: ID of the user performing the action.</span>
+</span><span data-line="505">
+</span><span data-line="506"><span class="sd">        Returns:</span>
+</span><span data-line="507"><span class="sd">            The updated element.</span>
+</span><span data-line="508"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="509">        <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">element_id</span><span class="p">)</span>
+</span><span data-line="510">        <span class="n">old_z</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">z_index</span>
+</span><span data-line="511">        <span class="n">new_z</span> <span class="o">=</span> <span class="n">old_z</span> <span class="o">-</span> <span class="mi">1</span>
+</span><span data-line="512">
+</span><span data-line="513">        <span class="n">cmd</span> <span class="o">=</span> <span class="n">ReorderElementCommand</span><span class="p">(</span>
+</span><span data-line="514">            <span class="n">canvas_id</span><span class="o">=</span><span class="n">canvas_id</span><span class="p">,</span>
+</span><span data-line="515">            <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
+</span><span data-line="516">            <span class="n">element_id</span><span class="o">=</span><span class="n">element_id</span><span class="p">,</span>
+</span><span data-line="517">            <span class="n">new_z_index</span><span class="o">=</span><span class="n">new_z</span><span class="p">,</span>
+</span><span data-line="518">        <span class="p">)</span>
+</span><span data-line="519">        <span class="n">cmd</span><span class="o">.</span><span class="n">set_old_z_index</span><span class="p">(</span><span class="n">old_z</span><span class="p">)</span>
+</span><span data-line="520">        <span class="bp">self</span><span class="o">.</span><span class="n">command_history</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+</span><span data-line="521">
+</span><span data-line="522">        <span class="n">updated</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">z_index</span><span class="o">=</span><span class="n">new_z</span><span class="p">)</span>
+</span><span data-line="523">        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">updated</span><span class="p">)</span></div>
+
+</span><span data-line="524">
+</span><span data-line="525">    <span class="c1"># Grouping operations</span>
+</span><span data-line="526">
+<div class="viewcode-block" id="CanvasService.group_elements">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.group_elements">[docs]</a>
+</span><span data-line="527">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">group_elements</span><span class="p">(</span>
+</span><span data-line="528">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="529">        <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="530">        <span class="n">element_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">UUID</span><span class="p">],</span>
+</span><span data-line="531">        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+</span><span data-line="532">        <span class="n">group_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span data-line="533">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Group</span><span class="p">:</span>
+</span><span data-line="534"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Group multiple elements together.</span>
+</span><span data-line="535">
+</span><span data-line="536"><span class="sd">        Args:</span>
+</span><span data-line="537"><span class="sd">            canvas_id: The canvas ID.</span>
+</span><span data-line="538"><span class="sd">            element_ids: IDs of elements to group.</span>
+</span><span data-line="539"><span class="sd">            user_id: ID of the user performing the action.</span>
+</span><span data-line="540"><span class="sd">            group_name: Optional name for the group.</span>
+</span><span data-line="541">
+</span><span data-line="542"><span class="sd">        Returns:</span>
+</span><span data-line="543"><span class="sd">            The created group element.</span>
+</span><span data-line="544">
+</span><span data-line="545"><span class="sd">        Raises:</span>
+</span><span data-line="546"><span class="sd">            ValueError: If fewer than 2 elements are provided.</span>
+</span><span data-line="547"><span class="sd">            ElementNotFoundError: If any element does not exist.</span>
+</span><span data-line="548"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="549">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">element_ids</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+</span><span data-line="550">            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;At least 2 elements are required to create a group&quot;</span>
+</span><span data-line="551">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</span><span data-line="552">
+</span><span data-line="553">        <span class="c1"># Verify all elements exist and store previous group assignments</span>
+</span><span data-line="554">        <span class="n">previous_groups</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">UUID</span><span class="p">,</span> <span class="n">UUID</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span data-line="555">        <span class="k">for</span> <span class="n">eid</span> <span class="ow">in</span> <span class="n">element_ids</span><span class="p">:</span>
+</span><span data-line="556">            <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">eid</span><span class="p">)</span>
+</span><span data-line="557">            <span class="n">previous_groups</span><span class="p">[</span><span class="n">eid</span><span class="p">]</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">group_id</span>
+</span><span data-line="558">
+</span><span data-line="559">        <span class="c1"># Create the group</span>
+</span><span data-line="560">        <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span>
+</span><span data-line="561">            <span class="n">name</span><span class="o">=</span><span class="n">group_name</span><span class="p">,</span>
+</span><span data-line="562">            <span class="n">children</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">element_ids</span><span class="p">),</span>
+</span><span data-line="563">            <span class="n">z_index</span><span class="o">=</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_z_index</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">),</span>
+</span><span data-line="564">        <span class="p">)</span>
+</span><span data-line="565">        <span class="n">created_group</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+</span><span data-line="566">
+</span><span data-line="567">        <span class="c1"># Update elements with group_id</span>
+</span><span data-line="568">        <span class="k">for</span> <span class="n">eid</span> <span class="ow">in</span> <span class="n">element_ids</span><span class="p">:</span>
+</span><span data-line="569">            <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">eid</span><span class="p">)</span>
+</span><span data-line="570">            <span class="k">if</span> <span class="n">element</span><span class="p">:</span>
+</span><span data-line="571">                <span class="n">updated</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">group_id</span><span class="o">=</span><span class="n">created_group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</span><span data-line="572">                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">updated</span><span class="p">)</span>
+</span><span data-line="573">
+</span><span data-line="574">        <span class="c1"># Record command for undo</span>
+</span><span data-line="575">        <span class="n">cmd</span> <span class="o">=</span> <span class="n">GroupElementsCommand</span><span class="p">(</span>
+</span><span data-line="576">            <span class="n">canvas_id</span><span class="o">=</span><span class="n">canvas_id</span><span class="p">,</span>
+</span><span data-line="577">            <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
+</span><span data-line="578">            <span class="n">element_ids</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">element_ids</span><span class="p">),</span>
+</span><span data-line="579">        <span class="p">)</span>
+</span><span data-line="580">        <span class="n">cmd</span><span class="o">.</span><span class="n">set_group_id</span><span class="p">(</span><span class="n">created_group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</span><span data-line="581">        <span class="n">cmd</span><span class="o">.</span><span class="n">set_previous_group_ids</span><span class="p">(</span><span class="n">previous_groups</span><span class="p">)</span>
+</span><span data-line="582">        <span class="bp">self</span><span class="o">.</span><span class="n">command_history</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+</span><span data-line="583">
+</span><span data-line="584">        <span class="k">return</span> <span class="n">created_group</span></div>
+
+</span><span data-line="585">
+<div class="viewcode-block" id="CanvasService.ungroup_elements">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.ungroup_elements">[docs]</a>
+</span><span data-line="586">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ungroup_elements</span><span class="p">(</span>
+</span><span data-line="587">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="588">        <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="589">        <span class="n">group_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="590">        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+</span><span data-line="591">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Element</span><span class="p">]:</span>
+</span><span data-line="592"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Ungroup elements from a group.</span>
+</span><span data-line="593">
+</span><span data-line="594"><span class="sd">        Args:</span>
+</span><span data-line="595"><span class="sd">            canvas_id: The canvas ID.</span>
+</span><span data-line="596"><span class="sd">            group_id: ID of the group to ungroup.</span>
+</span><span data-line="597"><span class="sd">            user_id: ID of the user performing the action.</span>
+</span><span data-line="598">
+</span><span data-line="599"><span class="sd">        Returns:</span>
+</span><span data-line="600"><span class="sd">            List of elements that were in the group.</span>
+</span><span data-line="601">
+</span><span data-line="602"><span class="sd">        Raises:</span>
+</span><span data-line="603"><span class="sd">            ElementNotFoundError: If the group does not exist.</span>
+</span><span data-line="604"><span class="sd">            ValueError: If the element is not a group.</span>
+</span><span data-line="605"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="606">        <span class="n">group</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">group_id</span><span class="p">)</span>
+</span><span data-line="607">        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">Group</span><span class="p">):</span>
+</span><span data-line="608">            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Element </span><span class="si">{</span><span class="n">group_id</span><span class="si">}</span><span class="s2"> is not a group&quot;</span>
+</span><span data-line="609">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</span><span data-line="610">
+</span><span data-line="611">        <span class="n">child_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
+</span><span data-line="612">        <span class="n">ungrouped_elements</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Element</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="613">
+</span><span data-line="614">        <span class="c1"># Remove group_id from all children</span>
+</span><span data-line="615">        <span class="k">for</span> <span class="n">child_id</span> <span class="ow">in</span> <span class="n">child_ids</span><span class="p">:</span>
+</span><span data-line="616">            <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">child_id</span><span class="p">)</span>
+</span><span data-line="617">            <span class="k">if</span> <span class="n">element</span><span class="p">:</span>
+</span><span data-line="618">                <span class="n">updated</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">group_id</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span data-line="619">                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">updated</span><span class="p">)</span>
+</span><span data-line="620">                <span class="n">ungrouped_elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+</span><span data-line="621">
+</span><span data-line="622">        <span class="c1"># Record command before deleting group</span>
+</span><span data-line="623">        <span class="n">cmd</span> <span class="o">=</span> <span class="n">UngroupElementsCommand</span><span class="p">(</span>
+</span><span data-line="624">            <span class="n">canvas_id</span><span class="o">=</span><span class="n">canvas_id</span><span class="p">,</span>
+</span><span data-line="625">            <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
+</span><span data-line="626">            <span class="n">group_id</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span>
+</span><span data-line="627">        <span class="p">)</span>
+</span><span data-line="628">        <span class="n">cmd</span><span class="o">.</span><span class="n">set_deleted_group</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">child_ids</span><span class="p">)</span>
+</span><span data-line="629">        <span class="bp">self</span><span class="o">.</span><span class="n">command_history</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+</span><span data-line="630">
+</span><span data-line="631">        <span class="c1"># Delete the group element</span>
+</span><span data-line="632">        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">delete_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">group_id</span><span class="p">)</span>
+</span><span data-line="633">
+</span><span data-line="634">        <span class="k">return</span> <span class="n">ungrouped_elements</span></div>
+
+</span><span data-line="635">
+</span><span data-line="636">    <span class="c1"># Copy/paste operations</span>
+</span><span data-line="637">
+<div class="viewcode-block" id="CanvasService.copy_elements">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.copy_elements">[docs]</a>
+</span><span data-line="638">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">copy_elements</span><span class="p">(</span>
+</span><span data-line="639">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="640">        <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="641">        <span class="n">element_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">UUID</span><span class="p">],</span>
+</span><span data-line="642">        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span data-line="643">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span data-line="644"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Copy elements to the clipboard.</span>
+</span><span data-line="645">
+</span><span data-line="646"><span class="sd">        Args:</span>
+</span><span data-line="647"><span class="sd">            canvas_id: The canvas ID.</span>
+</span><span data-line="648"><span class="sd">            element_ids: IDs of elements to copy.</span>
+</span><span data-line="649"><span class="sd">            user_id: ID of the user copying.</span>
+</span><span data-line="650">
+</span><span data-line="651"><span class="sd">        Returns:</span>
+</span><span data-line="652"><span class="sd">            Number of elements copied.</span>
+</span><span data-line="653"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="654">        <span class="n">copied</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Element</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="655">        <span class="k">for</span> <span class="n">eid</span> <span class="ow">in</span> <span class="n">element_ids</span><span class="p">:</span>
+</span><span data-line="656">            <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">eid</span><span class="p">)</span>
+</span><span data-line="657">            <span class="k">if</span> <span class="n">element</span><span class="p">:</span>
+</span><span data-line="658">                <span class="n">copied</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">element</span><span class="p">))</span>
+</span><span data-line="659">
+</span><span data-line="660">        <span class="bp">self</span><span class="o">.</span><span class="n">_clipboard</span><span class="p">[</span><span class="n">user_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">copied</span>
+</span><span data-line="661">        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">copied</span><span class="p">)</span></div>
+
+</span><span data-line="662">
+<div class="viewcode-block" id="CanvasService.paste_elements">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.paste_elements">[docs]</a>
+</span><span data-line="663">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">paste_elements</span><span class="p">(</span>
+</span><span data-line="664">        <span class="bp">self</span><span class="p">,</span>
+</span><span data-line="665">        <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span data-line="666">        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span data-line="667">        <span class="n">offset_x</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
+</span><span data-line="668">        <span class="n">offset_y</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
+</span><span data-line="669">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Element</span><span class="p">]:</span>
+</span><span data-line="670"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Paste elements from the clipboard.</span>
+</span><span data-line="671">
+</span><span data-line="672"><span class="sd">        Args:</span>
+</span><span data-line="673"><span class="sd">            canvas_id: The canvas ID to paste into.</span>
+</span><span data-line="674"><span class="sd">            user_id: ID of the user pasting.</span>
+</span><span data-line="675"><span class="sd">            offset_x: X offset for pasted elements.</span>
+</span><span data-line="676"><span class="sd">            offset_y: Y offset for pasted elements.</span>
+</span><span data-line="677">
+</span><span data-line="678"><span class="sd">        Returns:</span>
+</span><span data-line="679"><span class="sd">            List of newly created elements.</span>
+</span><span data-line="680"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="681">        <span class="k">if</span> <span class="n">user_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clipboard</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clipboard</span><span class="p">[</span><span class="n">user_id</span><span class="p">]:</span>
+</span><span data-line="682">            <span class="k">return</span> <span class="p">[]</span>
+</span><span data-line="683">
+</span><span data-line="684">        <span class="n">pasted</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Element</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="685">        <span class="n">id_mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">UUID</span><span class="p">,</span> <span class="n">UUID</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># old_id -&gt; new_id</span>
+</span><span data-line="686">
+</span><span data-line="687">        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clipboard</span><span class="p">[</span><span class="n">user_id</span><span class="p">]:</span>
+</span><span data-line="688">            <span class="c1"># Create new element with new ID and offset position</span>
+</span><span data-line="689">            <span class="n">new_id</span> <span class="o">=</span> <span class="n">uuid4</span><span class="p">()</span>
+</span><span data-line="690">            <span class="n">id_mapping</span><span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_id</span>
+</span><span data-line="691">
+</span><span data-line="692">            <span class="n">new_position</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span>
+</span><span data-line="693">                <span class="n">x</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">offset_x</span><span class="p">,</span>
+</span><span data-line="694">                <span class="n">y</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">offset_y</span><span class="p">,</span>
+</span><span data-line="695">                <span class="n">pressure</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">pressure</span><span class="p">,</span>
+</span><span data-line="696">            <span class="p">)</span>
+</span><span data-line="697">
+</span><span data-line="698">            <span class="c1"># Create a copy with new ID and position</span>
+</span><span data-line="699">            <span class="n">new_element</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span>
+</span><span data-line="700">                <span class="n">element</span><span class="p">,</span>
+</span><span data-line="701">                <span class="nb">id</span><span class="o">=</span><span class="n">new_id</span><span class="p">,</span>
+</span><span data-line="702">                <span class="n">position</span><span class="o">=</span><span class="n">new_position</span><span class="p">,</span>
+</span><span data-line="703">                <span class="n">z_index</span><span class="o">=</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_z_index</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">),</span>
+</span><span data-line="704">                <span class="n">group_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># Don&#39;t preserve group membership</span>
+</span><span data-line="705">            <span class="p">)</span>
+</span><span data-line="706">
+</span><span data-line="707">            <span class="n">created</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">new_element</span><span class="p">)</span>
+</span><span data-line="708">            <span class="n">pasted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">created</span><span class="p">)</span>
+</span><span data-line="709">
+</span><span data-line="710">            <span class="c1"># Record command</span>
+</span><span data-line="711">            <span class="n">cmd</span> <span class="o">=</span> <span class="n">AddElementCommand</span><span class="p">(</span>
+</span><span data-line="712">                <span class="n">canvas_id</span><span class="o">=</span><span class="n">canvas_id</span><span class="p">,</span>
+</span><span data-line="713">                <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
+</span><span data-line="714">                <span class="n">element</span><span class="o">=</span><span class="n">created</span><span class="p">,</span>
+</span><span data-line="715">            <span class="p">)</span>
+</span><span data-line="716">            <span class="bp">self</span><span class="o">.</span><span class="n">command_history</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+</span><span data-line="717">
+</span><span data-line="718">        <span class="k">return</span> <span class="n">pasted</span></div>
+
+</span><span data-line="719">
+<div class="viewcode-block" id="CanvasService.clear_clipboard">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.clear_clipboard">[docs]</a>
+</span><span data-line="720">    <span class="k">def</span><span class="w"> </span><span class="nf">clear_clipboard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="721"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear a user&#39;s clipboard.</span>
+</span><span data-line="722">
+</span><span data-line="723"><span class="sd">        Args:</span>
+</span><span data-line="724"><span class="sd">            user_id: ID of the user.</span>
+</span><span data-line="725"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="726">        <span class="bp">self</span><span class="o">.</span><span class="n">_clipboard</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+</span><span data-line="727">
+<div class="viewcode-block" id="CanvasService.get_clipboard_count">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.get_clipboard_count">[docs]</a>
+</span><span data-line="728">    <span class="k">def</span><span class="w"> </span><span class="nf">get_clipboard_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span data-line="729"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get number of items in a user&#39;s clipboard.</span>
+</span><span data-line="730">
+</span><span data-line="731"><span class="sd">        Args:</span>
+</span><span data-line="732"><span class="sd">            user_id: ID of the user.</span>
+</span><span data-line="733">
+</span><span data-line="734"><span class="sd">        Returns:</span>
+</span><span data-line="735"><span class="sd">            Number of elements in clipboard.</span>
+</span><span data-line="736"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="737">        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clipboard</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="p">[]))</span></div>
+
+</span><span data-line="738">
+</span><span data-line="739">    <span class="c1"># Undo/redo operations</span>
+</span><span data-line="740">
+<div class="viewcode-block" id="CanvasService.undo">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.undo">[docs]</a>
+</span><span data-line="741">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">undo</span><span class="p">(</span>  <span class="c1"># noqa: C901, PLR0912</span>
+</span><span data-line="742">        <span class="bp">self</span><span class="p">,</span> <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;system&quot;</span>
+</span><span data-line="743">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="744"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Undo the last operation on a canvas.</span>
+</span><span data-line="745">
+</span><span data-line="746"><span class="sd">        Args:</span>
+</span><span data-line="747"><span class="sd">            canvas_id: The canvas ID.</span>
+</span><span data-line="748"><span class="sd">            user_id: ID of the user (for filtering, not yet implemented).</span>
+</span><span data-line="749">
+</span><span data-line="750"><span class="sd">        Returns:</span>
+</span><span data-line="751"><span class="sd">            True if an operation was undone, False if nothing to undo.</span>
+</span><span data-line="752"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="753">        <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">command_history</span><span class="o">.</span><span class="n">undo</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">)</span>
+</span><span data-line="754">        <span class="k">if</span> <span class="n">command</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="755">            <span class="k">return</span> <span class="kc">False</span>
+</span><span data-line="756">
+</span><span data-line="757">        <span class="c1"># Execute the undo based on command type</span>
+</span><span data-line="758">        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">AddElementCommand</span><span class="p">):</span>
+</span><span data-line="759">            <span class="c1"># Undo add = delete</span>
+</span><span data-line="760">            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">delete_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</span><span data-line="761">
+</span><span data-line="762">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">DeleteElementCommand</span><span class="p">):</span>
+</span><span data-line="763">            <span class="c1"># Undo delete = restore element</span>
+</span><span data-line="764">            <span class="k">if</span> <span class="n">command</span><span class="o">.</span><span class="n">deleted_element</span><span class="p">:</span>
+</span><span data-line="765">                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">deleted_element</span><span class="p">)</span>
+</span><span data-line="766">
+</span><span data-line="767">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">UpdateElementCommand</span><span class="p">):</span>
+</span><span data-line="768">            <span class="c1"># Undo update = restore previous state</span>
+</span><span data-line="769">            <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">element_id</span><span class="p">)</span>
+</span><span data-line="770">            <span class="k">if</span> <span class="n">element</span> <span class="ow">and</span> <span class="n">command</span><span class="o">.</span><span class="n">previous_state</span><span class="p">:</span>
+</span><span data-line="771">                <span class="n">restored</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="o">**</span><span class="n">command</span><span class="o">.</span><span class="n">previous_state</span><span class="p">)</span>
+</span><span data-line="772">                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">restored</span><span class="p">)</span>
+</span><span data-line="773">
+</span><span data-line="774">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">MoveElementCommand</span><span class="p">):</span>
+</span><span data-line="775">            <span class="c1"># Undo move = restore old position</span>
+</span><span data-line="776">            <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">element_id</span><span class="p">)</span>
+</span><span data-line="777">            <span class="k">if</span> <span class="n">element</span><span class="p">:</span>
+</span><span data-line="778">                <span class="n">old_pos</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">old_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">old_y</span><span class="p">)</span>
+</span><span data-line="779">                <span class="n">restored</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="n">old_pos</span><span class="p">)</span>
+</span><span data-line="780">                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">restored</span><span class="p">)</span>
+</span><span data-line="781">
+</span><span data-line="782">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">ReorderElementCommand</span><span class="p">):</span>
+</span><span data-line="783">            <span class="c1"># Undo reorder = restore old z-index</span>
+</span><span data-line="784">            <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">element_id</span><span class="p">)</span>
+</span><span data-line="785">            <span class="k">if</span> <span class="n">element</span><span class="p">:</span>
+</span><span data-line="786">                <span class="n">restored</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">z_index</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">old_z_index</span><span class="p">)</span>
+</span><span data-line="787">                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">restored</span><span class="p">)</span>
+</span><span data-line="788">
+</span><span data-line="789">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">GroupElementsCommand</span><span class="p">):</span>
+</span><span data-line="790">            <span class="c1"># Undo group = ungroup and restore previous group assignments</span>
+</span><span data-line="791">            <span class="k">if</span> <span class="n">command</span><span class="o">.</span><span class="n">group_id</span><span class="p">:</span>
+</span><span data-line="792">                <span class="c1"># Remove group_id from children and restore previous</span>
+</span><span data-line="793">                <span class="k">for</span> <span class="n">eid</span><span class="p">,</span> <span class="n">prev_gid</span> <span class="ow">in</span> <span class="n">command</span><span class="o">.</span><span class="n">previous_group_ids</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span data-line="794">                    <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">eid</span><span class="p">)</span>
+</span><span data-line="795">                    <span class="k">if</span> <span class="n">element</span><span class="p">:</span>
+</span><span data-line="796">                        <span class="n">restored</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">group_id</span><span class="o">=</span><span class="n">prev_gid</span><span class="p">)</span>
+</span><span data-line="797">                        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">restored</span><span class="p">)</span>
+</span><span data-line="798">                <span class="c1"># Delete the group</span>
+</span><span data-line="799">                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">delete_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">group_id</span><span class="p">)</span>
+</span><span data-line="800">
+</span><span data-line="801">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">UngroupElementsCommand</span><span class="p">)</span> <span class="ow">and</span> <span class="n">command</span><span class="o">.</span><span class="n">deleted_group</span><span class="p">:</span>
+</span><span data-line="802">            <span class="c1"># Undo ungroup = recreate group and reassign children</span>
+</span><span data-line="803">            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">deleted_group</span><span class="p">)</span>
+</span><span data-line="804">            <span class="k">for</span> <span class="n">child_id</span> <span class="ow">in</span> <span class="n">command</span><span class="o">.</span><span class="n">child_ids</span><span class="p">:</span>
+</span><span data-line="805">                <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">child_id</span><span class="p">)</span>
+</span><span data-line="806">                <span class="k">if</span> <span class="n">element</span><span class="p">:</span>
+</span><span data-line="807">                    <span class="n">restored</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">group_id</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">group_id</span><span class="p">)</span>
+</span><span data-line="808">                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">restored</span><span class="p">)</span>
+</span><span data-line="809">
+</span><span data-line="810">        <span class="k">return</span> <span class="kc">True</span></div>
+
+</span><span data-line="811">
+<div class="viewcode-block" id="CanvasService.redo">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.redo">[docs]</a>
+</span><span data-line="812">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">redo</span><span class="p">(</span>  <span class="c1"># noqa: C901, PLR0912</span>
+</span><span data-line="813">        <span class="bp">self</span><span class="p">,</span> <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;system&quot;</span>
+</span><span data-line="814">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="815"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Redo the last undone operation on a canvas.</span>
+</span><span data-line="816">
+</span><span data-line="817"><span class="sd">        Args:</span>
+</span><span data-line="818"><span class="sd">            canvas_id: The canvas ID.</span>
+</span><span data-line="819"><span class="sd">            user_id: ID of the user (for filtering, not yet implemented).</span>
+</span><span data-line="820">
+</span><span data-line="821"><span class="sd">        Returns:</span>
+</span><span data-line="822"><span class="sd">            True if an operation was redone, False if nothing to redo.</span>
+</span><span data-line="823"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="824">        <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">command_history</span><span class="o">.</span><span class="n">redo</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">)</span>
+</span><span data-line="825">        <span class="k">if</span> <span class="n">command</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="826">            <span class="k">return</span> <span class="kc">False</span>
+</span><span data-line="827">
+</span><span data-line="828">        <span class="c1"># Execute the redo based on command type</span>
+</span><span data-line="829">        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">AddElementCommand</span><span class="p">):</span>
+</span><span data-line="830">            <span class="c1"># Redo add = add again</span>
+</span><span data-line="831">            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">element</span><span class="p">)</span>
+</span><span data-line="832">
+</span><span data-line="833">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">DeleteElementCommand</span><span class="p">):</span>
+</span><span data-line="834">            <span class="c1"># Redo delete = delete again</span>
+</span><span data-line="835">            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">delete_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">element_id</span><span class="p">)</span>
+</span><span data-line="836">
+</span><span data-line="837">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">UpdateElementCommand</span><span class="p">):</span>
+</span><span data-line="838">            <span class="c1"># Redo update = apply updates again</span>
+</span><span data-line="839">            <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">element_id</span><span class="p">)</span>
+</span><span data-line="840">            <span class="k">if</span> <span class="n">element</span><span class="p">:</span>
+</span><span data-line="841">                <span class="n">updated</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="o">**</span><span class="n">command</span><span class="o">.</span><span class="n">updates</span><span class="p">)</span>
+</span><span data-line="842">                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">updated</span><span class="p">)</span>
+</span><span data-line="843">
+</span><span data-line="844">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">MoveElementCommand</span><span class="p">):</span>
+</span><span data-line="845">            <span class="c1"># Redo move = apply new position</span>
+</span><span data-line="846">            <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">element_id</span><span class="p">)</span>
+</span><span data-line="847">            <span class="k">if</span> <span class="n">element</span><span class="p">:</span>
+</span><span data-line="848">                <span class="n">new_pos</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">new_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">new_y</span><span class="p">)</span>
+</span><span data-line="849">                <span class="n">updated</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="n">new_pos</span><span class="p">)</span>
+</span><span data-line="850">                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">updated</span><span class="p">)</span>
+</span><span data-line="851">
+</span><span data-line="852">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">ReorderElementCommand</span><span class="p">):</span>
+</span><span data-line="853">            <span class="c1"># Redo reorder = apply new z-index</span>
+</span><span data-line="854">            <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">element_id</span><span class="p">)</span>
+</span><span data-line="855">            <span class="k">if</span> <span class="n">element</span><span class="p">:</span>
+</span><span data-line="856">                <span class="n">updated</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">z_index</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">new_z_index</span><span class="p">)</span>
+</span><span data-line="857">                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">updated</span><span class="p">)</span>
+</span><span data-line="858">
+</span><span data-line="859">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">GroupElementsCommand</span><span class="p">):</span>
+</span><span data-line="860">            <span class="c1"># Redo group = recreate group</span>
+</span><span data-line="861">            <span class="k">if</span> <span class="n">command</span><span class="o">.</span><span class="n">group_id</span><span class="p">:</span>
+</span><span data-line="862">                <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span>
+</span><span data-line="863">                    <span class="nb">id</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">group_id</span><span class="p">,</span>
+</span><span data-line="864">                    <span class="n">children</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">element_ids</span><span class="p">,</span>
+</span><span data-line="865">                <span class="p">)</span>
+</span><span data-line="866">                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+</span><span data-line="867">                <span class="k">for</span> <span class="n">eid</span> <span class="ow">in</span> <span class="n">command</span><span class="o">.</span><span class="n">element_ids</span><span class="p">:</span>
+</span><span data-line="868">                    <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">eid</span><span class="p">)</span>
+</span><span data-line="869">                    <span class="k">if</span> <span class="n">element</span><span class="p">:</span>
+</span><span data-line="870">                        <span class="n">updated</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">group_id</span><span class="o">=</span><span class="n">command</span><span class="o">.</span><span class="n">group_id</span><span class="p">)</span>
+</span><span data-line="871">                        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">updated</span><span class="p">)</span>
+</span><span data-line="872">
+</span><span data-line="873">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">UngroupElementsCommand</span><span class="p">):</span>
+</span><span data-line="874">            <span class="c1"># Redo ungroup = ungroup again</span>
+</span><span data-line="875">            <span class="k">for</span> <span class="n">child_id</span> <span class="ow">in</span> <span class="n">command</span><span class="o">.</span><span class="n">child_ids</span><span class="p">:</span>
+</span><span data-line="876">                <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">get_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">child_id</span><span class="p">)</span>
+</span><span data-line="877">                <span class="k">if</span> <span class="n">element</span><span class="p">:</span>
+</span><span data-line="878">                    <span class="n">updated</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">group_id</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span data-line="879">                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">updated</span><span class="p">)</span>
+</span><span data-line="880">            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storage</span><span class="o">.</span><span class="n">delete_element</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">group_id</span><span class="p">)</span>
+</span><span data-line="881">
+</span><span data-line="882">        <span class="k">return</span> <span class="kc">True</span></div>
+
+</span><span data-line="883">
+<div class="viewcode-block" id="CanvasService.can_undo">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.can_undo">[docs]</a>
+</span><span data-line="884">    <span class="k">def</span><span class="w"> </span><span class="nf">can_undo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="885"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if undo is available for a canvas.</span>
+</span><span data-line="886">
+</span><span data-line="887"><span class="sd">        Args:</span>
+</span><span data-line="888"><span class="sd">            canvas_id: The canvas ID.</span>
+</span><span data-line="889">
+</span><span data-line="890"><span class="sd">        Returns:</span>
+</span><span data-line="891"><span class="sd">            True if undo is available.</span>
+</span><span data-line="892"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="893">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">command_history</span><span class="o">.</span><span class="n">get_history</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">)</span><span class="o">.</span><span class="n">can_undo</span><span class="p">()</span></div>
+
+</span><span data-line="894">
+<div class="viewcode-block" id="CanvasService.can_redo">
+<a class="viewcode-back" href="../../../api/services.html#scribbl_py.CanvasService.can_redo">[docs]</a>
+</span><span data-line="895">    <span class="k">def</span><span class="w"> </span><span class="nf">can_redo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canvas_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="896"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if redo is available for a canvas.</span>
+</span><span data-line="897">
+</span><span data-line="898"><span class="sd">        Args:</span>
+</span><span data-line="899"><span class="sd">            canvas_id: The canvas ID.</span>
+</span><span data-line="900">
+</span><span data-line="901"><span class="sd">        Returns:</span>
+</span><span data-line="902"><span class="sd">            True if redo is available.</span>
+</span><span data-line="903"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span data-line="904">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">command_history</span><span class="o">.</span><span class="n">get_history</span><span class="p">(</span><span class="n">canvas_id</span><span class="p">)</span><span class="o">.</span><span class="n">can_redo</span><span class="p">()</span></div>
+</div>
+
+</span></pre></div>
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2025, Jacob Coffee</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/JacobCoffee/scribbl-py" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a></div>
+    </div>
+  </div>
+</footer>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=30646c52"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../../../_static/shibuya.js?v=c1cf1a6b"></script></body>
+</html>
