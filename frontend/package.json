@@ -4,7 +4,7 @@
   "description": "Frontend assets for scribbl-py",
   "type": "module",
   "scripts": {
-    "build": "(tailwindcss -i ./src/css/main.css -o ./dist/css/main.css --minify 2>&1 | grep -v '@property') && bun build ./src/js/main.js --outdir ./dist/js --minify",
+    "build": "(tailwindcss -i ./src/css/main.css -o ./dist/css/main.css --minify 2>&1 | grep -v '@property') && bun build ./src/js/main.js --outdir ./dist/js --minify && cp ./src/favicon.svg ./dist/",
     "build:css": "tailwindcss -i ./src/css/main.css -o ./dist/css/main.css --minify 2>&1 | grep -v '@property'",
     "build:js": "bun build ./src/js/main.js --outdir ./dist/js --minify",
     "dev": "tailwindcss -i ./src/css/main.css -o ./dist/css/main.css --watch 2>&1 | grep -v '@property'"
