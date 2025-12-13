@@ -30,16 +30,13 @@ ENV UV_LINK_MODE=copy \
 
 # Sync DEPENDENCIES only (cached until uv.lock/pyproject.toml change)
 # This layer is cached separately from application code
-RUN --mount=type=cache,id=uv-cache,target=/root/.cache \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --locked --no-dev --no-install-project --all-extras
+COPY uv.lock pyproject.toml ./
+RUN uv sync --locked --no-dev --no-install-project --all-extras
 
 # Now install the APPLICATION (separate layer, changes more often)
 COPY . /src
 WORKDIR /src
-RUN --mount=type=cache,id=uv-cache,target=/root/.cache \
-    uv sync --locked --no-dev --no-editable --all-extras
+RUN uv sync --locked --no-dev --no-editable --all-extras
 
 
 # Frontend build stage
