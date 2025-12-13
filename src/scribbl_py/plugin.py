@@ -40,18 +40,27 @@ def _get_static_directory() -> Path:
     Returns:
         Path to the static files directory.
     """
-    # Check environment variable first (for custom deployments)
     import os
+    import sys
 
+    # Check environment variable first (for custom deployments)
     env_static = os.environ.get("SCRIBBL_STATIC_DIR")
     if env_static:
         env_path = Path(env_static)
         if env_path.exists():
+            print(f"[Scribbl] Static dir from env: {env_path}", file=sys.stderr)
             return env_path
 
     # Check Docker standard location (/app/frontend/dist)
     docker_path = Path("/app/frontend/dist")
     if docker_path.exists():
+        print(f"[Scribbl] Static dir (Docker): {docker_path}", file=sys.stderr)
+        # List contents for debugging
+        try:
+            contents = list(docker_path.iterdir())
+            print(f"[Scribbl] Static contents: {contents}", file=sys.stderr)
+        except OSError as e:
+            print(f"[Scribbl] Could not list static dir: {e}", file=sys.stderr)
         return docker_path
 
     # Look for frontend/dist relative to project root
@@ -59,11 +68,14 @@ def _get_static_directory() -> Path:
     while current != current.parent:
         frontend_dist = current / "frontend" / "dist"
         if frontend_dist.exists():
+            print(f"[Scribbl] Static dir (relative): {frontend_dist}", file=sys.stderr)
             return frontend_dist
         current = current.parent
 
     # Fallback to a path relative to the package
-    return Path(__file__).parent.parent.parent.parent / "frontend" / "dist"
+    fallback = Path(__file__).parent.parent.parent.parent / "frontend" / "dist"
+    print(f"[Scribbl] Static dir (fallback): {fallback}, exists={fallback.exists()}", file=sys.stderr)
+    return fallback
 
 
 @dataclass
