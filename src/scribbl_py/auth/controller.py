@@ -317,6 +317,41 @@ class AuthController(Controller):
             },
         )
 
+    @get("/navbar")
+    async def navbar_auth_status(
+        self,
+        request: Request,
+        auth_service: AuthService,
+    ) -> Template:
+        """Return navbar auth status partial.
+
+        Args:
+            request: The request object.
+            auth_service: Auth service instance.
+
+        Returns:
+            Navbar partial template.
+        """
+        session_id = request.cookies.get(auth_service._config.session_cookie_name)
+        user = None
+        guest_name = None
+
+        if session_id:
+            session = auth_service.get_session(session_id)
+            if session:
+                if session.user_id:
+                    user = auth_service.get_user(session.user_id)
+                elif session.guest_name:
+                    guest_name = session.guest_name
+
+        return Template(
+            template_name="auth/navbar.html",
+            context={
+                "user": user,
+                "guest_name": guest_name,
+            },
+        )
+
     @get("/leaderboard")
     async def leaderboard_page(
         self,

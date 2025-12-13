@@ -1,0 +1,73 @@
+{% if user %}
+<!-- Logged in user -->
+<div class="dropdown dropdown-end">
+    <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+        {% if user.avatar_url %}
+        <div class="w-10 rounded-full">
+            <img alt="{{ user.username }}" src="{{ user.avatar_url }}" />
+        </div>
+        {% else %}
+        <div class="avatar placeholder">
+            <div class="bg-primary text-primary-content rounded-full w-10">
+                <span class="text-lg">{{ user.username[0] | upper }}</span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+        <li class="menu-title">
+            <span>{{ user.username }}</span>
+        </li>
+        <li><a href="/auth/profile" hx-boost="false">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            Profile
+        </a></li>
+        <li><a href="/auth/leaderboard" hx-boost="false">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            Leaderboard
+        </a></li>
+        <div class="divider my-0"></div>
+        <li><a href="/auth/logout" hx-boost="false" class="text-error">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Logout
+        </a></li>
+    </ul>
+</div>
+{% elif guest_name %}
+<!-- Guest user -->
+<div class="dropdown dropdown-end">
+    <div tabindex="0" role="button" class="btn btn-ghost btn-sm gap-2">
+        <div class="avatar placeholder">
+            <div class="bg-neutral text-neutral-content rounded-full w-8">
+                <span class="text-sm">G</span>
+            </div>
+        </div>
+        <span class="hidden sm:inline">{{ guest_name }}</span>
+    </div>
+    <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+        <li class="menu-title">
+            <span>Playing as Guest</span>
+        </li>
+        <li><a href="/auth/login" hx-boost="false">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+            </svg>
+            Sign in to save stats
+        </a></li>
+    </ul>
+</div>
+{% else %}
+<!-- Not logged in -->
+<a href="/auth/login" class="btn btn-primary btn-sm" hx-boost="false">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+    </svg>
+    Login
+</a>
+{% endif %}
