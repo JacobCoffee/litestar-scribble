@@ -6,6 +6,7 @@ for running scribbl-py as a standalone application.
 
 from __future__ import annotations
 
+import mimetypes
 import os
 from contextlib import asynccontextmanager
 from typing import TYPE_CHECKING
@@ -26,6 +27,12 @@ from scribbl_py.web.health import HealthController
 
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator
+
+# Register MIME types for static file serving (Docker slim images may have incomplete mimetypes)
+mimetypes.add_type("text/css", ".css")
+mimetypes.add_type("application/javascript", ".js")
+mimetypes.add_type("image/svg+xml", ".svg")
+mimetypes.add_type("application/json", ".json")
 
 
 @asynccontextmanager
