@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Canvases - Scribbl{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <h1 class="text-3xl font-bold">Your Canvases</h1>
+            <p class="text-base-content/70">Manage and organize your drawing projects</p>
+        </div>
+        <a href="/ui/canvases/new" class="btn btn-primary" hx-get="/ui/canvases/new" hx-target="#main-content" hx-push-url="true">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            New Canvas
+        </a>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="flex flex-col sm:flex-row gap-4">
+        <div class="form-control flex-1">
+            <div class="input-group">
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search canvases..."
+                    class="input input-bordered w-full"
+                    hx-get="/ui/canvases"
+                    hx-trigger="keyup changed delay:300ms"
+                    hx-target="#canvas-grid"
+                    hx-swap="innerHTML"
+                    hx-include="[name='search']"
+                >
+            </div>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-active" data-view="grid">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                </svg>
+            </button>
+            <button class="btn" data-view="list">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Canvas Grid -->
+    <div id="canvas-grid">
+        {% include "partials/canvas_grid.html" %}
+    </div>
+</div>
+{% endblock %}

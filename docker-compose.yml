@@ -1,0 +1,30 @@
+services:
+  scribbl:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=false
+      # SQLite database will be stored in the volume below
+      - DATABASE_URL=sqlite:///data/scribbl.db
+      # OAuth providers (optional - set these for authentication)
+      # - GOOGLE_CLIENT_ID=your-google-client-id
+      # - GOOGLE_CLIENT_SECRET=your-google-client-secret
+      # - DISCORD_CLIENT_ID=your-discord-client-id
+      # - DISCORD_CLIENT_SECRET=your-discord-client-secret
+      # - GITHUB_CLIENT_ID=your-github-client-id
+      # - GITHUB_CLIENT_SECRET=your-github-client-secret
+    volumes:
+      - scribbl_data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  scribbl_data:

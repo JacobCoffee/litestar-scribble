@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Scribbl{% endblock %}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+
+    <!-- Tailwind CSS + DaisyUI (built) -->
+    <link rel="stylesheet" href="/static/css/main.css">
+
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script src="https://unpkg.com/htmx-ext-ws@2.0.2/ws.js"></script>
+
+    <!-- Alpine.js for client-side interactivity -->
+    <script defer src="https://unpkg.com/alpinejs@3.14.8/dist/cdn.min.js"></script>
+
+    {% block head %}{% endblock %}
+</head>
+<body class="min-h-screen bg-base-200" hx-boost="true">
+    <!-- Navbar -->
+    <div class="navbar bg-base-100 shadow-lg sticky top-0 z-50">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/>
+                    </svg>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                    <li><a href="/ui/" hx-get="/ui/" hx-target="#main-content" hx-push-url="true">Dashboard</a></li>
+                    <li><a href="/ui/canvases" hx-get="/ui/canvases" hx-target="#main-content" hx-push-url="true">Canvases</a></li>
+                    <li><a href="/canvas-clash/" class="text-primary font-semibold" hx-boost="false">Canvas Clash</a></li>
+                    <li><a href="/auth/leaderboard" hx-boost="false">Leaderboard</a></li>
+                </ul>
+            </div>
+            <a href="/ui/" class="btn btn-ghost text-xl font-bold" hx-boost="false">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                </svg>
+                Scribbl
+            </a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="/ui/" hx-get="/ui/" hx-target="#main-content" hx-push-url="true">Dashboard</a></li>
+                <li><a href="/ui/canvases" hx-get="/ui/canvases" hx-target="#main-content" hx-push-url="true">Canvases</a></li>
+                <li><a href="/canvas-clash/" class="text-primary font-semibold" hx-boost="false">Canvas Clash</a></li>
+                <li><a href="/auth/leaderboard" hx-boost="false">Leaderboard</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end">
+            <!-- Theme Toggle -->
+            <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme">
+                <svg class="h-5 w-5 hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+                <svg class="h-5 w-5 block dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                </svg>
+            </button>
+
+            <!-- Create New Canvas -->
+            <a href="/ui/canvases/new" class="btn btn-primary btn-sm ml-2" hx-get="/ui/canvases/new" hx-target="#main-content" hx-push-url="true">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                New Canvas
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content" class="container mx-auto px-4 py-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer footer-center bg-base-300 text-base-content p-4 mt-auto">
+        <aside>
+            <p>Scribbl - Real-time collaborative drawing</p>
+        </aside>
+    </footer>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast toast-end toast-bottom z-50"></div>
+
+    <!-- Delete Confirmation Modal -->
+    <dialog id="delete-modal" class="modal">
+        <div class="modal-box">
+            <h3 class="text-lg font-bold">Confirm Delete</h3>
+            <p class="py-4">Are you sure you want to delete this canvas? This action cannot be undone.</p>
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn">Cancel</button>
+                </form>
+                <button id="confirm-delete-btn" class="btn btn-error">Delete</button>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <!-- Custom JS -->
+    <script src="/static/js/main.js"></script>
+
+    <!-- HTMX Extensions and Config -->
+    <script>
+        // Show toast notification
+        function showToast(message, type) {
+            type = type || 'info';
+            var toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) return;
+
+            var toastId = 'toast-' + Date.now();
+            var alertClass = 'alert-' + type;
+            var iconSvg = '';
+
+            if (type === 'error') {
+                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+            } else if (type === 'success') {
+                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+            } else if (type === 'warning') {
+                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>';
+            } else {
+                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+            }
+
+            var toastHtml = '<div class="alert ' + alertClass + ' animate-fade-in" id="' + toastId + '">' + iconSvg + '<span>' + message + '</span></div>';
+            toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+
+            // Auto-remove after 5 seconds
+            setTimeout(function() {
+                var toast = document.getElementById(toastId);
+                if (toast) toast.remove();
+            }, 5000);
+        }
+
+        // Check for error in URL params on page load
+        (function() {
+            var params = new URLSearchParams(window.location.search);
+            var errorMsg = params.get('error');
+            var errorType = params.get('error_type') || 'error';
+
+            if (errorMsg) {
+                // Show toast after a short delay for page render
+                setTimeout(function() {
+                    showToast(errorMsg, errorType);
+                }, 100);
+
+                // Clean up URL (remove error params)
+                params.delete('error');
+                params.delete('error_type');
+                var newUrl = window.location.pathname;
+                if (params.toString()) {
+                    newUrl += '?' + params.toString();
+                }
+                window.history.replaceState({}, '', newUrl);
+            }
+        })();
+
+        // HTMX configuration
+        document.body.addEventListener('htmx:beforeSwap', function(evt) {
+            // Handle 422 validation errors
+            if (evt.detail.xhr.status === 422) {
+                evt.detail.shouldSwap = true;
+                evt.detail.isError = false;
+            }
+        });
+
+        // Show loading indicator during HTMX requests
+        document.body.addEventListener('htmx:beforeRequest', function(evt) {
+            document.body.classList.add('htmx-request');
+        });
+
+        document.body.addEventListener('htmx:afterRequest', function(evt) {
+            document.body.classList.remove('htmx-request');
+        });
+
+        // Handle delete confirmation (use window to avoid redeclaration with HTMX)
+        if (typeof window._scribblDeleteUrl === 'undefined') {
+            window._scribblDeleteUrl = null;
+            window.confirmDelete = function(url) {
+                window._scribblDeleteUrl = url;
+                document.getElementById('delete-modal').showModal();
+            };
+
+            document.getElementById('confirm-delete-btn').addEventListener('click', function() {
+                if (window._scribblDeleteUrl) {
+                    htmx.ajax('DELETE', window._scribblDeleteUrl, {
+                        target: '#main-content',
+                        swap: 'innerHTML'
+                    });
+                    document.getElementById('delete-modal').close();
+                    window._scribblDeleteUrl = null;
+                }
+            });
+        }
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

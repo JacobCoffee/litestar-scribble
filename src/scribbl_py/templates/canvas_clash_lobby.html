@@ -1,0 +1,838 @@
+{% extends "base.html" %}
+
+{% block title %}Game Lobby - Canvas Clash{% endblock %}
+
+{% block head %}
+<style>
+    /* Lobby specific styles */
+    .player-list-item {
+        transition: all 0.2s ease;
+    }
+    .player-list-item:hover {
+        transform: translateX(4px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <a href="/ui/" class="btn btn-ghost btn-sm" hx-get="/ui/" hx-target="#main-content" hx-push-url="true">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back
+            </a>
+            <h1 class="text-3xl font-bold">Game Lobby</h1>
+        </div>
+
+        <!-- Connection Status -->
+        <div class="flex items-center gap-2">
+            <div class="connection-status">
+                <span class="connection-status-dot connection-status-dot-connecting" id="lobby-connection-dot"></span>
+                <span class="connection-status-label text-sm" id="lobby-connection-label">Connecting...</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Section - Room Info & Settings -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Room Code Card -->
+            <div class="card bg-base-100 shadow-lg">
+                <div class="card-body">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="card-title text-2xl">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                            Room Code
+                        </h2>
+                        {% if room.is_public %}
+                        <span class="badge badge-success gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Public
+                        </span>
+                        {% else %}
+                        <span class="badge badge-warning gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                            Private
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex-1">
+                            <div class="font-mono text-5xl font-bold text-primary tracking-wider" id="room-code">
+                                {{ room.code }}
+                            </div>
+                            {% if room.is_public %}
+                            <p class="text-sm text-base-content/70 mt-2">This room is visible in Open Lobbies</p>
+                            {% else %}
+                            <p class="text-sm text-base-content/70 mt-2">Share this code with your friends to join</p>
+                            {% endif %}
+                        </div>
+                        <button
+                            class="btn btn-square btn-lg"
+                            onclick="copyRoomCode()"
+                            title="Copy room code"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Settings Card (Host Only) -->
+            <div
+                class="card bg-base-100 shadow-lg"
+                id="game-settings-card"
+                {% if not is_host %}style="display: none;"{% endif %}
+            >
+                <div class="card-body">
+                    <h2 class="card-title text-xl mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Game Settings
+                        <span class="badge badge-warning badge-sm">Host Only</span>
+                    </h2>
+
+                    <div class="space-y-4" id="settings-form">
+                        <!-- Number of Rounds -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Number of Rounds</span>
+                                <span class="label-text-alt" id="rounds-value">{{ room.settings.rounds }}</span>
+                            </label>
+                            <input
+                                type="range"
+                                id="rounds-input"
+                                min="2"
+                                max="10"
+                                value="{{ room.settings.rounds }}"
+                                class="range range-primary"
+                                oninput="document.getElementById('rounds-value').textContent = this.value; updateSettings();"
+                            >
+                            <div class="flex justify-between text-xs px-2 opacity-50">
+                                <span>2</span>
+                                <span>5</span>
+                                <span>10</span>
+                            </div>
+                        </div>
+
+                        <!-- Draw Time -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Draw Time (seconds)</span>
+                                <span class="label-text-alt" id="draw-time-value">{{ room.settings.draw_time }}</span>
+                            </label>
+                            <input
+                                type="range"
+                                id="draw-time-input"
+                                min="30"
+                                max="180"
+                                step="10"
+                                value="{{ room.settings.draw_time }}"
+                                class="range range-secondary"
+                                oninput="document.getElementById('draw-time-value').textContent = this.value; updateSettings();"
+                            >
+                            <div class="flex justify-between text-xs px-2 opacity-50">
+                                <span>30s</span>
+                                <span>90s</span>
+                                <span>180s</span>
+                            </div>
+                        </div>
+
+                        <!-- Custom Words -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Custom Words (Optional)</span>
+                                <span class="label-text-alt">Comma-separated</span>
+                            </label>
+                            <textarea
+                                id="custom-words-input"
+                                class="textarea textarea-bordered h-20"
+                                placeholder="e.g., elephant, rocket, pizza"
+                                onchange="updateSettings();"
+                            >{{ room.settings.custom_words|join(', ') if room.settings.custom_words else '' }}</textarea>
+                        </div>
+
+                        <!-- Custom Words Only Toggle -->
+                        <div class="form-control">
+                            <label class="label cursor-pointer justify-start gap-3">
+                                <input
+                                    type="checkbox"
+                                    id="custom-words-only-input"
+                                    class="toggle toggle-secondary"
+                                    onchange="updateSettings(); updateCustomWordsHint();"
+                                    {{ 'checked' if room.settings.custom_words_only else '' }}
+                                >
+                                <div>
+                                    <span class="label-text font-medium">Custom Words Only</span>
+                                    <p class="text-xs text-base-content/60">Only use custom words (no default word bank)</p>
+                                    <p id="custom-words-hint" class="text-xs text-warning mt-1 {{ '' if room.settings.custom_words_only else 'hidden' }}">
+                                        Requires at least 3 custom words
+                                    </p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Waiting for Host Message (Non-Host) -->
+            <div
+                class="alert alert-info"
+                id="waiting-for-host-alert"
+                {% if is_host %}style="display: none;"{% endif %}
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span>Waiting for host to start the game...</span>
+            </div>
+        </div>
+
+        <!-- Right Section - Player List -->
+        <div class="lg:col-span-1">
+            <div class="card bg-base-100 shadow-lg sticky top-20">
+                <div class="card-body">
+                    <h2 class="card-title text-xl mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                        Players
+                        <span class="badge badge-accent" id="player-count">{{ players|length }}/12</span>
+                    </h2>
+
+                    <!-- Players List -->
+                    <div class="space-y-2" id="players-list">
+                        {% for player in players %}
+                        <div class="player-list-item flex items-center gap-3 p-3 rounded-lg bg-base-200" data-player-id="{{ player.id }}" data-user-id="{{ player.user_id }}">
+                            <div class="avatar placeholder">
+                                <div class="bg-neutral text-neutral-content w-10 rounded-full">
+                                    <span class="text-sm">{{ player.name[:2].upper() }}</span>
+                                </div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-medium truncate">{{ player.name }}</div>
+                                {% if player.is_host %}
+                                <div class="badge badge-warning badge-xs">Host</div>
+                                {% endif %}
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <!-- Host Controls (kick/ban dropdown) -->
+                                {% if is_host and not player.is_host %}
+                                <div class="dropdown dropdown-end host-controls">
+                                    <label tabindex="0" class="btn btn-ghost btn-xs btn-circle">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                        </svg>
+                                    </label>
+                                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40">
+                                        <li><a onclick="kickPlayer('{{ player.id }}')" class="text-warning">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6" />
+                                            </svg>
+                                            Kick
+                                        </a></li>
+                                        <li><a onclick="banPlayer('{{ player.id }}')" class="text-error">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                            </svg>
+                                            Ban
+                                        </a></li>
+                                        <li><a onclick="transferHost('{{ player.id }}')" class="text-info">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                                            </svg>
+                                            Make Host
+                                        </a></li>
+                                    </ul>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Spectators Section -->
+                    {% if spectators or is_spectator %}
+                    <div class="divider text-xs opacity-50">Spectators</div>
+                    <div class="space-y-2" id="spectators-list">
+                        {% for spectator in spectators %}
+                        <div class="player-list-item flex items-center gap-3 p-2 rounded-lg bg-base-200/50" data-spectator-id="{{ spectator.id }}">
+                            <div class="avatar placeholder">
+                                <div class="bg-base-300 text-base-content/50 w-8 rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="text-sm font-medium truncate opacity-70">{{ spectator.name }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Spectator Notice -->
+                    {% if is_spectator %}
+                    <div class="alert alert-info mt-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                        <span class="text-xs">You are watching as a spectator</span>
+                    </div>
+                    {% endif %}
+
+                    <div class="divider"></div>
+
+                    <!-- Action Buttons -->
+                    <div class="space-y-2">
+                        <!-- Start Game Button (Host Only) -->
+                        <button
+                            class="btn btn-primary w-full"
+                            id="start-game-btn"
+                            onclick="startGame()"
+                            {% if not is_host %}style="display: none;"{% endif %}
+                            {% if players|length < 2 %}disabled{% endif %}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Start Game
+                        </button>
+
+                        <!-- Leave Room Button -->
+                        <button
+                            class="btn btn-outline w-full"
+                            hx-post="/canvas-clash/rooms/{{ room.id }}/leave"
+                            hx-target="#main-content"
+                            hx-push-url="true"
+                            hx-confirm="Are you sure you want to leave this room?"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                            </svg>
+                            Leave Room
+                        </button>
+                    </div>
+
+                    <!-- Min Players Warning -->
+                    <div
+                        class="alert alert-warning mt-4"
+                        id="min-players-warning"
+                        {% if players|length >= 2 %}style="display: none;"{% endif %}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        <span class="text-xs">Need at least 2 players to start</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container" class="toast toast-end toast-bottom z-50"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Global WebSocket reference for lobby
+let lobbyWs = null;
+const lobbyRoomId = '{{ room.id }}';
+
+// WebSocket connection for lobby updates
+document.addEventListener('DOMContentLoaded', function() {
+    const roomId = lobbyRoomId;
+    // Get user_id from localStorage (set on home page) or fall back to cookie
+    const userId = localStorage.getItem('canvas_clash_user_id') || '{{ user_id }}';
+    const userName = localStorage.getItem('canvas_clash_user_name') || 'Anonymous';
+    const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/canvas-clash/lobby/${roomId}`;
+
+    // Ensure cookie is set for server-side access
+    document.cookie = `user_id=${userId}; path=/; max-age=86400`;
+
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 5;
+
+    function connect() {
+        lobbyWs = new WebSocket(wsUrl);
+
+        lobbyWs.onopen = function() {
+            console.log('Lobby WebSocket connected');
+            reconnectAttempts = 0;
+            updateConnectionStatus('connected');
+
+            // Send join message with user_name
+            lobbyWs.send(JSON.stringify({
+                type: 'join',
+                user_id: userId,
+                user_name: userName
+            }));
+        };
+
+        lobbyWs.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            console.log('[Lobby WS] Received message:', data.type, data);
+            handleLobbyMessage(data);
+        };
+
+        lobbyWs.onclose = function() {
+            console.log('Lobby WebSocket disconnected');
+            updateConnectionStatus('disconnected');
+
+            // Attempt reconnect
+            if (reconnectAttempts < maxReconnectAttempts) {
+                reconnectAttempts++;
+                setTimeout(connect, Math.min(1000 * Math.pow(2, reconnectAttempts), 10000));
+            }
+        };
+
+        lobbyWs.onerror = function(error) {
+            console.error('Lobby WebSocket error:', error);
+            updateConnectionStatus('error');
+        };
+    }
+
+    function handleLobbyMessage(data) {
+        switch(data.type) {
+            case 'player_joined':
+                addPlayer(data.player);
+                updatePlayerCount();
+                showToast(`${data.player.name} joined the lobby`, 'info');
+                break;
+
+            case 'player_left':
+                removePlayer(data.player_id);
+                updatePlayerCount();
+                showToast(`${data.player_name} left the lobby`, 'info');
+                break;
+
+            case 'settings_updated':
+                // Settings updated by host
+                break;
+
+            case 'game_started':
+                // Redirect to game
+                window.location.href = `/canvas-clash/rooms/${roomId}/game`;
+                break;
+
+            case 'error':
+                showToast(data.message || 'An error occurred', 'error');
+                // Re-enable start button if it was disabled
+                const btn = document.getElementById('start-game-btn');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Start Game
+                    `;
+                }
+                break;
+
+            case 'player_kicked':
+                removePlayer(data.player_id);
+                updatePlayerCount();
+                showToast(`${data.player_name} was kicked from the room`, 'warning');
+                break;
+
+            case 'player_banned':
+                removePlayer(data.player_id);
+                updatePlayerCount();
+                showToast(`${data.player_name} was banned from the room`, 'warning');
+                break;
+
+            case 'you_were_kicked':
+                showToast('You have been kicked from this room', 'error');
+                setTimeout(() => {
+                    window.location.href = '/canvas-clash/';
+                }, 2000);
+                break;
+
+            case 'you_were_banned':
+                showToast('You have been banned from this room', 'error');
+                setTimeout(() => {
+                    window.location.href = '/canvas-clash/';
+                }, 2000);
+                break;
+
+            case 'host_transferred':
+                // Update UI to reflect new host
+                // Remove host badge from all players
+                document.querySelectorAll('.badge-warning').forEach(el => el.remove());
+                // Add host badge to new host
+                const newHostEl = document.querySelector(`[data-player-id="${data.new_host_id}"]`);
+                if (newHostEl) {
+                    const nameDiv = newHostEl.querySelector('.flex-1');
+                    if (nameDiv && !nameDiv.querySelector('.badge-warning')) {
+                        const badge = document.createElement('div');
+                        badge.className = 'badge badge-warning badge-xs';
+                        badge.textContent = 'Host';
+                        nameDiv.appendChild(badge);
+                    }
+                }
+                showToast(`${data.new_host_name} is now the host`, 'info');
+                // If current user was host, refresh to update UI controls
+                if (isHost) {
+                    setTimeout(() => window.location.reload(), 1000);
+                }
+                break;
+        }
+    }
+
+    function addPlayer(player) {
+        const playersList = document.getElementById('players-list');
+        const playerEl = document.createElement('div');
+        playerEl.className = 'player-list-item flex items-center gap-3 p-3 rounded-lg bg-base-200';
+        playerEl.dataset.playerId = player.id;
+        playerEl.innerHTML = `
+            <div class="avatar placeholder">
+                <div class="bg-neutral text-neutral-content w-10 rounded-full">
+                    <span class="text-sm">${player.name.substring(0, 2).toUpperCase()}</span>
+                </div>
+            </div>
+            <div class="flex-1 min-w-0">
+                <div class="font-medium truncate">${player.name}</div>
+                ${player.is_host ? '<div class="badge badge-warning badge-xs">Host</div>' : ''}
+            </div>
+            <div class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+        `;
+        playersList.appendChild(playerEl);
+    }
+
+    function removePlayer(playerId) {
+        const playerEl = document.querySelector(`[data-player-id="${playerId}"]`);
+        if (playerEl) {
+            playerEl.remove();
+        }
+    }
+
+    function updatePlayerCount() {
+        const count = document.querySelectorAll('.player-list-item').length;
+        document.getElementById('player-count').textContent = `${count}/12`;
+
+        // Update start button state
+        const startBtn = document.getElementById('start-game-btn');
+        if (startBtn) {
+            startBtn.disabled = count < 2;
+        }
+
+        // Show/hide min players warning
+        const warning = document.getElementById('min-players-warning');
+        if (warning) {
+            warning.style.display = count < 2 ? 'flex' : 'none';
+        }
+    }
+
+    function updateConnectionStatus(status) {
+        const dot = document.getElementById('lobby-connection-dot');
+        const label = document.getElementById('lobby-connection-label');
+
+        if (!dot || !label) return;  // Guard against null elements
+
+        dot.className = 'connection-status-dot';
+
+        if (status === 'connected') {
+            dot.classList.add('connection-status-dot-connected');
+            label.textContent = 'Connected';
+        } else if (status === 'error' || status === 'disconnected') {
+            dot.classList.add('connection-status-dot-disconnected');
+            label.textContent = 'Disconnected';
+        } else {
+            dot.classList.add('connection-status-dot-connecting');
+            label.textContent = 'Connecting...';
+        }
+    }
+
+    // Make showToast available globally so startGame can use it
+    window.showToast = function(message, type = 'info') {
+        const toastContainer = document.getElementById('toast-container');
+        const toastId = 'toast-' + Date.now();
+        const toastEl = document.createElement('div');
+        toastEl.id = toastId;
+        toastEl.className = `alert alert-${type} animate-fade-in`;
+        toastEl.innerHTML = `<span>${message}</span>`;
+        toastContainer.appendChild(toastEl);
+
+        setTimeout(() => toastEl.remove(), 3000);
+    };
+    // Also keep local reference for convenience
+    const showToast = window.showToast;
+
+    // Connect on page load
+    connect();
+
+    // Clean up on page unload
+    window.addEventListener('beforeunload', function() {
+        if (lobbyWs) {
+            lobbyWs.close();
+        }
+    });
+});
+
+// Debounce helper
+let settingsTimeout = null;
+let settingsUpdatePromise = null;
+
+// Update settings function (Host only)
+window.updateSettings = function() {
+    // Debounce to avoid too many requests
+    if (settingsTimeout) clearTimeout(settingsTimeout);
+    settingsTimeout = setTimeout(() => {
+        settingsUpdatePromise = updateSettingsNow();
+    }, 300);
+};
+
+// Update the hint visibility based on toggle state
+function updateCustomWordsHint() {
+    const customWordsOnly = document.getElementById('custom-words-only-input')?.checked || false;
+    const hint = document.getElementById('custom-words-hint');
+    if (hint) {
+        hint.classList.toggle('hidden', !customWordsOnly);
+    }
+}
+
+// Immediate settings update (used internally and before starting game)
+// Returns: { rejected_words_count, accepted_count } or null on error
+async function updateSettingsNow() {
+    const roomId = '{{ room.id }}';
+    const rounds = document.getElementById('rounds-input')?.value;
+    const drawTime = document.getElementById('draw-time-input')?.value;
+    const customWordsText = document.getElementById('custom-words-input')?.value || '';
+    const customWordsOnly = document.getElementById('custom-words-only-input')?.checked || false;
+
+    // Parse custom words
+    const customWords = customWordsText
+        .split(',')
+        .map(w => w.trim())
+        .filter(w => w.length > 0);
+
+    console.log('[Settings] Saving:', { customWords, customWordsOnly });
+
+    try {
+        const response = await fetch(`/canvas-clash/rooms/${roomId}/settings`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+                rounds_per_game: parseInt(rounds) || null,
+                round_duration: parseInt(drawTime) || null,
+                custom_words: customWords,
+                custom_words_only: customWordsOnly,
+            }),
+        });
+
+        if (!response.ok) {
+            console.error('Failed to update settings');
+            return null;
+        }
+
+        const data = await response.json();
+        console.log('[Settings] Saved successfully', data);
+
+        // Check for rejected words and show warning
+        if (data.rejected_words_count > 0) {
+            const msg = data.rejected_words_count === 1
+                ? '1 custom word was blocked (hate speech not allowed)'
+                : `${data.rejected_words_count} custom words were blocked (hate speech not allowed)`;
+            window.showToast(msg, 'warning');
+        }
+
+        // Return info about accepted words
+        return {
+            rejected_words_count: data.rejected_words_count || 0,
+            accepted_count: data.settings?.custom_words?.length || 0,
+        };
+    } catch (err) {
+        console.error('Error updating settings:', err);
+        throw err;
+    }
+}
+
+// Helper to reset start button
+function resetStartButton(btn) {
+    if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Start Game
+        `;
+    }
+}
+
+// Start game function (Host only) - uses WebSocket to broadcast to all players
+window.startGame = async function() {
+    const btn = document.getElementById('start-game-btn');
+    const customWordsOnly = document.getElementById('custom-words-only-input')?.checked || false;
+    const customWordsText = document.getElementById('custom-words-input')?.value || '';
+    const customWords = customWordsText.split(',').map(w => w.trim()).filter(w => w.length > 0);
+
+    console.log('[StartGame] Pre-validation:', { customWordsOnly, customWordsCount: customWords.length });
+
+    // Quick pre-check (will be validated again after save)
+    if (customWordsOnly && customWords.length < 3) {
+        window.showToast('Need at least 3 custom words when "Custom Words Only" is enabled!', 'error');
+        return;
+    }
+
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading loading-spinner"></span> Saving settings...';
+    }
+
+    // Cancel any pending debounced update
+    if (settingsTimeout) {
+        clearTimeout(settingsTimeout);
+        settingsTimeout = null;
+    }
+
+    // Save settings immediately and get the actual accepted word count
+    let saveResult = null;
+    try {
+        saveResult = await updateSettingsNow();
+        console.log('[Lobby] Settings saved:', saveResult);
+    } catch (err) {
+        console.error('[Lobby] Failed to save settings:', err);
+        window.showToast('Failed to save settings. Please try again.', 'error');
+        resetStartButton(btn);
+        return;
+    }
+
+    // Check if enough words were accepted after moderation filtering
+    if (customWordsOnly && saveResult && saveResult.accepted_count < 3) {
+        const blocked = saveResult.rejected_words_count || 0;
+        if (blocked > 0) {
+            window.showToast(`Not enough valid words! ${blocked} word(s) were blocked. Need at least 3 allowed words.`, 'error');
+        } else {
+            window.showToast('Need at least 3 custom words when "Custom Words Only" is enabled!', 'error');
+        }
+        resetStartButton(btn);
+        return;
+    }
+
+    if (btn) {
+        btn.innerHTML = '<span class="loading loading-spinner"></span> Starting...';
+    }
+
+    // Send start_game via WebSocket - this broadcasts to all players
+    if (lobbyWs && lobbyWs.readyState === WebSocket.OPEN) {
+        console.log('[Lobby WS] Sending start_game message');
+        lobbyWs.send(JSON.stringify({ type: 'start_game' }));
+    } else {
+        window.showToast('Not connected to server. Please refresh.', 'error');
+        resetStartButton(btn);
+    }
+};
+
+// Copy room code to clipboard
+window.copyRoomCode = function() {
+    const roomCode = document.getElementById('room-code').textContent.trim();
+    navigator.clipboard.writeText(roomCode).then(function() {
+        const toastContainer = document.getElementById('toast-container');
+        const toastEl = document.createElement('div');
+        toastEl.className = 'alert alert-success animate-fade-in';
+        toastEl.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>Room code copied to clipboard!</span>
+        `;
+        toastContainer.appendChild(toastEl);
+        setTimeout(() => toastEl.remove(), 3000);
+    });
+};
+
+// Kick player from room (Host only)
+window.kickPlayer = function(playerId) {
+    if (!lobbyWs || lobbyWs.readyState !== WebSocket.OPEN) {
+        window.showToast('Not connected to server', 'error');
+        return;
+    }
+
+    // Get player name for confirmation
+    const playerEl = document.querySelector(`[data-player-id="${playerId}"]`);
+    const playerName = playerEl ? playerEl.querySelector('.font-medium')?.textContent : 'this player';
+
+    if (confirm(`Are you sure you want to kick ${playerName}?`)) {
+        lobbyWs.send(JSON.stringify({
+            type: 'kick_player',
+            target_player_id: playerId
+        }));
+        console.log('[Lobby] Kicking player:', playerId);
+    }
+};
+
+// Ban player from room (Host only)
+window.banPlayer = function(playerId) {
+    if (!lobbyWs || lobbyWs.readyState !== WebSocket.OPEN) {
+        window.showToast('Not connected to server', 'error');
+        return;
+    }
+
+    // Get player name for confirmation
+    const playerEl = document.querySelector(`[data-player-id="${playerId}"]`);
+    const playerName = playerEl ? playerEl.querySelector('.font-medium')?.textContent : 'this player';
+
+    if (confirm(`Are you sure you want to BAN ${playerName}? They will not be able to rejoin this room.`)) {
+        lobbyWs.send(JSON.stringify({
+            type: 'ban_player',
+            target_player_id: playerId
+        }));
+        console.log('[Lobby] Banning player:', playerId);
+    }
+};
+
+// Transfer host to another player (Host only)
+window.transferHost = function(playerId) {
+    if (!lobbyWs || lobbyWs.readyState !== WebSocket.OPEN) {
+        window.showToast('Not connected to server', 'error');
+        return;
+    }
+
+    // Get player name for confirmation
+    const playerEl = document.querySelector(`[data-player-id="${playerId}"]`);
+    const playerName = playerEl ? playerEl.querySelector('.font-medium')?.textContent : 'this player';
+
+    if (confirm(`Are you sure you want to make ${playerName} the new host?`)) {
+        lobbyWs.send(JSON.stringify({
+            type: 'transfer_host',
+            new_host_player_id: playerId
+        }));
+        console.log('[Lobby] Transferring host to:', playerId);
+    }
+};
+</script>
+{% endblock %}

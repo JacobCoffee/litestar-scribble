@@ -1,0 +1,51 @@
+{% if canvases %}
+<div class="overflow-x-auto">
+    <table class="table table-zebra w-full">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Dimensions</th>
+                <th>Created</th>
+                <th>Updated</th>
+                <th class="text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for canvas in canvases %}
+            <tr id="canvas-row-{{ canvas.id }}">
+                <td>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded" style="background-color: {{ canvas.background_color or '#ffffff' }};"></div>
+                        <span class="font-medium">{{ canvas.name }}</span>
+                    </div>
+                </td>
+                <td>{{ canvas.width }}x{{ canvas.height }}</td>
+                <td>{{ canvas.created_at.strftime('%b %d, %Y') if canvas.created_at else 'Unknown' }}</td>
+                <td>{{ canvas.updated_at.strftime('%b %d, %Y') if canvas.updated_at else 'Never' }}</td>
+                <td class="text-right">
+                    <div class="flex gap-2 justify-end">
+                        <a
+                            href="/ui/canvases/{{ canvas.id }}/edit"
+                            class="btn btn-primary btn-sm"
+                            hx-get="/ui/canvases/{{ canvas.id }}/edit"
+                            hx-target="#main-content"
+                            hx-push-url="true"
+                        >
+                            Edit
+                        </a>
+                        <button
+                            class="btn btn-error btn-sm btn-outline"
+                            onclick="confirmDelete('/api/canvases/{{ canvas.id }}')"
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+{% include "partials/canvas_grid.html" %}
+{% endif %}

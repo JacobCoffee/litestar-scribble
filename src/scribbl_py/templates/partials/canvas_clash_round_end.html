@@ -1,0 +1,158 @@
+<!-- Round End Modal -->
+<dialog id="round-end-modal" class="modal modal-open">
+    <div class="modal-box max-w-3xl">
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <h3 class="text-3xl font-bold mb-2">Round {{ round_number }} Complete!</h3>
+            <div class="divider"></div>
+        </div>
+
+        <!-- Word Reveal -->
+        <div class="bg-base-200 rounded-lg p-6 mb-6 text-center">
+            <div class="text-sm opacity-70 uppercase font-medium mb-2">The word was</div>
+            <div class="text-5xl font-bold text-primary mb-2">{{ word }}</div>
+            <div class="text-sm opacity-50">Drawn by {{ drawer_name }}</div>
+        </div>
+
+        <!-- Round Scores -->
+        <div class="mb-6">
+            <h4 class="font-bold text-lg mb-3 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                </svg>
+                Points Earned This Round
+            </h4>
+            <div class="space-y-2 max-h-64 overflow-y-auto">
+                {% for player in round_scores %}
+                <div class="flex items-center gap-3 p-3 rounded-lg bg-base-200 {% if player.points_earned > 0 %}border-l-4 border-success{% endif %}">
+                    <div class="avatar placeholder">
+                        <div class="bg-neutral text-neutral-content w-10 rounded-full">
+                            <span class="text-sm">{{ player.name[:2].upper() }}</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-medium">{{ player.name }}</div>
+                        {% if player.guess_time %}
+                        <div class="text-xs opacity-70">Guessed in {{ player.guess_time }}s</div>
+                        {% elif player.is_drawer %}
+                        <div class="text-xs opacity-70">Artist</div>
+                        {% else %}
+                        <div class="text-xs opacity-70">Did not guess</div>
+                        {% endif %}
+                    </div>
+                    <div class="text-right">
+                        {% if player.points_earned > 0 %}
+                        <div class="text-lg font-bold text-success">+{{ player.points_earned }}</div>
+                        {% else %}
+                        <div class="text-lg font-bold opacity-30">0</div>
+                        {% endif %}
+                        <div class="text-xs opacity-50">Total: {{ player.total_score }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Current Leaderboard -->
+        <div class="mb-6">
+            <h4 class="font-bold text-lg mb-3 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                </svg>
+                Current Standings
+            </h4>
+            <div class="flex gap-4 justify-center">
+                {% for player in leaderboard[:3] %}
+                <div class="text-center">
+                    {% if loop.index == 1 %}
+                    <div class="text-4xl mb-2">🥇</div>
+                    {% elif loop.index == 2 %}
+                    <div class="text-4xl mb-2">🥈</div>
+                    {% elif loop.index == 3 %}
+                    <div class="text-4xl mb-2">🥉</div>
+                    {% endif %}
+                    <div class="avatar placeholder mb-2">
+                        <div class="bg-neutral text-neutral-content w-12 rounded-full">
+                            <span>{{ player.name[:2].upper() }}</span>
+                        </div>
+                    </div>
+                    <div class="font-medium text-sm">{{ player.name }}</div>
+                    <div class="font-bold text-lg">{{ player.total_score }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Continue Button -->
+        <div class="modal-action justify-center">
+            <button
+                class="btn btn-primary btn-lg"
+                onclick="continueToNextRound()"
+                id="continue-btn"
+            >
+                {% if is_final_round %}
+                View Final Results
+                {% else %}
+                Continue to Next Round
+                {% endif %}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Auto-continue countdown -->
+        <div class="text-center mt-4">
+            <div class="text-xs opacity-50">
+                Auto-continuing in <span id="auto-continue-timer" class="font-bold">10</span> seconds...
+            </div>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button disabled>close</button>
+    </form>
+</dialog>
+
+<script>
+(function() {
+    const modal = document.getElementById('round-end-modal');
+    const timerEl = document.getElementById('auto-continue-timer');
+    const roomId = '{{ room_id }}';
+    const isFinalRound = {{ is_final_round|lower }};
+
+    let timeLeft = 10;
+    const timerInterval = setInterval(function() {
+        timeLeft--;
+        if (timerEl) {
+            timerEl.textContent = timeLeft;
+        }
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            continueToNextRound();
+        }
+    }, 1000);
+
+    window.continueToNextRound = function() {
+        clearInterval(timerInterval);
+
+        if (modal) {
+            modal.close();
+        }
+
+        if (isFinalRound) {
+            // Load game over screen
+            htmx.ajax('GET', `/canvas-clash/rooms/${roomId}/partials/game_over`, {
+                target: '#game-modals',
+                swap: 'innerHTML'
+            });
+        } else {
+            // Just close modal and wait for next round to start
+            const modalsContainer = document.getElementById('game-modals');
+            if (modalsContainer) {
+                modalsContainer.innerHTML = '';
+            }
+        }
+    };
+})();
+</script>

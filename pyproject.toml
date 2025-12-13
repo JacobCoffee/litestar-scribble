@@ -1,0 +1,432 @@
+[build-system]
+requires = ["uv_build>=0.9.11,<0.10.0"]
+build-backend = "uv_build"
+
+[project]
+name = "scribbl-py"
+version = "0.1.0"
+description = "A Litestar-based API for drawing and whiteboard applications"
+authors = [
+    { name = "Jacob Coffee", email = "jacob@z7x.org" }
+]
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+keywords = [
+    "litestar",
+    "drawing",
+    "whiteboard",
+    "api",
+    "canvas",
+    "websocket",
+    "real-time",
+    "collaboration"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python",
+    "Topic :: Communications",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    "litestar-htmx>=0.4.0",
+    "litestar[jinja,standard]>=2.12.0",
+    "pillow>=10.0.0",
+    "pydantic>=2.0.0",
+    "rich>=13.0.0",
+    "sniffio>=1.3.1",
+    "structlog>=24.0.0",
+]
+
+[project.optional-dependencies]
+db = [
+    "advanced-alchemy>=0.26.0",
+    "aiosqlite>=0.20.0",
+    "alembic>=1.13.0",
+    "asyncpg>=0.29.0",
+]
+auth = [
+    "authlib>=1.3.0",
+    "itsdangerous>=2.1.0",
+    "httpx>=0.27.0",
+]
+redis = [
+    "redis[hiredis]>=5.0.0",
+]
+tasks = [
+    "huey>=2.5.0",
+]
+all = [
+    "scribbl-py[db,auth,redis,tasks]",
+]
+
+[project.urls]
+Homepage = "https://github.com/JacobCoffee/scribbl-py"
+Documentation = "https://github.com/JacobCoffee/scribbl-py"
+Repository = "https://github.com/JacobCoffee/scribbl-py"
+Issues = "https://github.com/JacobCoffee/scribbl-py/issues"
+Changelog = "https://github.com/JacobCoffee/scribbl-py/releases"
+
+[dependency-groups]
+docs = [
+    "sphinx>=8.1.3",
+    "shibuya>=2024.12.3",
+    "sphinx-autobuild>=2024.10.3",
+    "sphinx-autodoc-typehints>=2.5.0",
+    "sphinx-copybutton>=0.5.2",
+    "sphinx-design>=0.6.1",
+    "myst-parser>=4.0.0",
+    "sphinx-paramlinks>=0.6.0",
+    "sphinx-toolbox>=3.8.1",
+]
+lint = [
+    "ruff>=0.9.0",
+    "ty>=0.0.1a27",
+    "prek>=0.2.18",
+    "codespell>=2.2.6",
+    "pre-commit>=4.0.1",
+]
+test = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.0.0",
+    "pytest-sugar>=1.1.1",
+    "pytest-mock>=3.14.0",
+    "pytest-timeout>=2.3.1",
+    "pytest-xdist>=3.6.1",
+    "coverage[toml]>=7.6.0",
+    "hypothesis>=6.122.3",
+]
+dev = [
+    { include-group = "docs" },
+    { include-group = "lint" },
+    { include-group = "test" },
+]
+
+[tool.uv]
+package = true
+default-groups = ["dev"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+src = ["src", "tests"]
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "A",       # flake8-builtins
+    "ANN401",  # any-type
+    "ARG",     # flake8-unused-arguments
+    "COM",     # flake8-commas
+    "D",       # pydocstyle
+    "DJ",      # flake8-django
+    "E501",    # line-too-long
+    "EM",      # flake8-errmsg
+    "ERA",     # eradicate
+    "FBT",     # flake8-boolean-trap
+    "FIX",     # flake8-fixme
+    "G",       # flake8-logging-format
+    "ICN",     # flake8-import-conventions
+    "INP",     # flake8-no-pep420
+    "N",       # pep8-naming
+    "PD",      # pandas-vet
+    "PGH",     # pygrep-hooks
+    "PLR0913", # too-many-arguments
+    "PLR0917", # too-many-positional
+    "PLR2004", # magic-value-comparison
+    "RET",     # flake8-return
+    "S",       # flake8-bandit
+    "SLF",     # flake8-self
+    "T20",     # flake8-print
+    "TD",      # flake8-todos
+    "TRY",     # tryceratops
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/scribbl_py/web/controllers.py" = [
+    "TC001",    # Litestar needs runtime type resolution for DI
+    "TC003",    # Litestar needs runtime type resolution for DI
+]
+"src/scribbl_py/web/dto.py" = [
+    "TC001",    # Litestar needs runtime type resolution for DTOs
+    "TC003",    # Litestar needs runtime type resolution for DTOs
+]
+"src/scribbl_py/realtime/*.py" = [
+    "TC001",    # Runtime type resolution needed for WebSocket handlers
+    "TC003",    # Runtime type resolution needed for message types
+    "BLE001",   # WebSocket handlers need broad exception catching for resilience
+    "PERF203",  # Try-except in loop is acceptable for WebSocket handling
+    "F841",     # Data received but not used (keep-alive receive)
+    "RUF006",   # Fire-and-forget tasks are intentional for async scheduling
+    "SIM105",   # Keep explicit try-except-pass for clarity in error handling
+]
+"src/scribbl_py/plugin.py" = [
+    "PLC0415",  # Deferred import to avoid circular dependencies
+]
+"src/scribbl_py/storage/__init__.py" = [
+    "PLC0415",  # Lazy import for optional db extra
+]
+"src/scribbl_py/services/game.py" = [
+    "TC003",    # UUID needed at runtime for service methods
+]
+"src/scribbl_py/services/telemetry.py" = [
+    "TC003",    # UUID needed at runtime for telemetry tracking
+    "BLE001",   # Broad exception catching needed for resilient telemetry
+    "PERF203",  # Try-except in loop acceptable for callback handling
+    "PLW0603",  # Global _telemetry is intentional singleton pattern
+]
+"src/scribbl_py/storage/db/__init__.py" = [
+    "PLC0415",  # Lazy import for optional db extra
+    "PLR0911",  # Many return statements needed for lazy import pattern
+]
+"src/scribbl_py/storage/db/auth_models.py" = [
+    "TC003",    # datetime/UUID needed at runtime for SQLAlchemy models
+]
+"src/scribbl_py/storage/db/auth_storage.py" = [
+    "TC003",    # UUID needed at runtime for storage methods
+]
+"src/scribbl_py/storage/db/models.py" = [
+    "PLC0415",  # Deferred import to avoid circular dependencies
+    "TC003",    # UUID needed at runtime for Mapped type hints
+]
+"src/scribbl_py/storage/db/migrations/*.py" = [
+    "INP001",   # Migrations don't need __init__.py
+]
+"src/scribbl_py/web/ui.py" = [
+    "TC001",    # Litestar needs runtime type resolution for DI
+    "TC003",    # Litestar needs runtime type resolution for templates
+]
+"src/scribbl_py/app.py" = [
+    "PLC0415",  # Deferred import for optional dependencies
+]
+"src/scribbl_py/core/error_handling.py" = [
+    "PLC0415",  # Deferred imports to avoid circular dependencies
+    "SIM103",   # Keep explicit return for clarity
+]
+"src/scribbl_py/core/tasks.py" = [
+    "PLC0415",  # Deferred imports for optional huey extra
+    "BLE001",   # Catching all exceptions for task resilience
+]
+"src/scribbl_py/cli/database.py" = [
+    "PLC0415",  # Deferred imports for optional extras
+    "BLE001",   # Catching all exceptions for CLI resilience
+    "TC003",    # Generator needed at runtime for contextmanager
+    "ANN",      # Type annotations not required for CLI functions
+    "SIM108",   # Keep explicit if/else for readability
+]
+"src/scribbl_py/game/wordbank.py" = [
+    "TC001",    # Types needed at runtime for dataclasses
+    "C901",     # Complex word matching logic is intentional
+    "PLR0912",  # Many branches needed for word matching logic
+    "C401",     # Generator in set() is fine for readability
+    "SIM102",   # Nested if is clearer for word matching
+    "SIM103",   # Explicit return for clarity
+]
+"src/scribbl_py/storage/db/setup.py" = [
+    "PLW0603",  # Global db_manager is intentional singleton pattern
+    "TC003",    # AsyncGenerator needed at runtime for contextmanager
+    "ANN",      # Type annotations not needed for SQLAlchemy event handlers
+]
+"examples/**/*" = [
+    "PLR0915",  # Examples can have long functions for demo purposes
+    "T201",     # Print statements expected in examples
+    "INP001",   # Examples don't need __init__.py
+]
+"tests/**/*" = [
+    "PLC0415",  # Deferred imports in test fixtures are fine
+    "PLR0913",  # too-many-arguments
+    "PLR0917",  # too-many-positional
+    "PLR6301",  # no-self-use
+    "S101",     # assert
+    "F841",     # Unused variables sometimes needed for setup
+    "PT011",    # Broad exception catching OK in tests
+    "SIM117",   # multiple-with-statements
+    "TCH",      # flake8-type-checking
+]
+"docs/**/*" = [
+    "INP001",   # implicit-namespace-package
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+known-first-party = ["scribbl_py"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 12
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+line-ending = "auto"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--cov=scribbl_py",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-report=html",
+    "--cov-report=xml",
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "e2e: End-to-end tests",
+    "slow: Slow running tests",
+    "db: Tests requiring database",
+    "redis: Tests requiring Redis",
+]
+filterwarnings = [
+    "error",
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["scribbl_py"]
+omit = [
+    "*/tests/*",
+    "*/__pycache__/*",
+    "*/site-packages/*",
+    "*/.venv/*",
+]
+branch = true
+parallel = true
+concurrency = ["thread"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if TYPE_CHECKING:",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "nocov",
+    "if typing.TYPE_CHECKING:",
+    "@overload",
+    "@abstractmethod",
+]
+show_missing = true
+precision = 2
+skip_covered = false
+skip_empty = true
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.coverage.xml]
+output = "coverage.xml"
+
+[tool.codespell]
+skip = "uv.lock,*.lock,*.min.js,*.min.css"
+ignore-words-list = "selectin,nd,ws,discus,runing"
+
+[tool.ty]
+
+[tool.ty.src]
+root = "src"
+
+[tool.ty.rules]
+# Ignore unresolved imports for third-party packages (prek uses isolated env)
+unresolved-import = "ignore"
+# Ignore type errors that are false positives due to prek's isolated environment
+# These occur because ty can't resolve third-party type information
+invalid-assignment = "ignore"
+invalid-argument-type = "ignore"
+invalid-return-type = "ignore"
+possibly-missing-attribute = "ignore"
+
+[tool.git-cliff.changelog]
+header = """
+# Changelog
+
+All notable changes to this project will be documented in this file.\n
+"""
+body = """
+{% if version -%}
+    ## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
+{% else -%}
+    ## [Unreleased]
+{% endif -%}
+{% for group, commits in commits | group_by(attribute="group") %}
+    ### {{ group | upper_first }}
+    {% for commit in commits %}
+        - {{ commit.message | upper_first | trim }}\
+    {% endfor %}
+{% endfor %}\n
+"""
+trim = true
+footer = ""
+
+[tool.git-cliff.git]
+conventional_commits = true
+filter_unconventional = true
+split_commits = false
+commit_parsers = [
+    { message = "^feat", group = "Features" },
+    { message = "^fix", group = "Bug Fixes" },
+    { message = "^doc", group = "Documentation" },
+    { message = "^perf", group = "Performance" },
+    { message = "^refactor", group = "Refactor" },
+    { message = "^style", group = "Styling" },
+    { message = "^test", group = "Testing" },
+    { message = "^chore\\(release\\): prepare for", skip = true },
+    { message = "^chore", group = "Miscellaneous Tasks" },
+    { body = ".*security", group = "Security" },
+]
+protect_breaking_commits = false
+filter_commits = false
+tag_pattern = "v[0-9]*"
+skip_tags = "v0.1.0-beta.1"
+ignore_tags = ""
+topo_order = false
+sort_commits = "oldest"

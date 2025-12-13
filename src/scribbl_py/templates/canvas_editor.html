@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% block title %}{{ canvas.name }} - Scribbl{% endblock %}
+
+{% block head %}
+<style>
+    /* Full height editor layout */
+    body {
+        overflow: hidden;
+    }
+    #main-content {
+        height: calc(100vh - 64px - 56px);
+        padding: 0;
+        max-width: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="flex h-full" x-data="{ showLayers: true, showProperties: false }">
+    <!-- Left Toolbar -->
+    <div class="w-14 bg-base-100 border-r border-base-300 flex flex-col items-center py-2 gap-1">
+        <div class="tooltip tooltip-right" data-tip="Select">
+            <button class="toolbar-btn" data-tool="select">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/>
+                </svg>
+            </button>
+        </div>
+        <div class="tooltip tooltip-right" data-tip="Pen">
+            <button class="toolbar-btn-active" data-tool="pen">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                </svg>
+            </button>
+        </div>
+        <div class="tooltip tooltip-right" data-tip="Rectangle">
+            <button class="toolbar-btn" data-tool="rectangle">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"/>
+                </svg>
+            </button>
+        </div>
+        <div class="tooltip tooltip-right" data-tip="Ellipse">
+            <button class="toolbar-btn" data-tool="ellipse">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <circle cx="12" cy="12" r="9" stroke-width="2"/>
+                </svg>
+            </button>
+        </div>
+        <div class="tooltip tooltip-right" data-tip="Text">
+            <button class="toolbar-btn" data-tool="text">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M8 6v14M16 6v14"/>
+                </svg>
+            </button>
+        </div>
+        <div class="tooltip tooltip-right" data-tip="Eraser">
+            <button class="toolbar-btn" data-tool="eraser">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="divider my-1"></div>
+
+        <!-- Color Picker -->
+        <div class="tooltip tooltip-right" data-tip="Stroke Color">
+            <input type="color" id="color-picker" value="#000000" class="w-8 h-8 rounded cursor-pointer border-2 border-base-300">
+        </div>
+
+        <!-- Stroke Width -->
+        <div class="tooltip tooltip-right" data-tip="Stroke Size">
+            <div class="dropdown dropdown-right">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-sm p-1">
+                    <div class="flex items-center justify-center w-8 h-8 bg-base-200 rounded border border-base-300">
+                        <div id="stroke-preview" class="rounded-full" style="width: 4px; height: 4px; background-color: #000000;"></div>
+                    </div>
+                </div>
+                <div tabindex="0" class="dropdown-content bg-base-100 rounded-box shadow-lg p-3 w-48 z-50">
+                    <label class="text-xs font-medium mb-2 block">Stroke Size</label>
+                    <input type="range" id="stroke-width" min="1" max="50" value="2" class="range range-xs range-primary w-full">
+                    <div class="flex justify-between text-xs opacity-50 mt-1">
+                        <span>1</span>
+                        <span id="stroke-value" class="font-mono font-semibold">2px</span>
+                        <span>50</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1"></div>
+
+        <!-- Undo/Redo -->
+        <div class="tooltip tooltip-right" data-tip="Undo">
+            <button class="toolbar-btn" id="undo-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
+                </svg>
+            </button>
+        </div>
+        <div class="tooltip tooltip-right" data-tip="Redo">
+            <button class="toolbar-btn" id="redo-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Canvas Area -->
+    <div class="flex-1 flex flex-col bg-base-200 overflow-hidden">
+        <!-- Top Bar -->
+        <div class="h-10 bg-base-100 border-b border-base-300 flex items-center justify-between px-4">
+            <div class="flex items-center gap-2">
+                <span class="font-medium">{{ canvas.name }}</span>
+                <span class="badge badge-sm">{{ canvas.width }}x{{ canvas.height }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <!-- Connection Status -->
+                <div class="connection-status">
+                    <span class="connection-status-dot connection-status-dot-connecting"></span>
+                    <span class="connection-status-label text-xs">Connecting...</span>
+                </div>
+
+                <!-- Users Online -->
+                <div class="avatar-group -space-x-3" id="users-online">
+                    <!-- User avatars will be added dynamically -->
+                </div>
+
+                <!-- Export Dropdown -->
+                <div class="dropdown dropdown-end">
+                    <div tabindex="0" role="button" class="btn btn-sm btn-ghost">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        Export
+                    </div>
+                    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                        <li><a href="/api/canvases/{{ canvas.id }}/export/json" target="_blank">Export as JSON</a></li>
+                        <li><a href="/api/canvases/{{ canvas.id }}/export/svg" target="_blank">Export as SVG</a></li>
+                        <li><a href="/api/canvases/{{ canvas.id }}/export/png" target="_blank">Export as PNG</a></li>
+                    </ul>
+                </div>
+
+                <!-- Toggle Panels -->
+                <button class="btn btn-sm btn-ghost" @click="showLayers = !showLayers">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div class="flex-1 overflow-auto p-4 flex items-center justify-center">
+            <div class="canvas-container relative" style="width: {{ canvas.width }}px; height: {{ canvas.height }}px; background-color: {{ canvas.background_color or '#ffffff' }};">
+                <canvas
+                    id="drawing-canvas"
+                    data-canvas-id="{{ canvas.id }}"
+                    data-user-id="{{ user_id }}"
+                    data-user-name="{{ user_name }}"
+                    class="absolute inset-0"
+                ></canvas>
+                <!-- Remote cursors will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Panel - Layers -->
+    <div class="w-64 bg-base-100 border-l border-base-300 flex flex-col" x-show="showLayers" x-transition>
+        <div class="p-3 border-b border-base-300 flex items-center justify-between">
+            <h3 class="font-semibold">Layers</h3>
+            <button class="btn btn-xs btn-ghost" @click="showLayers = false">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="flex-1 overflow-auto p-2" id="layers-list">
+            <!-- Layers will be populated dynamically -->
+            <div class="text-center text-base-content/50 py-8">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mx-auto mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                </svg>
+                <p class="text-sm">No elements yet</p>
+                <p class="text-xs">Start drawing to add layers</p>
+            </div>
+        </div>
+        <div class="p-2 border-t border-base-300">
+            <div class="btn-group w-full">
+                <button class="btn btn-sm flex-1" title="Move layer up">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+                    </svg>
+                </button>
+                <button class="btn btn-sm flex-1" title="Move layer down">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <button class="btn btn-sm flex-1" title="Delete layer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Initialize canvas-specific WebSocket connection
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('drawing-canvas');
+    if (canvas) {
+        // Resize canvas to container
+        const container = canvas.parentElement;
+        canvas.width = container.offsetWidth;
+        canvas.height = container.offsetHeight;
+    }
+});
+</script>
+{% endblock %}

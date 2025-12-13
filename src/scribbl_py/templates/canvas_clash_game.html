@@ -1,0 +1,1557 @@
+{% extends "base.html" %}
+
+{% block title %}Canvas Clash{% endblock %}
+
+{% block head %}
+<style>
+    /* Full height game layout */
+    body {
+        overflow: hidden;
+    }
+    #main-content {
+        height: calc(100vh - 64px);
+        padding: 0;
+        max-width: none;
+    }
+
+    /* Chat messages */
+    .chat-message {
+        animation: slideIn 0.2s ease-out;
+    }
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Correct guess highlight */
+    .correct-guess {
+        background-color: oklch(var(--su) / 0.2);
+        border-left: 4px solid oklch(var(--su));
+    }
+
+    /* Timer warning states */
+    .timer-warning {
+        color: oklch(var(--wa));
+    }
+    .timer-critical {
+        color: oklch(var(--er));
+        animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+    }
+
+    /* Toast animations */
+    .animate-bounce-in {
+        animation: bounceIn 0.3s ease-out;
+    }
+    @keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.8) translateY(20px);
+        }
+        50% {
+            transform: scale(1.05) translateY(-5px);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+    .animate-fade-out {
+        animation: fadeOut 0.3s ease-out forwards;
+    }
+    @keyframes fadeOut {
+        to {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+    }
+
+    /* Correct guess celebration */
+    .correct-banner {
+        animation: slideDown 0.4s ease-out, pulse 2s ease-in-out infinite;
+    }
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-100%);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Confetti animation */
+    .confetti {
+        position: fixed;
+        pointer-events: none;
+        z-index: 100;
+    }
+    .confetti-piece {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        animation: confetti-fall 3s ease-out forwards;
+    }
+    @keyframes confetti-fall {
+        0% {
+            opacity: 1;
+            transform: translateY(0) rotate(0deg);
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(100vh) rotate(720deg);
+        }
+    }
+
+    /* Guess input disabled state */
+    .guess-disabled {
+        pointer-events: none;
+        opacity: 0.6;
+    }
+
+    /* Toolbar tooltips - prevent clipping */
+    #drawing-toolbar {
+        overflow: visible !important;
+    }
+    #drawing-toolbar .tooltip::before,
+    #drawing-toolbar .tooltip::after {
+        z-index: 100;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="flex h-full bg-base-200" x-data="{ showScoreboard: true }">
+    <!-- Left Section - Scoreboard -->
+    <div
+        class="w-64 bg-base-100 border-r border-base-300 flex flex-col"
+        x-show="showScoreboard"
+        x-transition
+    >
+        <!-- Game Info Header -->
+        <div class="p-4 border-b border-base-300">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium opacity-70">Round</span>
+                <span class="text-sm font-bold" id="round-info">{{ game.current_round }}/{{ game.total_rounds }}</span>
+            </div>
+            <div class="flex items-center justify-between">
+                <span class="text-sm font-medium opacity-70">Room</span>
+                <span class="font-mono text-sm font-bold">{{ room.code }}</span>
+            </div>
+        </div>
+
+        <!-- Scoreboard -->
+        <div class="flex-1 overflow-y-auto p-2">
+            <h3 class="text-xs font-bold uppercase opacity-50 px-2 mb-2">Players</h3>
+            <div class="space-y-1" id="scoreboard-list">
+                {% for player in game.players %}
+                <div
+                    class="flex items-center gap-2 p-2 rounded-lg transition-all"
+                    data-player-id="{{ player.id }}"
+                    {% if player.is_drawing %}style="background-color: oklch(var(--p) / 0.1);"{% endif %}
+                >
+                    <div class="avatar placeholder">
+                        <div class="bg-neutral text-neutral-content w-8 rounded-full">
+                            <span class="text-xs">{{ player.name[:2].upper() }}</span>
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium truncate flex items-center gap-1">
+                            {{ player.name }}
+                            {% if player.is_drawing %}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                            </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="text-sm font-bold" data-score="{{ player.score }}">
+                        {{ player.score }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Center Section - Canvas & Game Area -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Top Bar - Timer & Word Hint -->
+        <div class="h-16 bg-base-100 border-b border-base-300 flex items-center justify-between px-6">
+            <!-- Timer -->
+            <div class="flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div>
+                    <div class="text-xs opacity-50 uppercase font-medium">Time Left</div>
+                    <div class="text-2xl font-bold font-mono" id="timer">90</div>
+                </div>
+            </div>
+
+            <!-- Word Hint / Current Drawer -->
+            <div class="text-center flex-1">
+                {% if is_drawing %}
+                <div class="badge badge-primary badge-lg">You are drawing!</div>
+                <div class="text-2xl font-bold mt-1" id="word-display">{{ current_word }}</div>
+                {% else %}
+                <div class="text-xs opacity-50 uppercase font-medium mb-1">Guess the word</div>
+                <div class="text-3xl font-bold font-mono tracking-widest" id="word-hint">
+                    _ _ _ _ _ _ _
+                </div>
+                {% endif %}
+                {% if debug_mode %}
+                <!-- Debug: Show actual word -->
+                <div class="mt-2 inline-flex items-center gap-2 bg-warning/20 border border-warning rounded-lg px-3 py-1" id="debug-word-display">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <span class="text-xs text-warning font-medium">DEBUG:</span>
+                    <span class="font-bold text-warning" id="debug-word">{{ debug_word or 'waiting...' }}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Toggle Scoreboard -->
+            <button
+                class="btn btn-ghost btn-sm"
+                @click="showScoreboard = !showScoreboard"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Canvas Area -->
+        <div class="flex-1 overflow-hidden flex">
+            <!-- Drawing Toolbar (Only for drawer) -->
+            <div
+                class="w-20 bg-base-100 border-r border-base-300 flex flex-col items-center py-3 gap-2"
+                id="drawing-toolbar"
+                {% if not is_drawing %}style="display: none;"{% endif %}
+            >
+                <!-- Drawing Tools -->
+                <div class="flex flex-col gap-1">
+                    <span class="text-[10px] text-center opacity-50 uppercase mb-1">Tools</span>
+                    <div class="grid grid-cols-2 gap-1">
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Pen">
+                            <button class="btn btn-sm btn-square btn-primary" data-tool="pen">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Fill">
+                            <button class="btn btn-sm btn-square btn-ghost" data-tool="fill">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Line">
+                            <button class="btn btn-sm btn-square btn-ghost" data-tool="line">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 20L20 4"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Eraser">
+                            <button class="btn btn-sm btn-square btn-ghost" data-tool="eraser">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shape Tools -->
+                <div class="flex flex-col gap-1">
+                    <span class="text-[10px] text-center opacity-50 uppercase mb-1">Shapes</span>
+                    <div class="grid grid-cols-2 gap-1">
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Rectangle">
+                            <button class="btn btn-sm btn-square btn-ghost" data-tool="rectangle">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <rect x="3" y="5" width="18" height="14" rx="2" stroke-width="2"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Ellipse">
+                            <button class="btn btn-sm btn-square btn-ghost" data-tool="ellipse">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <ellipse cx="12" cy="12" rx="9" ry="7" stroke-width="2"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Triangle">
+                            <button class="btn btn-sm btn-square btn-ghost" data-tool="triangle">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4L3 20h18L12 4z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Circle">
+                            <button class="btn btn-sm btn-square btn-ghost" data-tool="circle">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <circle cx="12" cy="12" r="9" stroke-width="2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider my-0 w-14"></div>
+
+                <!-- Color Palette -->
+                <div class="flex flex-col gap-1">
+                    <span class="text-[10px] text-center opacity-50 uppercase">Colors</span>
+                    <div class="grid grid-cols-2 gap-1 px-1">
+                        <!-- Row 1: Black & White -->
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform ring-2 ring-primary ring-offset-1" data-color="#000000"></button>
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#ffffff"></button>
+                        <!-- Row 2: Grays -->
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#9ca3af"></button>
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#4b5563"></button>
+                        <!-- Row 3: Reds -->
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#ef4444"></button>
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#991b1b"></button>
+                        <!-- Row 4: Oranges -->
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#f97316"></button>
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#c2410c"></button>
+                        <!-- Row 5: Yellows -->
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#eab308"></button>
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#fde047"></button>
+                        <!-- Row 6: Greens -->
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#22c55e"></button>
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#15803d"></button>
+                        <!-- Row 7: Cyans -->
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#06b6d4"></button>
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#0e7490"></button>
+                        <!-- Row 8: Blues -->
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#3b82f6"></button>
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#1d4ed8"></button>
+                        <!-- Row 9: Purples -->
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#a855f7"></button>
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#7e22ce"></button>
+                        <!-- Row 10: Pinks -->
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#ec4899"></button>
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#be185d"></button>
+                        <!-- Row 11: Browns -->
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#a16207"></button>
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#78350f"></button>
+                        <!-- Row 12: Skin tones -->
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#fcd9bd"></button>
+                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#d4a373"></button>
+                    </div>
+                </div>
+
+                <div class="divider my-0 w-14"></div>
+
+                <!-- Stroke Width - Size Buttons -->
+                <div class="flex flex-col gap-1">
+                    <span class="text-[10px] text-center opacity-50 uppercase">Brush Size</span>
+                    <div class="grid grid-cols-2 gap-1 px-1">
+                        <button class="size-btn w-7 h-7 rounded-md bg-gray-100 hover:bg-gray-200 border-2 border-gray-300 flex items-center justify-center" data-size="2" title="Small">
+                            <div class="w-1.5 h-1.5 bg-gray-800 rounded-full"></div>
+                        </button>
+                        <button class="size-btn w-7 h-7 rounded-md bg-primary border-2 border-primary flex items-center justify-center selected" data-size="4" title="Medium">
+                            <div class="w-2.5 h-2.5 bg-white rounded-full"></div>
+                        </button>
+                        <button class="size-btn w-7 h-7 rounded-md bg-gray-100 hover:bg-gray-200 border-2 border-gray-300 flex items-center justify-center" data-size="8" title="Large">
+                            <div class="w-3.5 h-3.5 bg-gray-800 rounded-full"></div>
+                        </button>
+                        <button class="size-btn w-7 h-7 rounded-md bg-gray-100 hover:bg-gray-200 border-2 border-gray-300 flex items-center justify-center" data-size="16" title="X-Large">
+                            <div class="w-5 h-5 bg-gray-800 rounded-full"></div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-1"></div>
+
+                <!-- Clear Canvas -->
+                <div class="tooltip tooltip-bottom z-50" data-tip="Clear Canvas">
+                    <button class="btn btn-sm btn-error" id="clear-canvas-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Canvas Container -->
+            <div class="flex-1 overflow-auto p-4 flex items-center justify-center">
+                <div class="canvas-container relative bg-white rounded-lg shadow-xl" style="width: 800px; height: 600px;">
+                    <canvas
+                        id="game-canvas"
+                        width="800"
+                        height="600"
+                        data-room-id="{{ room.id }}"
+                        data-user-id="{{ user_id }}"
+                        data-is-drawing="{{ is_drawing|lower }}"
+                        class="absolute inset-0 rounded-lg"
+                        {% if not is_drawing %}style="cursor: not-allowed;"{% endif %}
+                    ></canvas>
+                    <!-- Loading overlay for canvas -->
+                    <div id="canvas-loading" class="absolute inset-0 bg-base-100/80 flex flex-col items-center justify-center rounded-lg z-10">
+                        <span class="loading loading-spinner loading-lg text-primary"></span>
+                        <p class="mt-4 text-base-content/70 text-sm" id="canvas-loading-text">Connecting to game...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Section - Chat -->
+    <div class="w-80 bg-base-100 border-l border-base-300 flex flex-col">
+        <div class="p-4 border-b border-base-300">
+            <h3 class="font-bold flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                </svg>
+                Chat & Guesses
+            </h3>
+        </div>
+
+        <!-- Messages -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-2" id="chat-messages">
+            <!-- Chat messages will be added here dynamically -->
+            <div class="text-center text-base-content/50 text-sm py-8">
+                <p>Start guessing to chat!</p>
+            </div>
+        </div>
+
+        <!-- Input (Disabled if drawing or spectating) -->
+        <div class="p-4 border-t border-base-300">
+            {% if is_spectator %}
+            <div class="alert alert-neutral">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+                <span class="text-xs">You are watching as a spectator</span>
+            </div>
+            {% elif is_drawing %}
+            <div class="alert alert-info">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="text-xs">You are drawing!</span>
+            </div>
+            {% else %}
+            <form id="guess-form" class="flex gap-2" hx-boost="false">
+                <input
+                    type="text"
+                    id="guess-input"
+                    placeholder="Type your guess..."
+                    class="input input-bordered flex-1"
+                    maxlength="50"
+                    autocomplete="off"
+                >
+                <button type="submit" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                    </svg>
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modals Container -->
+<div id="game-modals"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Game WebSocket connection - global for word selection partial access
+let gameWs = null;
+const gameRoomId = '{{ room.id }}';
+
+document.addEventListener('DOMContentLoaded', function() {
+    const roomId = gameRoomId;
+    const userId = '{{ user_id }}';
+    const isDrawing = {{ is_drawing|lower }};
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas ? canvas.getContext('2d') : null;
+    const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/canvas-clash/game/${roomId}`;
+
+    let ws = null;
+    let currentColor = '#000000';
+    let currentWidth = 4;
+    let currentTool = 'pen';
+    let isDrawingActive = false;
+    let lastX = 0;
+    let lastY = 0;
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 5;
+    const reconnectDelay = 2000; // 2 seconds
+    let myPlayerId = null; // Will be set from room_state message
+
+    function connect() {
+        ws = new WebSocket(wsUrl);
+        gameWs = ws;  // Make accessible globally for word selection
+
+        ws.onopen = function() {
+            console.log('Game WebSocket connected');
+            reconnectAttempts = 0;
+            hideConnectionStatus();
+            hideCanvasLoading();
+            ws.send(JSON.stringify({
+                type: 'join',
+                user_id: userId
+            }));
+        };
+
+        ws.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            console.log('[Game WS] Received:', data.type, data);
+            handleGameMessage(data);
+        };
+
+        ws.onclose = function(event) {
+            console.log('Game WebSocket disconnected', event.code, event.reason);
+            gameWs = null;
+
+            // Attempt to reconnect unless it was a clean close or we've exhausted attempts
+            if (event.code !== 1000 && reconnectAttempts < maxReconnectAttempts) {
+                reconnectAttempts++;
+                console.log(`Attempting to reconnect (${reconnectAttempts}/${maxReconnectAttempts})...`);
+                showConnectionStatus('Reconnecting...');
+                showCanvasLoading(`Reconnecting... (${reconnectAttempts}/${maxReconnectAttempts})`);
+                setTimeout(connect, reconnectDelay);
+            } else if (reconnectAttempts >= maxReconnectAttempts) {
+                console.log('Max reconnection attempts reached');
+                showConnectionStatus('Connection lost. Please refresh the page.');
+                showCanvasLoading('Connection lost. Please refresh.');
+            }
+        };
+
+        ws.onerror = function(error) {
+            console.error('Game WebSocket error:', error);
+        };
+    }
+
+    function handleGameMessage(data) {
+        switch(data.type) {
+            case 'room_state':
+                console.log('[Game WS] Received room state:', data.room);
+                // Store our player_id for identification
+                if (data.player_id) {
+                    myPlayerId = data.player_id;
+                    console.log('[Game WS] My player ID:', myPlayerId);
+                }
+                // Update scoreboard with players from room state
+                if (data.room && data.room.players) {
+                    populateScoreboard(data.room.players);
+                }
+                break;
+
+            case 'timer_update':
+                updateTimer(data.time_left);
+                break;
+
+            case 'draw_stroke':
+                if (ctx && !isDrawing) {
+                    drawStroke(data);
+                }
+                break;
+
+            case 'draw_shape':
+                if (ctx && !isDrawing) {
+                    drawRemoteShape(data);
+                }
+                break;
+
+            case 'fill':
+                if (ctx && !isDrawing) {
+                    drawRemoteFill(data);
+                }
+                break;
+
+            case 'clear_canvas':
+                console.log('[Game WS] Canvas cleared by drawer');
+                if (ctx) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+                break;
+
+            case 'chat_message':
+                addChatMessage(data);
+                break;
+
+            case 'correct_guess':
+                handleCorrectGuess(data);
+                break;
+
+            case 'word_hint':
+                updateWordHint(data.hint);
+                break;
+
+            case 'word_selected':
+                console.log('[Game WS] Word selected, drawing phase started');
+                // Update hint display with underscores based on word length
+                updateWordHint(data.word_hint);
+                // Update debug word display if present
+                if (data.debug_word) {
+                    updateDebugWord(data.debug_word);
+                }
+                break;
+
+            case 'hint_update':
+                console.log('[Game WS] Hint updated:', data.hint);
+                updateWordHint(data.hint);
+                break;
+
+            case 'round_started':
+                console.log('[Game WS] New round started:', data);
+                // Reload page to get correct drawer state (is_drawing template variable)
+                // This ensures the correct UI is shown (toolbar for drawer, guess input for guessers)
+                // Only reload for rounds after the first (round 1 state is set on initial page load)
+                if (data.round_number > 1) {
+                    window.location.reload();
+                }
+                break;
+
+            case 'word_options':
+                console.log('[Game WS] Received word options:', data.options);
+                // Show word selection modal for the drawer
+                showWordSelectionModal(data.options);
+                break;
+
+            case 'round_end':
+                showRoundEnd(data);
+                break;
+
+            case 'game_over':
+                showGameOver(data);
+                break;
+
+            case 'score_update':
+                updateScoreboard(data.scores);
+                break;
+
+            case 'guess_result':
+                // Show feedback for close guesses (private to guesser)
+                if (data.result === 'close') {
+                    showToast(data.message || "You're close!", 'warning');
+                    addPrivateChatMessage(data.message || "You're close!");
+                }
+                break;
+
+            case 'new_drawer':
+                handleNewDrawer(data);
+                break;
+        }
+    }
+
+    // Toast notification
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} shadow-lg animate-bounce-in`;
+        toast.innerHTML = `
+            <span>${message}</span>
+        `;
+
+        // Create or get toast container
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.className = 'toast toast-end toast-bottom z-50';
+            document.body.appendChild(container);
+        }
+
+        container.appendChild(toast);
+
+        // Remove after 3 seconds
+        setTimeout(() => {
+            toast.classList.add('animate-fade-out');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // Private chat message (only visible to this player)
+    function addPrivateChatMessage(message) {
+        const chatMessages = document.getElementById('chat-messages');
+        if (!chatMessages) return;
+
+        const msgEl = document.createElement('div');
+        msgEl.className = 'chat-message p-2 rounded bg-warning/20 border-l-4 border-warning text-sm italic';
+        msgEl.innerHTML = `<span class="opacity-70">💡</span> ${message}`;
+        chatMessages.appendChild(msgEl);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Drawing functionality (only for drawer)
+    if (isDrawing && canvas && ctx) {
+        let shapeStartX = 0;
+        let shapeStartY = 0;
+        let savedImageData = null;  // For shape preview
+
+        // Apply background colors to color buttons
+        document.querySelectorAll('.color-btn').forEach(btn => {
+            btn.style.backgroundColor = btn.dataset.color;
+        });
+
+        // Tool selection
+        document.querySelectorAll('[data-tool]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('[data-tool]').forEach(b => {
+                    b.classList.remove('btn-primary');
+                    b.classList.add('btn-ghost');
+                });
+                this.classList.remove('btn-ghost');
+                this.classList.add('btn-primary');
+                currentTool = this.dataset.tool;
+
+                // Set color for eraser
+                if (currentTool === 'eraser') {
+                    currentColor = '#ffffff';
+                }
+            });
+        });
+
+        // Color selection
+        document.querySelectorAll('[data-color]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                currentColor = this.dataset.color;
+                document.querySelectorAll('[data-color]').forEach(b => {
+                    b.classList.remove('ring-2', 'ring-primary', 'ring-offset-1');
+                });
+                this.classList.add('ring-2', 'ring-primary', 'ring-offset-1');
+
+                // Switch back to pen tool when selecting a color
+                if (currentTool === 'eraser') {
+                    document.querySelectorAll('[data-tool]').forEach(b => {
+                        b.classList.remove('btn-primary');
+                        b.classList.add('btn-ghost');
+                    });
+                    document.querySelector('[data-tool="pen"]').classList.remove('btn-ghost');
+                    document.querySelector('[data-tool="pen"]').classList.add('btn-primary');
+                    currentTool = 'pen';
+                }
+            });
+        });
+
+        // Stroke width - size buttons
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.size-btn').forEach(b => {
+                    b.classList.remove('bg-primary', 'border-primary');
+                    b.classList.add('bg-gray-100', 'border-gray-300');
+                    const dot = b.querySelector('div');
+                    if (dot) {
+                        dot.classList.remove('bg-white');
+                        dot.classList.add('bg-gray-800');
+                    }
+                });
+                this.classList.remove('bg-gray-100', 'border-gray-300');
+                this.classList.add('bg-primary', 'border-primary');
+                const dot = this.querySelector('div');
+                if (dot) {
+                    dot.classList.remove('bg-gray-800');
+                    dot.classList.add('bg-white');
+                }
+                currentWidth = parseInt(this.dataset.size);
+            });
+        });
+
+        // Check if tool is a shape tool
+        function isShapeTool(tool) {
+            return ['line', 'rectangle', 'ellipse', 'circle', 'triangle'].includes(tool);
+        }
+
+        // Flood fill algorithm for fill tool
+        function floodFill(startX, startY, fillColor) {
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            const width = canvas.width;
+            const height = canvas.height;
+
+            // Get starting pixel color
+            const startIdx = (Math.floor(startY) * width + Math.floor(startX)) * 4;
+            const startR = data[startIdx];
+            const startG = data[startIdx + 1];
+            const startB = data[startIdx + 2];
+            const startA = data[startIdx + 3];
+
+            // Parse fill color
+            const fillRGB = hexToRgb(fillColor);
+            if (!fillRGB) return;
+
+            // Don't fill if clicking on same color
+            if (startR === fillRGB.r && startG === fillRGB.g && startB === fillRGB.b) {
+                return;
+            }
+
+            // Stack-based flood fill (avoids recursion limit)
+            const stack = [[Math.floor(startX), Math.floor(startY)]];
+            const visited = new Set();
+
+            function getKey(x, y) {
+                return y * width + x;
+            }
+
+            function matchesStart(idx) {
+                return Math.abs(data[idx] - startR) < 10 &&
+                       Math.abs(data[idx + 1] - startG) < 10 &&
+                       Math.abs(data[idx + 2] - startB) < 10 &&
+                       Math.abs(data[idx + 3] - startA) < 10;
+            }
+
+            while (stack.length > 0) {
+                const [x, y] = stack.pop();
+                const key = getKey(x, y);
+
+                if (x < 0 || x >= width || y < 0 || y >= height) continue;
+                if (visited.has(key)) continue;
+
+                const idx = key * 4;
+                if (!matchesStart(idx)) continue;
+
+                visited.add(key);
+
+                // Set pixel color
+                data[idx] = fillRGB.r;
+                data[idx + 1] = fillRGB.g;
+                data[idx + 2] = fillRGB.b;
+                data[idx + 3] = 255;
+
+                // Add neighbors
+                stack.push([x + 1, y]);
+                stack.push([x - 1, y]);
+                stack.push([x, y + 1]);
+                stack.push([x, y - 1]);
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        // Canvas drawing
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        function startDrawing(e) {
+            const rect = canvas.getBoundingClientRect();
+            lastX = e.clientX - rect.left;
+            lastY = e.clientY - rect.top;
+
+            // Handle fill tool immediately on click
+            if (currentTool === 'fill') {
+                floodFill(lastX, lastY, currentColor);
+
+                // Send fill to server
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({
+                        type: 'fill',
+                        color: currentColor,
+                        x: Math.floor(lastX),
+                        y: Math.floor(lastY)
+                    }));
+                }
+                return;
+            }
+
+            isDrawingActive = true;
+
+            // For shape tools, save starting position and canvas state
+            if (isShapeTool(currentTool)) {
+                shapeStartX = lastX;
+                shapeStartY = lastY;
+                savedImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        function draw(e) {
+            if (!isDrawingActive) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            if (isShapeTool(currentTool)) {
+                // Restore canvas and draw shape preview
+                ctx.putImageData(savedImageData, 0, 0);
+                drawShape(shapeStartX, shapeStartY, x, y, currentTool, false);
+            } else {
+                // Free-hand drawing (pen, eraser)
+                ctx.strokeStyle = currentColor;
+                ctx.lineWidth = currentWidth;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+
+                // Send to server
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({
+                        type: 'draw',
+                        tool: currentTool,
+                        color: currentColor,
+                        width: currentWidth,
+                        from_x: lastX,
+                        from_y: lastY,
+                        to_x: x,
+                        to_y: y
+                    }));
+                }
+
+                lastX = x;
+                lastY = y;
+            }
+        }
+
+        function stopDrawing(e) {
+            if (!isDrawingActive) return;
+
+            if (isShapeTool(currentTool) && e.type !== 'mouseout') {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                // Restore and draw final shape
+                ctx.putImageData(savedImageData, 0, 0);
+                drawShape(shapeStartX, shapeStartY, x, y, currentTool, true);
+
+                // Send shape to server
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({
+                        type: 'draw_shape',
+                        shape: currentTool,
+                        color: currentColor,
+                        width: currentWidth,
+                        from_x: shapeStartX,
+                        from_y: shapeStartY,
+                        to_x: x,
+                        to_y: y
+                    }));
+                }
+            }
+
+            isDrawingActive = false;
+        }
+
+        // Draw shape on canvas
+        function drawShape(x1, y1, x2, y2, shape, isFinal) {
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = currentWidth;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+
+            switch (shape) {
+                case 'line':
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    break;
+                case 'rectangle':
+                    ctx.rect(x1, y1, x2 - x1, y2 - y1);
+                    break;
+                case 'ellipse':
+                    const radiusX = Math.abs(x2 - x1) / 2;
+                    const radiusY = Math.abs(y2 - y1) / 2;
+                    const centerX = x1 + (x2 - x1) / 2;
+                    const centerY = y1 + (y2 - y1) / 2;
+                    ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
+                    break;
+                case 'circle':
+                    const radius = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                    ctx.arc(x1, y1, radius, 0, 2 * Math.PI);
+                    break;
+                case 'triangle':
+                    const midX = x1 + (x2 - x1) / 2;
+                    ctx.moveTo(midX, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.lineTo(x1, y2);
+                    ctx.closePath();
+                    break;
+            }
+            ctx.stroke();
+        }
+
+        // Clear canvas
+        const clearBtn = document.getElementById('clear-canvas-btn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({ type: 'clear' }));
+                }
+            });
+        }
+    }
+
+    // Drawing stroke received from other player
+    function drawStroke(data) {
+        ctx.strokeStyle = data.color;
+        ctx.lineWidth = data.width;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(data.from_x, data.from_y);
+        ctx.lineTo(data.to_x, data.to_y);
+        ctx.stroke();
+    }
+
+    // Drawing shape received from other player
+    function drawRemoteShape(data) {
+        ctx.strokeStyle = data.color;
+        ctx.lineWidth = data.width;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+
+        const x1 = data.from_x;
+        const y1 = data.from_y;
+        const x2 = data.to_x;
+        const y2 = data.to_y;
+
+        switch (data.shape) {
+            case 'line':
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                break;
+            case 'rectangle':
+                ctx.rect(x1, y1, x2 - x1, y2 - y1);
+                break;
+            case 'ellipse':
+                const radiusX = Math.abs(x2 - x1) / 2;
+                const radiusY = Math.abs(y2 - y1) / 2;
+                const centerX = x1 + (x2 - x1) / 2;
+                const centerY = y1 + (y2 - y1) / 2;
+                ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
+                break;
+            case 'circle':
+                const radius = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                ctx.arc(x1, y1, radius, 0, 2 * Math.PI);
+                break;
+            case 'triangle':
+                const midX = x1 + (x2 - x1) / 2;
+                ctx.moveTo(midX, y1);
+                ctx.lineTo(x2, y2);
+                ctx.lineTo(x1, y2);
+                ctx.closePath();
+                break;
+        }
+        ctx.stroke();
+    }
+
+    // Fill received from other player
+    function drawRemoteFill(data) {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixelData = imageData.data;
+        const width = canvas.width;
+        const height = canvas.height;
+
+        // Get starting pixel color
+        const startX = data.x;
+        const startY = data.y;
+        const startIdx = (startY * width + startX) * 4;
+        const startR = pixelData[startIdx];
+        const startG = pixelData[startIdx + 1];
+        const startB = pixelData[startIdx + 2];
+        const startA = pixelData[startIdx + 3];
+
+        // Parse fill color
+        const hex = data.color;
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        if (!result) return;
+        const fillR = parseInt(result[1], 16);
+        const fillG = parseInt(result[2], 16);
+        const fillB = parseInt(result[3], 16);
+
+        // Don't fill if same color
+        if (startR === fillR && startG === fillG && startB === fillB) return;
+
+        // Stack-based flood fill
+        const stack = [[startX, startY]];
+        const visited = new Set();
+
+        function matchesStart(idx) {
+            return Math.abs(pixelData[idx] - startR) < 10 &&
+                   Math.abs(pixelData[idx + 1] - startG) < 10 &&
+                   Math.abs(pixelData[idx + 2] - startB) < 10 &&
+                   Math.abs(pixelData[idx + 3] - startA) < 10;
+        }
+
+        while (stack.length > 0) {
+            const [x, y] = stack.pop();
+            const key = y * width + x;
+
+            if (x < 0 || x >= width || y < 0 || y >= height) continue;
+            if (visited.has(key)) continue;
+
+            const idx = key * 4;
+            if (!matchesStart(idx)) continue;
+
+            visited.add(key);
+
+            pixelData[idx] = fillR;
+            pixelData[idx + 1] = fillG;
+            pixelData[idx + 2] = fillB;
+            pixelData[idx + 3] = 255;
+
+            stack.push([x + 1, y]);
+            stack.push([x - 1, y]);
+            stack.push([x, y + 1]);
+            stack.push([x, y - 1]);
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+    }
+
+    // Guess form
+    const guessForm = document.getElementById('guess-form');
+    if (guessForm) {
+        guessForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            e.stopPropagation();  // Prevent HTMX from intercepting
+            console.log('[Game] Guess form submitted via JS');
+            const input = document.getElementById('guess-input');
+            const guess = input.value.trim();
+
+            if (guess && ws && ws.readyState === WebSocket.OPEN) {
+                console.log('[Game] Sending guess:', guess);
+                ws.send(JSON.stringify({
+                    type: 'guess',
+                    text: guess
+                }));
+                input.value = '';
+            }
+        });
+    }
+
+    // UI Update Functions
+    function updateTimer(timeLeft) {
+        const timerEl = document.getElementById('timer');
+        if (timerEl) {
+            timerEl.textContent = timeLeft;
+            timerEl.className = 'text-2xl font-bold font-mono';
+
+            if (timeLeft <= 10) {
+                timerEl.classList.add('timer-critical');
+            } else if (timeLeft <= 30) {
+                timerEl.classList.add('timer-warning');
+            }
+        }
+    }
+
+    function updateWordHint(hint) {
+        const hintEl = document.getElementById('word-hint');
+        if (hintEl) {
+            hintEl.textContent = hint;
+        }
+    }
+
+    function updateDebugWord(word) {
+        const debugEl = document.getElementById('debug-word');
+        if (debugEl) {
+            debugEl.textContent = word;
+        }
+    }
+
+    function addChatMessage(data) {
+        const chatMessages = document.getElementById('chat-messages');
+        if (!chatMessages) return;
+
+        // Remove placeholder if exists
+        const placeholder = chatMessages.querySelector('.text-center');
+        if (placeholder) placeholder.remove();
+
+        const messageEl = document.createElement('div');
+        messageEl.className = `chat-message p-2 rounded-lg ${data.is_correct ? 'correct-guess' : 'bg-base-200'}`;
+        messageEl.innerHTML = `
+            <div class="text-xs font-medium opacity-70">${data.player_name}</div>
+            <div class="text-sm">${data.message}</div>
+        `;
+        chatMessages.appendChild(messageEl);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function handleCorrectGuess(data) {
+        addChatMessage({
+            player_name: data.player_name,
+            message: 'guessed the word!',
+            is_correct: true
+        });
+
+        // Check if this is the current user who guessed correctly
+        const isCurrentUser = data.player_id === myPlayerId;
+
+        // Show celebration banner
+        showCorrectGuessBanner(data.player_name, isCurrentUser);
+
+        // If current user guessed correctly, disable input and show waiting state
+        if (isCurrentUser) {
+            disableGuessInput();
+            showConfetti();
+        }
+
+        // Update scoreboard to show who has guessed (via checkmark)
+        updatePlayerGuessedState(data.player_id);
+    }
+
+    // Show a celebration banner when someone guesses correctly
+    function showCorrectGuessBanner(playerName, isCurrentUser) {
+        const banner = document.createElement('div');
+        banner.id = 'correct-guess-banner';
+        banner.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 z-50 correct-banner';
+
+        if (isCurrentUser) {
+            banner.innerHTML = `
+                <div class="alert alert-success shadow-lg">
+                    <div class="flex items-center gap-3">
+                        <span class="text-3xl">🎉</span>
+                        <div>
+                            <div class="text-xl font-bold">You got it!</div>
+                            <div class="text-sm opacity-70">Waiting for others to guess...</div>
+                        </div>
+                        <span class="text-3xl">🎉</span>
+                    </div>
+                </div>
+            `;
+        } else {
+            banner.innerHTML = `
+                <div class="alert alert-info shadow-lg">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">✨</span>
+                        <div>
+                            <div class="font-bold">${playerName} guessed correctly!</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Remove any existing banner
+        const existingBanner = document.getElementById('correct-guess-banner');
+        if (existingBanner) existingBanner.remove();
+
+        document.body.appendChild(banner);
+
+        // Auto-remove banner after 5 seconds (unless it's current user waiting)
+        if (!isCurrentUser) {
+            setTimeout(() => {
+                banner.classList.add('animate-fade-out');
+                setTimeout(() => banner.remove(), 300);
+            }, 4000);
+        }
+    }
+
+    // Disable the guess input after the player has guessed correctly
+    function disableGuessInput() {
+        const guessForm = document.getElementById('guess-form');
+        const guessInput = document.getElementById('guess-input');
+
+        if (guessForm && guessInput) {
+            guessInput.disabled = true;
+            guessInput.placeholder = "You've already guessed!";
+            guessForm.classList.add('guess-disabled');
+
+            // Replace form with waiting message
+            guessForm.innerHTML = `
+                <div class="alert alert-success w-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <span class="text-sm">Nice guess! Waiting for others...</span>
+                </div>
+            `;
+        }
+    }
+
+    // Update player's guessed state in scoreboard
+    function updatePlayerGuessedState(playerId) {
+        const playerEl = document.querySelector(`[data-player-id="${playerId}"]`);
+        if (playerEl) {
+            const nameDiv = playerEl.querySelector('.truncate');
+            if (nameDiv && !nameDiv.querySelector('.badge-success')) {
+                nameDiv.innerHTML += ' <span class="badge badge-xs badge-success">✓</span>';
+            }
+            // Briefly highlight the player
+            playerEl.style.backgroundColor = 'oklch(var(--su) / 0.2)';
+            setTimeout(() => {
+                playerEl.style.backgroundColor = '';
+            }, 2000);
+        }
+    }
+
+    // Confetti celebration
+    function showConfetti() {
+        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+        const container = document.createElement('div');
+        container.className = 'confetti';
+
+        for (let i = 0; i < 50; i++) {
+            const piece = document.createElement('div');
+            piece.className = 'confetti-piece';
+            piece.style.left = Math.random() * 100 + 'vw';
+            piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.animationDelay = Math.random() * 0.5 + 's';
+            piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+            container.appendChild(piece);
+        }
+
+        document.body.appendChild(container);
+        setTimeout(() => container.remove(), 4000);
+    }
+
+    function populateScoreboard(players) {
+        const scoreboard = document.getElementById('scoreboard-list');
+        if (!scoreboard) return;
+
+        // Clear existing content
+        scoreboard.innerHTML = '';
+
+        // Sort by score descending
+        players.sort((a, b) => (b.score || 0) - (a.score || 0));
+
+        // Create player entries
+        players.forEach(player => {
+            const playerEl = document.createElement('div');
+            playerEl.className = 'flex items-center gap-2 p-2 rounded-lg transition-all';
+            playerEl.dataset.playerId = player.id;
+
+            const initials = (player.name || 'AN').substring(0, 2).toUpperCase();
+            const score = player.score || 0;
+
+            playerEl.innerHTML = `
+                <div class="avatar placeholder">
+                    <div class="bg-neutral text-neutral-content w-8 rounded-full">
+                        <span class="text-xs">${initials}</span>
+                    </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-sm font-medium truncate flex items-center gap-1">
+                        ${player.name}
+                        ${player.has_guessed ? '<span class="badge badge-xs badge-success">✓</span>' : ''}
+                    </div>
+                </div>
+                <div class="text-sm font-bold" data-score="${score}">
+                    ${score}
+                </div>
+            `;
+
+            scoreboard.appendChild(playerEl);
+        });
+    }
+
+    function updateScoreboard(scores) {
+        scores.forEach(score => {
+            const playerEl = document.querySelector(`[data-player-id="${score.player_id}"]`);
+            if (playerEl) {
+                const scoreEl = playerEl.querySelector('[data-score]');
+                if (scoreEl) {
+                    scoreEl.textContent = score.score;
+                    scoreEl.dataset.score = score.score;
+                }
+            }
+        });
+
+        // Re-sort players by score
+        const scoreboard = document.getElementById('scoreboard-list');
+        if (scoreboard) {
+            const players = Array.from(scoreboard.children);
+            players.sort((a, b) => {
+                const scoreA = parseInt(a.querySelector('[data-score]').dataset.score);
+                const scoreB = parseInt(b.querySelector('[data-score]').dataset.score);
+                return scoreB - scoreA;
+            });
+            players.forEach(player => scoreboard.appendChild(player));
+        }
+    }
+
+    function handleNewDrawer(data) {
+        // Reload page to update drawer state
+        window.location.reload();
+    }
+
+    function showRoundEnd(data) {
+        // Clean up any correct guess banners
+        const banner = document.getElementById('correct-guess-banner');
+        if (banner) banner.remove();
+
+        // Build query params - use round_num as expected by controller
+        const params = new URLSearchParams({
+            word: data.word || '',
+            round_num: data.round || 1,
+        });
+
+        htmx.ajax('GET', `/canvas-clash/rooms/${roomId}/partials/round_end?${params.toString()}`, {
+            target: '#game-modals',
+            swap: 'innerHTML'
+        });
+    }
+
+    function showGameOver(data) {
+        htmx.ajax('GET', `/canvas-clash/rooms/${roomId}/partials/game_over`, {
+            target: '#game-modals',
+            swap: 'innerHTML'
+        });
+    }
+
+    // Show word selection modal for drawer
+    function showWordSelectionModal(options) {
+        const modalsContainer = document.getElementById('game-modals');
+        if (!modalsContainer) return;
+
+        const modalHtml = `
+            <dialog id="word-selection-modal" class="modal modal-open">
+                <div class="modal-box max-w-2xl">
+                    <h3 class="text-2xl font-bold text-center mb-2">Choose a Word to Draw</h3>
+                    <p class="text-center text-base-content/70 mb-6">Select one of the following words</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        ${options.map(word => `
+                            <button
+                                class="card bg-base-200 hover:bg-primary hover:text-primary-content transition-all duration-200 transform hover:scale-105 cursor-pointer border-2 border-transparent hover:border-primary"
+                                onclick="selectWord('${word}')"
+                            >
+                                <div class="card-body items-center text-center p-8">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                                    </svg>
+                                    <h4 class="card-title text-2xl font-bold">${word}</h4>
+                                </div>
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="text-center mt-6">
+                        <div class="text-sm opacity-70 mb-2">Choose quickly!</div>
+                        <div class="radial-progress text-primary" style="--value:100; --size:3rem;" id="word-selection-timer">
+                            <span class="text-sm font-bold" id="word-selection-seconds">10</span>
+                        </div>
+                    </div>
+                </div>
+                <form method="dialog" class="modal-backdrop">
+                    <button disabled>close</button>
+                </form>
+            </dialog>
+        `;
+        modalsContainer.innerHTML = modalHtml;
+
+        // Start countdown timer
+        let timeLeft = 10;
+        const timerInterval = setInterval(() => {
+            timeLeft--;
+            const timerSeconds = document.getElementById('word-selection-seconds');
+            const timerProgress = document.getElementById('word-selection-timer');
+            if (timerSeconds) timerSeconds.textContent = timeLeft;
+            if (timerProgress) timerProgress.style.setProperty('--value', (timeLeft / 10) * 100);
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                selectWord(options[0]); // Auto-select first word
+            }
+        }, 1000);
+
+        // Store interval for cleanup
+        window._wordSelectionTimer = timerInterval;
+    }
+
+    // Select word function (called from modal)
+    window.selectWord = function(word) {
+        // Clear timer
+        if (window._wordSelectionTimer) {
+            clearInterval(window._wordSelectionTimer);
+        }
+
+        console.log('[Game] Selecting word:', word);
+
+        // Send via WebSocket
+        if (gameWs && gameWs.readyState === WebSocket.OPEN) {
+            gameWs.send(JSON.stringify({
+                type: 'select_word',
+                word: word
+            }));
+        }
+
+        // Close modal
+        const modal = document.getElementById('word-selection-modal');
+        if (modal) modal.close();
+
+        // Clear modals container
+        const modalsContainer = document.getElementById('game-modals');
+        if (modalsContainer) modalsContainer.innerHTML = '';
+
+        // Update word display for drawer
+        const wordDisplay = document.getElementById('word-display');
+        if (wordDisplay) wordDisplay.textContent = word;
+    };
+
+    // Connection status helpers for reconnection feedback
+    function showConnectionStatus(message) {
+        let statusEl = document.getElementById('connection-status');
+        if (!statusEl) {
+            statusEl = document.createElement('div');
+            statusEl.id = 'connection-status';
+            statusEl.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 z-50 alert alert-warning shadow-lg';
+            document.body.appendChild(statusEl);
+        }
+        statusEl.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            <span>${message}</span>
+        `;
+        statusEl.style.display = 'flex';
+    }
+
+    function hideConnectionStatus() {
+        const statusEl = document.getElementById('connection-status');
+        if (statusEl) {
+            statusEl.style.display = 'none';
+        }
+    }
+
+    // Canvas loading overlay helpers
+    function showCanvasLoading(message = 'Loading...') {
+        const loadingEl = document.getElementById('canvas-loading');
+        const textEl = document.getElementById('canvas-loading-text');
+        if (loadingEl) {
+            loadingEl.style.display = 'flex';
+            if (textEl) textEl.textContent = message;
+        }
+    }
+
+    function hideCanvasLoading() {
+        const loadingEl = document.getElementById('canvas-loading');
+        if (loadingEl) {
+            loadingEl.style.display = 'none';
+        }
+    }
+
+    // Connect on page load
+    connect();
+
+    // Clean up on page unload
+    window.addEventListener('beforeunload', function() {
+        if (ws) {
+            ws.close();
+        }
+    });
+});
+</script>
+{% endblock %}

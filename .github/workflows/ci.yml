@@ -1,0 +1,185 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/**"
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.13"
+  UV_CACHE_DIR: /tmp/.uv-cache
+
+jobs:
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@e639db99335bc9038abc0e066dfcd72e23d26fb4 # v1.1.1
+        with:
+          version: latest
+
+  validate:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v5.3.1
+        with:
+          enable-cache: true
+          cache-suffix: "lint"
+
+      - name: Set up Python
+        run: uv python install ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Run ruff check
+        run: uv run ruff check src tests
+
+      - name: Run ruff format check
+        run: uv run ruff format --check src tests
+
+      - name: Run ty type check
+        uses: JacobCoffee/ty-action@main
+        with:
+          version: latest
+
+  test-smoke:
+    name: Smoke Test
+    runs-on: ${{ matrix.os }}
+    needs: [security, validate]
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python-version: "3.13"
+          - os: windows-latest
+            python-version: "3.13"
+          - os: ubuntu-latest
+            python-version: "3.10"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v5.3.1
+        with:
+          enable-cache: true
+          cache-suffix: test-${{ matrix.os }}-${{ matrix.python-version }}
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Run tests
+        run: uv run pytest tests -v --tb=short
+
+  test-full:
+    name: Full Test
+    runs-on: ${{ matrix.os }}
+    needs: [test-smoke]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        exclude:
+          - os: ubuntu-latest
+            python-version: "3.13"
+          - os: windows-latest
+            python-version: "3.13"
+          - os: ubuntu-latest
+            python-version: "3.10"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v5.3.1
+        with:
+          enable-cache: true
+          cache-suffix: test-${{ matrix.os }}-${{ matrix.python-version }}
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Run tests with coverage
+        run: uv run pytest tests -v --tb=short --cov=src --cov-report=xml
+
+      - name: Upload coverage to Codecov
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+        uses: codecov/codecov-action@1e68e06f1571c2a4a6704a1372f31c256436a070 # v5.1.2
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
+          verbose: true
+
+  ci-success:
+    name: CI Success
+    runs-on: ubuntu-latest
+    needs: [security, validate, test-smoke, test-full]
+    if: always()
+    steps:
+      - name: Check all job results
+        run: |
+          if [[ "${{ needs.security.result }}" != "success" ]]; then
+            echo "Security job failed"
+            exit 1
+          fi
+          if [[ "${{ needs.validate.result }}" != "success" ]]; then
+            echo "Validate job failed"
+            exit 1
+          fi
+          if [[ "${{ needs.test-smoke.result }}" != "success" ]]; then
+            echo "Smoke test job failed"
+            exit 1
+          fi
+          if [[ "${{ needs.test-full.result }}" != "success" ]]; then
+            echo "Full test job failed"
+            exit 1
+          fi
+          echo "All CI jobs passed successfully!"

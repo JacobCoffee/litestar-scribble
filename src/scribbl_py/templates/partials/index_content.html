@@ -1,0 +1,143 @@
+<div class="space-y-8">
+    <!-- Hero Section -->
+    <div class="hero bg-gradient-to-br from-primary/10 via-base-100 to-secondary/10 rounded-box shadow-lg">
+        <div class="hero-content text-center py-16">
+            <div class="max-w-2xl">
+                <h1 class="text-6xl font-bold mb-2">
+                    <span class="text-primary">Scribbl</span>
+                </h1>
+                <p class="text-xl text-base-content/70 py-4">
+                    Draw, guess, and compete with friends in real-time!
+                </p>
+
+                <!-- Primary Action - Play Game -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+                    <a href="/canvas-clash/" class="btn btn-primary btn-lg gap-2" hx-boost="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Play Canvas Clash
+                    </a>
+                    <a href="/ui/canvases/new" class="btn btn-outline btn-lg gap-2" hx-boost="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Free Draw
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Modes Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Canvas Clash Card -->
+        <div class="card bg-base-100 shadow-xl border-2 border-primary/20 hover:border-primary/50 transition-colors">
+            <div class="card-body">
+                <div class="flex items-center gap-3">
+                    <div class="bg-primary/10 p-3 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="card-title text-xl">Canvas Clash</h2>
+                        <p class="text-sm text-base-content/60">Multiplayer draw & guess</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-base-content/70">
+                    Take turns drawing while others guess. Score points for fast guesses and beautiful art!
+                </p>
+                <ul class="mt-4 space-y-2 text-sm">
+                    <li class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        2-12 players
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Timed rounds
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Leaderboard
+                    </li>
+                </ul>
+                <div class="card-actions justify-end mt-4">
+                    <a href="/canvas-clash/" class="btn btn-primary" hx-boost="false">Play Now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Free Draw Card -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <div class="flex items-center gap-3">
+                    <div class="bg-secondary/10 p-3 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="card-title text-xl">Free Draw</h2>
+                        <p class="text-sm text-base-content/60">Collaborative whiteboard</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-base-content/70">
+                    Create and collaborate on drawings together. Perfect for brainstorming and creative sessions.
+                </p>
+                <ul class="mt-4 space-y-2 text-sm">
+                    <li class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Real-time collaboration
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Export to PNG/SVG
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        No time limit
+                    </li>
+                </ul>
+                <div class="card-actions justify-end mt-4">
+                    <a href="/ui/canvases" class="btn btn-ghost" hx-get="/ui/canvases" hx-target="#main-content" hx-push-url="true">View Canvases</a>
+                    <a href="/ui/canvases/new" class="btn btn-secondary" hx-boost="false">Create New</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Canvases -->
+    {% if recent_canvases %}
+    <div class="space-y-4">
+        <div class="flex justify-between items-center">
+            <h2 class="text-2xl font-bold">Recent Canvases</h2>
+            <a href="/ui/canvases" class="btn btn-ghost btn-sm" hx-get="/ui/canvases" hx-target="#main-content" hx-push-url="true">
+                View All
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="recent-canvases">
+            {% for canvas in recent_canvases %}
+            {% include "partials/canvas_card.html" %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>

@@ -1,0 +1,162 @@
+/* Tailwind CSS v4 + daisyUI */
+@import "tailwindcss";
+@plugin "daisyui";
+
+/* Source files for Tailwind to scan for classes */
+@source "../../../src/scribbl_py/templates/**/*.html";
+@source "../js/**/*.js";
+
+/* Custom theme configuration */
+@theme {
+  /* Scribbl brand colors */
+  --color-scribbl-primary: oklch(0.65 0.2 250);
+  --color-scribbl-secondary: oklch(0.7 0.15 180);
+  --color-scribbl-accent: oklch(0.75 0.18 80);
+
+  /* Canvas colors */
+  --color-canvas-bg: oklch(0.98 0 0);
+  --color-canvas-grid: oklch(0.92 0 0);
+  --color-canvas-selection: oklch(0.6 0.2 250 / 0.3);
+
+  /* Fonts */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* daisyUI theme customization */
+@plugin "daisyui" {
+  themes: light, dark, cupcake;
+}
+
+/* Custom component styles */
+@layer components {
+  /* Canvas container */
+  .canvas-container {
+    @apply relative overflow-hidden bg-base-100 rounded-lg shadow-lg;
+  }
+
+  /* Canvas element */
+  .canvas-element {
+    @apply absolute touch-none select-none;
+  }
+
+  /* Toolbar styles */
+  .toolbar {
+    @apply flex items-center gap-2 p-2 bg-base-200 rounded-lg shadow;
+  }
+
+  .toolbar-btn {
+    @apply btn btn-sm btn-ghost tooltip;
+  }
+
+  .toolbar-btn-active {
+    @apply btn btn-sm btn-primary;
+  }
+
+  /* User cursor indicator */
+  .user-cursor {
+    @apply absolute pointer-events-none z-50 transition-all duration-75;
+  }
+
+  .user-cursor-label {
+    @apply text-xs px-2 py-0.5 rounded-full bg-primary text-primary-content whitespace-nowrap;
+  }
+
+  /* Connection status indicator */
+  .connection-status {
+    @apply flex items-center gap-2 text-sm;
+  }
+
+  .connection-status-dot {
+    @apply w-2 h-2 rounded-full;
+  }
+
+  .connection-status-dot-connected {
+    @apply bg-success animate-pulse;
+  }
+
+  .connection-status-dot-disconnected {
+    @apply bg-error;
+  }
+
+  .connection-status-dot-connecting {
+    @apply bg-warning animate-pulse;
+  }
+
+  .connection-status-dot-reconnecting {
+    @apply bg-warning animate-pulse;
+  }
+
+  /* Element layers panel */
+  .layer-item {
+    @apply flex items-center gap-2 p-2 rounded hover:bg-base-200 cursor-pointer;
+  }
+
+  .layer-item-selected {
+    @apply bg-primary/10 border-l-2 border-primary;
+  }
+
+  /* Canvas card styles */
+  .canvas-card {
+    @apply card bg-base-100 shadow-md hover:shadow-lg transition-shadow;
+  }
+
+  .canvas-card-preview {
+    @apply aspect-video bg-base-200 rounded-t-lg overflow-hidden;
+  }
+
+  /* Stroke width control */
+  .stroke-width-control {
+    @apply py-2 px-1 rounded-lg bg-base-200/50;
+  }
+
+  .stroke-preview {
+    @apply shadow-sm;
+  }
+
+  /* Custom range slider styling */
+  #stroke-width {
+    @apply cursor-pointer;
+  }
+
+  #stroke-width::-webkit-slider-thumb {
+    @apply cursor-grab active:cursor-grabbing;
+  }
+
+  #stroke-width::-moz-range-thumb {
+    @apply cursor-grab active:cursor-grabbing;
+  }
+}
+
+/* Custom keyframes */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Utility classes */
+@layer utilities {
+  /* Smooth transitions for HTMX swaps */
+  .htmx-settling {
+    transition-property: opacity;
+    transition-duration: 200ms;
+  }
+
+  .htmx-swapping {
+    opacity: 0;
+  }
+
+  .htmx-added {
+    animation: fade-in 0.2s ease-out;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.2s ease-out;
+  }
+}

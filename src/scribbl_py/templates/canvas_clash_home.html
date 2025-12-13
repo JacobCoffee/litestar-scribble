@@ -1,0 +1,758 @@
+{% extends "base.html" %}
+
+{% block title %}Canvas Clash - Draw & Guess Game{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-8">
+    <!-- Hero Section -->
+    <div class="text-center py-8">
+        <h1 class="text-5xl font-bold mb-4">
+            <span class="text-primary">Canvas</span><span class="text-secondary">Clash</span>
+        </h1>
+        <p class="text-xl text-base-content/70">Draw, guess, and compete with friends!</p>
+    </div>
+
+    <!-- Create/Join Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Create Room Card -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Create Room
+                </h2>
+                <div id="create-room-form" class="space-y-4">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Your Name</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="create-host-name"
+                            placeholder="Enter your name"
+                            class="input input-bordered w-full"
+                            maxlength="20"
+                        >
+                    </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Room Name (optional)</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="create-room-name"
+                            placeholder="My Awesome Game"
+                            class="input input-bordered w-full"
+                            maxlength="30"
+                        >
+                    </div>
+                    <div class="form-control">
+                        <label class="label cursor-pointer justify-start gap-3">
+                            <input
+                                type="checkbox"
+                                id="create-room-public"
+                                class="toggle toggle-primary"
+                            >
+                            <div>
+                                <span class="label-text font-medium">Public Room</span>
+                                <p class="text-xs text-base-content/60">Show in Open Lobbies list</p>
+                            </div>
+                        </label>
+                    </div>
+                    <button type="button" id="create-room-btn" class="btn btn-primary w-full" hx-disable onclick="console.log('onclick fired')">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Create Room
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Join Room Card -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                    </svg>
+                    Join Room
+                </h2>
+                <div id="join-room-form" class="space-y-4">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Your Name</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="join-user-name"
+                            placeholder="Enter your name"
+                            class="input input-bordered w-full"
+                            maxlength="20"
+                        >
+                    </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Room Code</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="join-room-code"
+                            placeholder="ABC123"
+                            class="input input-bordered w-full font-mono text-center text-xl tracking-wider uppercase"
+                            maxlength="6"
+                        >
+                    </div>
+                    <button type="button" id="join-room-btn" class="btn btn-secondary w-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14"/>
+                        </svg>
+                        Join Room
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Available Rooms Section (always visible, updates via WebSocket) -->
+    <div class="card bg-base-100 shadow-xl" id="open-lobbies-card">
+        <div class="card-body">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="card-title text-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                    </svg>
+                    Open Lobbies
+                </h2>
+                <span class="badge badge-success badge-sm" id="lobby-status">
+                    <span class="loading loading-ring loading-xs mr-1"></span>
+                    Live
+                </span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Room</th>
+                            <th>Code</th>
+                            <th>Players</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="lobbies-table-body">
+                        {% for room in rooms %}
+                        <tr class="hover" data-room-id="{{ room.id }}">
+                            <td class="font-medium">{{ room.name }}</td>
+                            <td class="font-mono">{{ room.code }}</td>
+                            <td>
+                                <span class="badge badge-outline">{{ room.player_count }}/{{ room.max_players }}</span>
+                            </td>
+                            <td>
+                                <button
+                                    class="btn btn-sm btn-ghost"
+                                    onclick="quickJoin('{{ room.code }}')"
+                                >
+                                    Join
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div id="no-lobbies-message" class="text-center py-4 text-base-content/50 {% if rooms %}hidden{% endif %}">
+                No open lobbies. Create one to get started!
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Games Section (for spectating) -->
+    <div class="card bg-base-100 shadow-xl" id="active-games-card">
+        <div class="card-body">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="card-title text-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-info" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    Games in Progress
+                </h2>
+                <span class="badge badge-info badge-sm">Watch Live</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Room</th>
+                            <th>Round</th>
+                            <th>Players</th>
+                            <th>Spectators</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="active-games-table-body">
+                        {% for game in active_games %}
+                        <tr class="hover" data-room-id="{{ game.id }}">
+                            <td class="font-medium">{{ game.name }}</td>
+                            <td>
+                                <span class="badge badge-ghost">{{ game.current_round }}/{{ game.total_rounds }}</span>
+                            </td>
+                            <td>
+                                <span class="badge badge-outline">{{ game.player_count }}</span>
+                            </td>
+                            <td>
+                                <span class="badge badge-outline badge-info">{{ game.spectator_count }}</span>
+                            </td>
+                            <td>
+                                <button
+                                    class="btn btn-sm btn-info btn-outline"
+                                    onclick="watchGame('{{ game.id }}')"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    Watch
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div id="no-active-games-message" class="text-center py-4 text-base-content/50 {% if active_games %}hidden{% endif %}">
+                No active games to watch right now.
+            </div>
+        </div>
+    </div>
+
+    {% if debug_mode %}
+    <!-- Debug Tools (only visible in debug mode) -->
+    <div class="card bg-warning/10 border-2 border-warning shadow-xl">
+        <div class="card-body">
+            <div class="flex items-center gap-2 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+                <h2 class="card-title text-xl text-warning">Debug Tools</h2>
+                <span class="badge badge-warning badge-sm">DEV ONLY</span>
+            </div>
+            <p class="text-base-content/70 text-sm mb-4">
+                Quick test tools for development. Creates a game with 2 bot players and short round times (10s rounds, 2 total rounds).
+            </p>
+            <div class="flex flex-wrap gap-3">
+                <button
+                    type="button"
+                    id="debug-test-game-btn"
+                    class="btn btn-warning"
+                    onclick="createDebugGame()"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Launch Test Game
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- How to Play -->
+    <div class="card bg-base-200">
+        <div class="card-body">
+            <h2 class="card-title text-xl mb-4">How to Play</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="flex items-start gap-3">
+                    <div class="badge badge-primary badge-lg">1</div>
+                    <div>
+                        <div class="font-semibold">Create or Join</div>
+                        <div class="text-sm text-base-content/70">Start a new room or join with a code</div>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <div class="badge badge-primary badge-lg">2</div>
+                    <div>
+                        <div class="font-semibold">Take Turns Drawing</div>
+                        <div class="text-sm text-base-content/70">One player draws while others guess</div>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <div class="badge badge-primary badge-lg">3</div>
+                    <div>
+                        <div class="font-semibold">Score Points</div>
+                        <div class="text-sm text-base-content/70">Faster guesses earn more points!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container" class="toast toast-end toast-bottom z-50"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+console.log('[Canvas Clash] Script loaded');
+
+// Use a function so we can call it on both initial load and HTMX swap
+function initCanvasClash() {
+    console.log('[Canvas Clash] initCanvasClash called');
+
+    // Generate or get user ID
+    let userId = localStorage.getItem('canvas_clash_user_id');
+    if (!userId) {
+        userId = crypto.randomUUID();
+        localStorage.setItem('canvas_clash_user_id', userId);
+    }
+    // Set cookie for server-side access
+    document.cookie = `user_id=${userId}; path=/; max-age=86400`;
+
+    // Create Room Button
+    const createBtn = document.getElementById('create-room-btn');
+    const hostNameInput = document.getElementById('create-host-name');
+    const roomNameInput = document.getElementById('create-room-name');
+
+    console.log('[Canvas Clash] createBtn:', createBtn);
+    console.log('[Canvas Clash] hostNameInput:', hostNameInput);
+
+    if (!createBtn) {
+        console.error('[Canvas Clash] Create button not found!');
+        return;
+    }
+
+    createBtn.addEventListener('click', async function() {
+        console.log('[Canvas Clash] Create button clicked!');
+        // Prevent double submission
+        if (createBtn.disabled) return;
+        createBtn.disabled = true;
+        createBtn.innerHTML = '<span class="loading loading-spinner loading-sm"></span> Creating...';
+
+        const hostName = hostNameInput.value.trim();
+        const roomName = roomNameInput.value.trim() || 'Game Room';
+        const isPublic = document.getElementById('create-room-public')?.checked || false;
+
+        // Validate host name
+        if (!hostName) {
+            showToast('Please enter your name', 'warning');
+            createBtn.disabled = false;
+            createBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Create Room';
+            return;
+        }
+
+        // Store name for later
+        localStorage.setItem('canvas_clash_user_name', hostName);
+
+        try {
+            const response = await fetch('/canvas-clash/rooms/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                    name: roomName,
+                    host_name: hostName,
+                    is_public: isPublic,
+                }),
+            });
+
+            if (response.ok) {
+                const room = await response.json();
+                window.location.href = `/canvas-clash/rooms/${room.id}/lobby`;
+            } else {
+                const error = await response.json();
+                showToast(error.detail || 'Failed to create room', 'error');
+                createBtn.disabled = false;
+                createBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Create Room';
+            }
+        } catch (err) {
+            showToast('Network error. Please try again.', 'error');
+            createBtn.disabled = false;
+            createBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Create Room';
+        }
+    });
+
+    // Join Room Button
+    const joinBtn = document.getElementById('join-room-btn');
+    const userNameInput = document.getElementById('join-user-name');
+    const roomCodeInput = document.getElementById('join-room-code');
+
+    joinBtn.addEventListener('click', async function() {
+        // Prevent double submission
+        if (joinBtn.disabled) return;
+        joinBtn.disabled = true;
+        joinBtn.innerHTML = '<span class="loading loading-spinner loading-sm"></span> Joining...';
+
+        const userName = userNameInput.value.trim();
+        const roomCode = roomCodeInput.value.toUpperCase().trim();
+
+        // Validate
+        if (!userName) {
+            showToast('Please enter your name', 'warning');
+            resetJoinBtn();
+            return;
+        }
+        if (!roomCode || roomCode.length !== 6) {
+            showToast('Please enter a valid 6-character room code', 'warning');
+            resetJoinBtn();
+            return;
+        }
+
+        // Store name for later
+        localStorage.setItem('canvas_clash_user_name', userName);
+
+        try {
+            // First, find the room by code
+            const response = await fetch(`/canvas-clash/rooms/code/${roomCode}`);
+
+            if (response.ok) {
+                const room = await response.json();
+
+                // Join the room
+                const joinResponse = await fetch(`/canvas-clash/rooms/${room.id}/join`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({
+                        user_name: userName,
+                    }),
+                });
+
+                if (joinResponse.ok) {
+                    window.location.href = `/canvas-clash/rooms/${room.id}/lobby`;
+                } else {
+                    const error = await joinResponse.json();
+                    showToast(error.detail || 'Failed to join room', 'error');
+                    resetJoinBtn();
+                }
+            } else {
+                showToast('Room not found. Check the code and try again.', 'error');
+                resetJoinBtn();
+            }
+        } catch (err) {
+            showToast('Network error. Please try again.', 'error');
+            resetJoinBtn();
+        }
+
+        function resetJoinBtn() {
+            joinBtn.disabled = false;
+            joinBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14"/></svg> Join Room';
+        }
+    });
+}
+
+// Call on initial page load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCanvasClash);
+} else {
+    // DOM already loaded (e.g., HTMX swap)
+    initCanvasClash();
+}
+
+// Also call after HTMX swaps content (for boosted navigation)
+document.body.addEventListener('htmx:afterSettle', function(evt) {
+    // Only init if we're on the canvas-clash page
+    if (document.getElementById('create-room-btn')) {
+        initCanvasClash();
+    }
+});
+
+// Quick join from lobby list
+window.quickJoin = async function(roomCode) {
+    const userName = localStorage.getItem('canvas_clash_user_name') || prompt('Enter your name:');
+    if (!userName) return;
+
+    localStorage.setItem('canvas_clash_user_name', userName);
+
+    try {
+        // Find room by code
+        const response = await fetch(`/canvas-clash/rooms/code/${roomCode}`, {
+            credentials: 'same-origin',
+        });
+
+        if (response.ok) {
+            const room = await response.json();
+
+            // Join the room
+            const joinResponse = await fetch(`/canvas-clash/rooms/${room.id}/join`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                    user_name: userName,
+                }),
+            });
+
+            if (joinResponse.ok) {
+                window.location.href = `/canvas-clash/rooms/${room.id}/lobby`;
+            } else {
+                const error = await joinResponse.json();
+                showToast(error.detail || 'Failed to join room', 'error');
+            }
+        } else {
+            showToast('Room not found. Check the code and try again.', 'error');
+        }
+    } catch (err) {
+        showToast('Network error. Please try again.', 'error');
+    }
+};
+
+// Watch a game in progress as a spectator
+window.watchGame = async function(roomId) {
+    const userName = localStorage.getItem('canvas_clash_user_name') || prompt('Enter your name to watch:');
+    if (!userName) return;
+
+    localStorage.setItem('canvas_clash_user_name', userName);
+
+    try {
+        // Join the room as spectator
+        const joinResponse = await fetch(`/canvas-clash/rooms/${roomId}/join`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+                user_name: userName,
+                as_spectator: true,
+            }),
+        });
+
+        if (joinResponse.ok) {
+            // Go directly to the game screen since game is in progress
+            window.location.href = `/canvas-clash/rooms/${roomId}/game`;
+        } else {
+            const error = await joinResponse.json();
+            showToast(error.detail || 'Failed to join as spectator', 'error');
+        }
+    } catch (err) {
+        showToast('Network error. Please try again.', 'error');
+    }
+};
+
+function showToast(message, type = 'info') {
+    const toastContainer = document.getElementById('toast-container');
+    const toastEl = document.createElement('div');
+    toastEl.className = `alert alert-${type} animate-fade-in`;
+    toastEl.innerHTML = `<span>${message}</span>`;
+    toastContainer.appendChild(toastEl);
+    setTimeout(() => toastEl.remove(), 4000);
+}
+
+// Debug: Create test game with bot players
+window.createDebugGame = async function() {
+    const btn = document.getElementById('debug-test-game-btn');
+    if (!btn) return;
+
+    // Prevent double submission
+    if (btn.disabled) return;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading loading-spinner loading-sm"></span> Creating...';
+
+    try {
+        const response = await fetch('/canvas-clash/debug/test-game', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            showToast(`Debug game created with ${data.bots.length} bots!`, 'success');
+            // Redirect to the lobby
+            window.location.href = `/canvas-clash/rooms/${data.room_id}/lobby`;
+        } else {
+            const error = await response.json();
+            showToast(error.detail || error.error || 'Failed to create debug game', 'error');
+            resetDebugBtn();
+        }
+    } catch (err) {
+        console.error('Debug game creation error:', err);
+        showToast('Network error. Please try again.', 'error');
+        resetDebugBtn();
+    }
+
+    function resetDebugBtn() {
+        btn.disabled = false;
+        btn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Launch Test Game
+        `;
+    }
+};
+
+// WebSocket for live lobby updates
+(function() {
+    const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/canvas-clash/lobbies`;
+    let ws = null;
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 10;
+
+    function connect() {
+        ws = new WebSocket(wsUrl);
+
+        ws.onopen = function() {
+            console.log('[Lobbies WS] Connected');
+            reconnectAttempts = 0;
+            updateStatus('connected');
+        };
+
+        ws.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            console.log('[Lobbies WS] Received:', data.type, data);
+            handleLobbyMessage(data);
+        };
+
+        ws.onclose = function(event) {
+            console.log('[Lobbies WS] Disconnected');
+            updateStatus('disconnected');
+
+            if (reconnectAttempts < maxReconnectAttempts) {
+                reconnectAttempts++;
+                setTimeout(connect, 3000);
+            }
+        };
+
+        ws.onerror = function(error) {
+            console.error('[Lobbies WS] Error:', error);
+        };
+    }
+
+    function updateStatus(status) {
+        const statusEl = document.getElementById('lobby-status');
+        if (!statusEl) return;
+
+        if (status === 'connected') {
+            statusEl.className = 'badge badge-success badge-sm';
+            statusEl.innerHTML = '<span class="loading loading-ring loading-xs mr-1"></span>Live';
+        } else {
+            statusEl.className = 'badge badge-warning badge-sm';
+            statusEl.innerHTML = 'Reconnecting...';
+        }
+    }
+
+    function handleLobbyMessage(data) {
+        switch(data.type) {
+            case 'lobby_list':
+                // Initial list of lobbies
+                updateLobbiesTable(data.lobbies);
+                break;
+
+            case 'room_created':
+                addLobbyRow(data.room);
+                break;
+
+            case 'room_updated':
+                updateLobbyRow(data.room);
+                break;
+
+            case 'room_closed':
+            case 'game_started':
+                removeLobbyRow(data.room_id);
+                break;
+        }
+    }
+
+    function updateLobbiesTable(lobbies) {
+        const tbody = document.getElementById('lobbies-table-body');
+        const noLobbiesMsg = document.getElementById('no-lobbies-message');
+        if (!tbody) return;
+
+        tbody.innerHTML = '';
+        lobbies.forEach(room => addLobbyRow(room, false));
+
+        if (lobbies.length === 0) {
+            noLobbiesMsg?.classList.remove('hidden');
+        } else {
+            noLobbiesMsg?.classList.add('hidden');
+        }
+    }
+
+    function addLobbyRow(room, animate = true) {
+        const tbody = document.getElementById('lobbies-table-body');
+        const noLobbiesMsg = document.getElementById('no-lobbies-message');
+        if (!tbody) return;
+
+        // Don't add duplicates
+        if (tbody.querySelector(`tr[data-room-id="${room.id}"]`)) {
+            updateLobbyRow(room);
+            return;
+        }
+
+        noLobbiesMsg?.classList.add('hidden');
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover' + (animate ? ' animate-fade-in' : '');
+        tr.dataset.roomId = room.id;
+        tr.innerHTML = `
+            <td class="font-medium">${room.name}</td>
+            <td class="font-mono">${room.code}</td>
+            <td>
+                <span class="badge badge-outline">${room.player_count}/${room.max_players}</span>
+            </td>
+            <td>
+                <button class="btn btn-sm btn-ghost" onclick="quickJoin('${room.code}')">
+                    Join
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    function updateLobbyRow(room) {
+        const tbody = document.getElementById('lobbies-table-body');
+        if (!tbody) return;
+
+        const tr = tbody.querySelector(`tr[data-room-id="${room.id}"]`);
+        if (tr) {
+            tr.innerHTML = `
+                <td class="font-medium">${room.name}</td>
+                <td class="font-mono">${room.code}</td>
+                <td>
+                    <span class="badge badge-outline">${room.player_count}/${room.max_players}</span>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-ghost" onclick="quickJoin('${room.code}')">
+                        Join
+                    </button>
+                </td>
+            `;
+        }
+    }
+
+    function removeLobbyRow(roomId) {
+        const tbody = document.getElementById('lobbies-table-body');
+        const noLobbiesMsg = document.getElementById('no-lobbies-message');
+        if (!tbody) return;
+
+        const tr = tbody.querySelector(`tr[data-room-id="${roomId}"]`);
+        if (tr) {
+            tr.classList.add('animate-fade-out');
+            setTimeout(() => {
+                tr.remove();
+                if (tbody.children.length === 0) {
+                    noLobbiesMsg?.classList.remove('hidden');
+                }
+            }, 300);
+        }
+    }
+
+    // Connect when page loads
+    connect();
+})();
+</script>
+{% endblock %}

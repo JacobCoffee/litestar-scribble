@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Leaderboard - Canvas Clash{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-base-200 p-4">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold mb-2">Leaderboard</h1>
+            <p class="text-base-content/70">Top players in Canvas Clash</p>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="tabs tabs-boxed justify-center mb-6">
+            <a href="/auth/leaderboard?category=wins"
+               class="tab {% if category == 'wins' %}tab-active{% endif %}">
+                Most Wins
+            </a>
+            <a href="/auth/leaderboard?category=fastest"
+               class="tab {% if category == 'fastest' %}tab-active{% endif %}">
+                Fastest Guesser
+            </a>
+            <a href="/auth/leaderboard?category=drawer"
+               class="tab {% if category == 'drawer' %}tab-active{% endif %}">
+                Best Drawer
+            </a>
+            <a href="/auth/leaderboard?category=games"
+               class="tab {% if category == 'games' %}tab-active{% endif %}">
+                Most Games
+            </a>
+        </div>
+
+        <!-- Leaderboard Table -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                {% if entries %}
+                <div class="overflow-x-auto">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Player</th>
+                                {% if category == 'wins' %}
+                                <th>Wins</th>
+                                <th>Win Rate</th>
+                                {% elif category == 'fastest' %}
+                                <th>Fastest Guess</th>
+                                <th>Avg Time</th>
+                                {% elif category == 'drawer' %}
+                                <th>Success Rate</th>
+                                <th>Drawings</th>
+                                {% elif category == 'games' %}
+                                <th>Games Played</th>
+                                <th>Total Score</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user, stats in entries %}
+                            <tr class="{% if loop.index <= 3 %}font-bold{% endif %}">
+                                <td>
+                                    {% if loop.index == 1 %}
+                                    <span class="text-2xl">&#x1F947;</span>
+                                    {% elif loop.index == 2 %}
+                                    <span class="text-2xl">&#x1F948;</span>
+                                    {% elif loop.index == 3 %}
+                                    <span class="text-2xl">&#x1F949;</span>
+                                    {% else %}
+                                    <span class="text-base-content/70">#{{ loop.index }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div class="avatar">
+                                            <div class="w-10 h-10 rounded-full">
+                                                {% if user.avatar_url %}
+                                                <img src="{{ user.avatar_url }}" alt="{{ user.username }}" />
+                                                {% else %}
+                                                <div class="bg-primary text-primary-content flex items-center justify-center font-bold">
+                                                    {{ user.username[0] | upper }}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold">{{ user.username }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                {% if category == 'wins' %}
+                                <td class="text-primary font-semibold">{{ stats.games_won }}</td>
+                                <td>{{ "%.1f" | format(stats.win_rate) }}%</td>
+                                {% elif category == 'fastest' %}
+                                <td class="text-primary font-semibold">
+                                    {% if stats.fastest_guess_ms %}
+                                    {{ "%.2f" | format(stats.fastest_guess_ms / 1000) }}s
+                                    {% else %}
+                                    N/A
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if stats.avg_guess_time_ms > 0 %}
+                                    {{ "%.2f" | format(stats.avg_guess_time_ms / 1000) }}s
+                                    {% else %}
+                                    N/A
+                                    {% endif %}
+                                </td>
+                                {% elif category == 'drawer' %}
+                                <td class="text-primary font-semibold">{{ "%.1f" | format(stats.drawing_success_rate) }}%</td>
+                                <td>{{ stats.drawings_completed }}</td>
+                                {% elif category == 'games' %}
+                                <td class="text-primary font-semibold">{{ stats.games_played }}</td>
+                                <td>{{ stats.total_score }}</td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-8">
+                    <p class="text-base-content/70 text-lg">No players yet!</p>
+                    <p class="text-base-content/50">Be the first to play and get on the leaderboard.</p>
+                    <a href="/canvas-clash/" class="btn btn-primary mt-4">Start Playing</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Category Explanations -->
+        <div class="mt-6 text-center text-sm text-base-content/60">
+            {% if category == 'wins' %}
+            <p>Players ranked by total number of game wins (highest score in a game)</p>
+            {% elif category == 'fastest' %}
+            <p>Players ranked by their fastest single correct guess</p>
+            {% elif category == 'drawer' %}
+            <p>Players ranked by the percentage of their drawings that were guessed correctly</p>
+            {% elif category == 'games' %}
+            <p>Players ranked by total number of games played</p>
+            {% endif %}
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center mt-6">
+            <a href="/canvas-clash/" class="btn btn-outline">Back to Game</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
