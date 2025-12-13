@@ -40,6 +40,20 @@ def _get_static_directory() -> Path:
     Returns:
         Path to the static files directory.
     """
+    # Check environment variable first (for custom deployments)
+    import os
+
+    env_static = os.environ.get("SCRIBBL_STATIC_DIR")
+    if env_static:
+        env_path = Path(env_static)
+        if env_path.exists():
+            return env_path
+
+    # Check Docker standard location (/app/frontend/dist)
+    docker_path = Path("/app/frontend/dist")
+    if docker_path.exists():
+        return docker_path
+
     # Look for frontend/dist relative to project root
     current = Path(__file__).parent
     while current != current.parent:
