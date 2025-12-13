@@ -81,9 +81,10 @@ EOT
 # Copy pre-built virtualenv from build stage
 COPY --from=build --chown=app:app /app /app
 
-# Copy built frontend assets and public files
+# Copy built frontend assets, source, and public files
 COPY --from=frontend --chown=app:app /app/frontend/dist /app/frontend/dist
 COPY --from=frontend --chown=app:app /app/frontend/public /app/frontend/public
+COPY --from=frontend --chown=app:app /app/frontend/src /app/frontend/src
 
 # Create data directory for SQLite
 RUN mkdir -p /app/data && chown app:app /app/data
