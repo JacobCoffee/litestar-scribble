@@ -10,7 +10,7 @@ from litestar.di import Provide
 from litestar.plugins import InitPluginProtocol
 
 from scribbl_py.auth.config import OAuthConfig
-from scribbl_py.auth.service import AuthService
+from scribbl_py.auth.db_service import DatabaseAuthService
 from scribbl_py.game.wordbank import WordBank
 from scribbl_py.realtime.manager import ConnectionManager
 from scribbl_py.services.canvas import CanvasService
@@ -175,7 +175,8 @@ class ScribblPlugin(InitPluginProtocol):
         self._game_service: GameService | None = None
         self._connection_manager: ConnectionManager | None = None
         self._game_ws_handler: Any = None
-        self._auth_service: AuthService | None = None
+        self._auth_service: DatabaseAuthService | None = None
+        self._oauth_config: OAuthConfig | None = None
 
     def on_app_init(self, app_config: AppConfig) -> AppConfig:  # noqa: C901, PLR0915
         """Initialize the plugin during application startup.
@@ -211,8 +212,8 @@ class ScribblPlugin(InitPluginProtocol):
         # Create connection manager for WebSocket
         self._connection_manager = self._config.connection_manager or ConnectionManager()
 
-        # Create auth service
-        self._auth_service = AuthService(OAuthConfig())
+        # Store OAuth config for lazy auth service creation
+        self._oauth_config = OAuthConfig()
 
         # Register service as a dependency provider
         def provide_service() -> CanvasService:
@@ -259,15 +260,30 @@ class ScribblPlugin(InitPluginProtocol):
                 raise RuntimeError(msg)
             return self._game_service
 
-        def provide_auth_service() -> AuthService:
-            """Dependency provider for AuthService.
+        def provide_auth_service(request: Any) -> DatabaseAuthService:
+            """Dependency provider for DatabaseAuthService.
+
+            Creates the auth service lazily on first request, using
+            the database session factory if available.
 
             Returns:
-                The initialized AuthService instance.
+                The DatabaseAuthService instance.
             """
-            if self._auth_service is None:
-                msg = "Auth service not initialized"
-                raise RuntimeError(msg)
+            # Check if already cached
+            if self._auth_service is not None:
+                return self._auth_service
+
+            # Get session factory from db_manager if available
+            session_factory = None
+            db_manager = getattr(request.app.state, "db_manager", None)
+            if db_manager is not None:
+                session_factory = db_manager._session_factory
+
+            # Create and cache the service
+            self._auth_service = DatabaseAuthService(
+                config=self._oauth_config,
+                session_factory=session_factory,
+            )
             return self._auth_service
 
         app_config.dependencies[self._config.dependency_key] = Provide(
@@ -435,11 +451,11 @@ class ScribblPlugin(InitPluginProtocol):
         return self._connection_manager
 
     @property
-    def auth_service(self) -> AuthService:
+    def auth_service(self) -> DatabaseAuthService:
         """Get the initialized auth service.
 
         Returns:
-            The AuthService instance.
+            The DatabaseAuthService instance.
 
         Raises:
             RuntimeError: If the plugin has not been initialized yet
@@ -449,7 +465,7 @@ class ScribblPlugin(InitPluginProtocol):
             >>> plugin = ScribblPlugin(ScribblConfig())
             >>> # After app initialization
             >>> auth = plugin.auth_service
-            >>> leaderboard = auth.get_leaderboard("wins")
+            >>> leaderboard = await auth.get_leaderboard("wins")
         """
         if self._auth_service is None:
             msg = "Plugin not initialized. Call on_app_init first."

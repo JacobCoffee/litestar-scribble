@@ -10,8 +10,8 @@ from litestar import Controller, get
 from litestar.connection import Request  # noqa: TC002
 from litestar.response import Redirect, Template
 
+from scribbl_py.auth.db_service import DatabaseAuthService  # noqa: TC001
 from scribbl_py.auth.models import OAuthProvider
-from scribbl_py.auth.service import AuthService  # noqa: TC001
 
 logger = structlog.get_logger(__name__)
 
@@ -26,7 +26,7 @@ class AuthController(Controller):
     tags: ClassVar[list[str]] = ["Authentication"]
 
     @get("/login")
-    async def login_page(self, request: Request, auth_service: AuthService) -> Template:
+    async def login_page(self, request: Request, auth_service: DatabaseAuthService) -> Template:
         """Render login page with available OAuth providers.
 
         Args:
@@ -39,7 +39,7 @@ class AuthController(Controller):
         # Check if already logged in
         session_id = request.cookies.get(auth_service._config.session_cookie_name)
         if session_id:
-            session = auth_service.get_session(session_id)
+            session = await auth_service.get_session(session_id)
             if session and session.is_authenticated:
                 return Redirect(path="/canvas-clash/")
 
@@ -64,7 +64,7 @@ class AuthController(Controller):
         self,
         provider: str,
         request: Request,
-        auth_service: AuthService,
+        auth_service: DatabaseAuthService,
     ) -> Redirect:
         """Initiate OAuth login flow.
 
@@ -96,7 +96,7 @@ class AuthController(Controller):
         self,
         provider: str,
         request: Request,
-        auth_service: AuthService,
+        auth_service: DatabaseAuthService,
         code: str | None = None,
         error: str | None = None,
     ) -> Redirect:
@@ -134,7 +134,7 @@ class AuthController(Controller):
 
         # Get or create user
         oauth_provider = OAuthProvider(provider)
-        user, created = auth_service.get_or_create_user_from_oauth(
+        user, created = await auth_service.get_or_create_user_from_oauth(
             provider=oauth_provider,
             oauth_id=user_info["id"],
             username=user_info["username"],
@@ -153,13 +153,13 @@ class AuthController(Controller):
         # Create or update session
         session_id = request.cookies.get(auth_service._config.session_cookie_name)
         if session_id:
-            session = auth_service.get_session(session_id)
+            session = await auth_service.get_session(session_id)
             if session:
-                auth_service.update_session_user(session_id, user)
+                await auth_service.update_session_user(session_id, user)
             else:
-                session = auth_service.create_session(user_id=user.id)
+                session = await auth_service.create_session(user_id=user.id)
         else:
-            session = auth_service.create_session(
+            session = await auth_service.create_session(
                 user_id=user.id,
                 ip_address=request.client.host if request.client else None,
                 user_agent=request.headers.get("user-agent"),
@@ -181,7 +181,7 @@ class AuthController(Controller):
         return response
 
     @get("/logout")
-    async def logout(self, request: Request, auth_service: AuthService) -> Redirect:
+    async def logout(self, request: Request, auth_service: DatabaseAuthService) -> Redirect:
         """Log out the current user.
 
         Args:
@@ -193,14 +193,14 @@ class AuthController(Controller):
         """
         session_id = request.cookies.get(auth_service._config.session_cookie_name)
         if session_id:
-            auth_service.delete_session(session_id)
+            await auth_service.delete_session(session_id)
 
         response = Redirect(path="/")
         response.delete_cookie(auth_service._config.session_cookie_name)
         return response
 
     @get("/guest")
-    async def guest_login(self, request: Request, auth_service: AuthService) -> Redirect:
+    async def guest_login(self, request: Request, auth_service: DatabaseAuthService) -> Redirect:
         """Create a guest session.
 
         Args:
@@ -210,7 +210,7 @@ class AuthController(Controller):
         Returns:
             Redirect to game lobby.
         """
-        session = auth_service.create_session(
+        session = await auth_service.create_session(
             guest_name="Guest",
             ip_address=request.client.host if request.client else None,
             user_agent=request.headers.get("user-agent"),
@@ -231,7 +231,7 @@ class AuthController(Controller):
     async def get_current_user(
         self,
         request: Request,
-        auth_service: AuthService,
+        auth_service: DatabaseAuthService,
     ) -> dict[str, Any]:
         """Get current user info.
 
@@ -246,14 +246,14 @@ class AuthController(Controller):
         if not session_id:
             return {"authenticated": False, "guest": True}
 
-        session = auth_service.get_session(session_id)
+        session = await auth_service.get_session(session_id)
         if not session:
             return {"authenticated": False, "guest": True}
 
         if session.user_id:
-            user = auth_service.get_user(session.user_id)
+            user = await auth_service.get_user(session.user_id)
             if user:
-                stats = auth_service.get_user_stats(user.id)
+                stats = await auth_service.get_user_stats(user.id)
                 return {
                     "authenticated": True,
                     "guest": False,
@@ -284,7 +284,7 @@ class AuthController(Controller):
     async def profile_page(
         self,
         request: Request,
-        auth_service: AuthService,
+        auth_service: DatabaseAuthService,
     ) -> Template | Redirect:
         """Render user profile page.
 
@@ -299,15 +299,15 @@ class AuthController(Controller):
         if not session_id:
             return Redirect(path="/auth/login")
 
-        session = auth_service.get_session(session_id)
+        session = await auth_service.get_session(session_id)
         if not session or not session.user_id:
             return Redirect(path="/auth/login")
 
-        user = auth_service.get_user(session.user_id)
+        user = await auth_service.get_user(session.user_id)
         if not user:
             return Redirect(path="/auth/login")
 
-        stats = auth_service.get_user_stats(user.id)
+        stats = await auth_service.get_user_stats(user.id)
 
         return Template(
             template_name="auth/profile.html",
@@ -321,7 +321,7 @@ class AuthController(Controller):
     async def navbar_auth_status(
         self,
         request: Request,
-        auth_service: AuthService,
+        auth_service: DatabaseAuthService,
     ) -> Template:
         """Return navbar auth status partial.
 
@@ -337,10 +337,10 @@ class AuthController(Controller):
         guest_name = None
 
         if session_id:
-            session = auth_service.get_session(session_id)
+            session = await auth_service.get_session(session_id)
             if session:
                 if session.user_id:
-                    user = auth_service.get_user(session.user_id)
+                    user = await auth_service.get_user(session.user_id)
                 elif session.guest_name:
                     guest_name = session.guest_name
 
@@ -355,7 +355,7 @@ class AuthController(Controller):
     @get("/leaderboard")
     async def leaderboard_page(
         self,
-        auth_service: AuthService,
+        auth_service: DatabaseAuthService,
         category: str = "wins",
     ) -> Template:
         """Render leaderboard page.
@@ -372,7 +372,7 @@ class AuthController(Controller):
         if category not in valid_categories:
             category = "wins"
 
-        entries = auth_service.get_leaderboard(category=category, limit=10)
+        entries = await auth_service.get_leaderboard(category=category, limit=10)
 
         return Template(
             template_name="auth/leaderboard.html",
