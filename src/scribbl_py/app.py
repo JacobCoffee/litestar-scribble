@@ -246,4 +246,6 @@ def create_app(
 
 
 # Default application instance for uvicorn
-app = create_app(enable_ui=True, enable_api=True, enable_websocket=True, debug=True)
+# Use SCRIBBL_DEBUG=true for dev mode, defaults to False (production)
+_debug = os.environ.get("SCRIBBL_DEBUG", "").lower() in ("true", "1", "yes")
+app = create_app(enable_ui=True, enable_api=True, enable_websocket=True, debug=_debug)
