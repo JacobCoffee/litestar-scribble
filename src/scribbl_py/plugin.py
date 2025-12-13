@@ -344,34 +344,12 @@ class ScribblPlugin(InitPluginProtocol):
 
         # Mount UI routes if enabled
         if self._config.enable_ui:
-            from litestar.contrib.jinja import JinjaTemplateEngine
-            from litestar.static_files import create_static_files_router
-            from litestar.template.config import TemplateConfig
-
             from scribbl_py.web.game_controllers import GameUIController
             from scribbl_py.web.ui import UIController
 
-            # Configure templates
-            template_dir = _get_template_directory()
-            if app_config.template_config is None:
-                app_config.template_config = TemplateConfig(
-                    directory=template_dir,
-                    engine=JinjaTemplateEngine,
-                )
-
-            # Add UI controllers
+            # Add UI controllers (templates configured in app.py, static files by VitePlugin)
             app_config.route_handlers.append(UIController)
             app_config.route_handlers.append(GameUIController)
-
-            # Configure static files
-            static_dir = _get_static_directory()
-            if static_dir.exists():
-                static_router = create_static_files_router(
-                    path=self._config.static_path,
-                    directories=[static_dir],
-                    name="static",
-                )
-                app_config.route_handlers.append(static_router)
 
         # Configure session middleware for OAuth state (if API is enabled)
         if self._config.enable_api:

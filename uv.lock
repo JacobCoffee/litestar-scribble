@@ -1139,6 +1139,18 @@ wheels = [
 ]
 
 [[package]]
+name = "litestar-vite"
+version = "0.14.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "litestar" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/dc/64/20ab075abf8888f0369d22cfb119b9d1b67d4fb2b029d584d57a9a6cec88/litestar_vite-0.14.0.tar.gz", hash = "sha256:6da449fb346a9200b912454d94ac76e691f19b2a2d56b4c8a8e80845775d2a40", size = 73906, upload-time = "2025-08-21T22:51:31.708Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4b/61/0a7e1e51cd98f44fbd7c940b384e47f911c99c52140a750a40900b5e4217/litestar_vite-0.14.0-py3-none-any.whl", hash = "sha256:d6e3e4f0dff5c96a61345c72669041fefd8d0db26ab25041034a19185431c562", size = 35781, upload-time = "2025-08-21T22:51:30.041Z" },
+]
+
+[[package]]
 name = "mako"
 version = "1.3.10"
 source = { registry = "https://pypi.org/simple" }
@@ -2270,6 +2282,7 @@ source = { editable = "." }
 dependencies = [
     { name = "litestar", extra = ["jinja", "standard"] },
     { name = "litestar-htmx" },
+    { name = "litestar-vite" },
     { name = "pillow" },
     { name = "pydantic" },
     { name = "rich" },
@@ -2381,6 +2394,7 @@ requires-dist = [
     { name = "itsdangerous", marker = "extra == 'auth'", specifier = ">=2.1.0" },
     { name = "litestar", extras = ["jinja", "standard"], specifier = ">=2.12.0" },
     { name = "litestar-htmx", specifier = ">=0.4.0" },
+    { name = "litestar-vite", specifier = ">=0.13.0" },
     { name = "pillow", specifier = ">=10.0.0" },
     { name = "pydantic", specifier = ">=2.0.0" },
     { name = "redis", extras = ["hiredis"], marker = "extra == 'redis'", specifier = ">=5.0.0" },

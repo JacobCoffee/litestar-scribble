@@ -16,6 +16,7 @@ from advanced_alchemy.extensions.litestar.plugins.init.config.asyncio import SQL
 from litestar import Litestar, get
 from litestar.openapi import OpenAPIConfig
 from litestar.response import Redirect
+from litestar_vite import ViteConfig, VitePlugin
 
 from scribbl_py import ScribblConfig, ScribblPlugin
 from scribbl_py.cli import ScribblCLIPlugin
@@ -80,6 +81,36 @@ def get_database_url() -> str:
     return os.environ.get("DATABASE_URL", "sqlite+aiosqlite:///./scribbl.db")
 
 
+def _get_frontend_directory() -> str:
+    """Get the path to the frontend directory.
+
+    Returns:
+        Path to the frontend directory.
+    """
+    from pathlib import Path
+
+    # Check environment variable first (for custom deployments)
+    env_frontend = os.environ.get("SCRIBBL_FRONTEND_DIR")
+    if env_frontend:
+        return env_frontend
+
+    # Check Docker standard location
+    docker_path = Path("/app/frontend")
+    if docker_path.exists():
+        return str(docker_path)
+
+    # Look for frontend relative to project root
+    current = Path(__file__).parent
+    while current != current.parent:
+        frontend = current / "frontend"
+        if frontend.exists():
+            return str(frontend)
+        current = current.parent
+
+    # Fallback to relative path
+    return str(Path(__file__).parent.parent.parent.parent / "frontend")
+
+
 # SQLAlchemy configuration for database CLI commands
 sqlalchemy_config = SQLAlchemyAsyncConfig(
     connection_string=get_database_url(),
@@ -115,8 +146,24 @@ def create_app(
     # Configure structured logging
     configure_logging(debug=debug, json_logs=json_logs)
 
+    # Get frontend directory for Vite
+    frontend_dir = _get_frontend_directory()
+
+    # Configure Vite plugin
+    vite_plugin = VitePlugin(
+        config=ViteConfig(
+            dev_mode=debug,
+            bundle_dir=f"{frontend_dir}/dist",
+            resource_dir=f"{frontend_dir}/src",
+            public_dir=f"{frontend_dir}/public",
+            manifest_name=".vite/manifest.json",
+            hot_file="hot",
+            asset_url="/static/",
+        )
+    )
+
     # Try to import HTMXPlugin if available
-    plugins: list = [sqlalchemy_plugin, ScribblCLIPlugin()]
+    plugins: list = [sqlalchemy_plugin, ScribblCLIPlugin(), vite_plugin]
 
     if enable_ui:
         try:
@@ -157,6 +204,20 @@ def create_app(
 
     route_handlers = [root_redirect, favicon_redirect, HealthController] if enable_ui else [HealthController]
 
+    # Configure templates if UI is enabled (must be before Litestar init for VitePlugin)
+    template_config = None
+    if enable_ui:
+        from pathlib import Path
+
+        from litestar.contrib.jinja import JinjaTemplateEngine
+        from litestar.template.config import TemplateConfig
+
+        template_dir = Path(__file__).parent / "templates"
+        template_config = TemplateConfig(
+            directory=template_dir,
+            engine=JinjaTemplateEngine,
+        )
+
     # Build middleware stack
     middleware: list = [CorrelationIdMiddleware, RequestLoggingMiddleware]
 
@@ -172,6 +233,7 @@ def create_app(
         lifespan=[lifespan],
         middleware=middleware,
         exception_handlers=get_exception_handlers(),
+        template_config=template_config,
         openapi_config=OpenAPIConfig(
             title="scribbl-py API",
             version="0.1.0",
