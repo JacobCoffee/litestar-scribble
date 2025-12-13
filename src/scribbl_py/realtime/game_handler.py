@@ -645,7 +645,7 @@ class GameWebSocketHandler:
             room_id,
             connection.player_id,
             correct=guess.result == GuessResult.CORRECT,
-            time_ms=guess.guess_time_ms,
+            time_ms=int(guess.time_elapsed * 1000),
         )
 
         # Handle different guess results
