@@ -226,8 +226,8 @@ def http_exception_handler(request: Request, exc: HTTPException) -> Response[dic
         error_code=error_code,
     )
 
-    # For UI requests, redirect with error toast
-    if not is_api_request(request):
+    # For UI requests, redirect with error toast (but not for rate limits to avoid loops)
+    if not is_api_request(request) and exc.status_code != 429:
         friendly_message = friendly_messages.get(exc.status_code, message)
         return create_error_redirect(request, friendly_message, "error")
 

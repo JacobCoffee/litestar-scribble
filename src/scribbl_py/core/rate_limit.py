@@ -40,6 +40,8 @@ class RateLimitSettings:
             "/schema/swagger",
             "/static",
             "/favicon.ico",
+            "/auth/navbar",  # HTMX partial - exclude to prevent redirect loops
+            "/auth/guest",  # Guest login - needs to work reliably
         ]
     )
 

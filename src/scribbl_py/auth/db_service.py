@@ -41,6 +41,12 @@ class DatabaseAuthService:
         self._config = config or OAuthConfig()
         self._session_factory = session_factory
 
+        # In-memory fallback storage when no database is configured
+        self._memory_users: dict[UUID, User] = {}
+        self._memory_users_by_oauth: dict[str, UUID] = {}  # "provider:oauth_id" -> user_id
+        self._memory_sessions: dict[str, Session] = {}
+        self._memory_stats: dict[UUID, UserStats] = {}
+
     def _get_storage(self, db_session: AsyncSession) -> AuthDatabaseStorage:
         """Get storage instance for database operations."""
         from scribbl_py.storage.db.auth_storage import AuthDatabaseStorage  # noqa: PLC0415
@@ -75,6 +81,9 @@ class DatabaseAuthService:
                 storage = self._get_storage(db_session)
                 await storage.create_session(session)
                 await db_session.commit()
+        else:
+            # In-memory fallback
+            self._memory_sessions[session_id] = session
 
         logger.info(
             "Session created",
@@ -87,7 +96,15 @@ class DatabaseAuthService:
     async def get_session(self, session_id: str) -> Session | None:
         """Get a session by ID."""
         if not self._session_factory:
-            return None
+            # In-memory fallback
+            session = self._memory_sessions.get(session_id)
+            if not session:
+                return None
+            # Check expiration
+            if session.expires_at and session.expires_at < datetime.now(UTC):
+                del self._memory_sessions[session_id]
+                return None
+            return session
 
         async with self._session_factory() as db_session:
             storage = self._get_storage(db_session)
@@ -107,6 +124,11 @@ class DatabaseAuthService:
     async def delete_session(self, session_id: str) -> bool:
         """Delete a session (logout)."""
         if not self._session_factory:
+            # In-memory fallback
+            if session_id in self._memory_sessions:
+                del self._memory_sessions[session_id]
+                logger.info("Session deleted", session_id=session_id[:8] + "...")
+                return True
             return False
 
         async with self._session_factory() as db_session:
@@ -125,7 +147,7 @@ class DatabaseAuthService:
         session.user_id = user.id
         session.guest_name = user.username
 
-        # Update in database
+        # Update in database or memory
         if self._session_factory:
             async with self._session_factory() as db_session:
                 storage = self._get_storage(db_session)
@@ -133,6 +155,9 @@ class DatabaseAuthService:
                 await storage.delete_session(session_id)
                 await storage.create_session(session)
                 await db_session.commit()
+        else:
+            # In-memory - already updated since we mutated the object
+            self._memory_sessions[session_id] = session
 
         return session
 
@@ -141,7 +166,8 @@ class DatabaseAuthService:
     async def get_user(self, user_id: UUID) -> User | None:
         """Get a user by ID."""
         if not self._session_factory:
-            return None
+            # In-memory fallback
+            return self._memory_users.get(user_id)
 
         async with self._session_factory() as db_session:
             storage = self._get_storage(db_session)
@@ -150,6 +176,11 @@ class DatabaseAuthService:
     async def get_user_by_oauth(self, provider: OAuthProvider, oauth_id: str) -> User | None:
         """Get a user by OAuth provider and ID."""
         if not self._session_factory:
+            # In-memory fallback
+            key = f"{provider.value}:{oauth_id}"
+            user_id = self._memory_users_by_oauth.get(key)
+            if user_id:
+                return self._memory_users.get(user_id)
             return None
 
         async with self._session_factory() as db_session:
@@ -184,6 +215,14 @@ class DatabaseAuthService:
                 stats = UserStats(user_id=user.id)
                 await storage.create_stats(stats)
                 await db_session.commit()
+        else:
+            # In-memory fallback
+            self._memory_users[user.id] = user
+            if oauth_provider and oauth_id:
+                key = f"{oauth_provider.value}:{oauth_id}"
+                self._memory_users_by_oauth[key] = user.id
+            # Initialize stats
+            self._memory_stats[user.id] = UserStats(user_id=user.id)
 
         logger.info(
             "User created",
@@ -200,6 +239,9 @@ class DatabaseAuthService:
                 storage = self._get_storage(db_session)
                 user = await storage.update_user(user)
                 await db_session.commit()
+        else:
+            # In-memory fallback
+            self._memory_users[user.id] = user
         return user
 
     async def get_or_create_user_from_oauth(
@@ -236,7 +278,8 @@ class DatabaseAuthService:
     async def get_user_stats(self, user_id: UUID) -> UserStats | None:
         """Get stats for a user."""
         if not self._session_factory:
-            return None
+            # In-memory fallback
+            return self._memory_stats.get(user_id)
 
         async with self._session_factory() as db_session:
             storage = self._get_storage(db_session)
@@ -250,6 +293,9 @@ class DatabaseAuthService:
                 storage = self._get_storage(db_session)
                 stats = await storage.update_stats(stats)
                 await db_session.commit()
+        else:
+            # In-memory fallback
+            self._memory_stats[stats.user_id] = stats
         return stats
 
     async def record_game_result(
@@ -302,7 +348,27 @@ class DatabaseAuthService:
     ) -> list[tuple[User, UserStats]]:
         """Get leaderboard for a category."""
         if not self._session_factory:
-            return []
+            # In-memory fallback
+            entries: list[tuple[User, UserStats]] = []
+            for user_id, stats in self._memory_stats.items():
+                user = self._memory_users.get(user_id)
+                if user and stats.games_played > 0:
+                    entries.append((user, stats))
+
+            # Sort by category
+            if category == "wins":
+                entries.sort(key=lambda x: x[1].games_won, reverse=True)
+            elif category == "fastest":
+                entries = [e for e in entries if e[1].fastest_guess_ms is not None]
+                entries.sort(key=lambda x: x[1].fastest_guess_ms or float("inf"))
+            elif category == "drawer":
+                entries.sort(key=lambda x: x[1].drawing_success_rate, reverse=True)
+            elif category == "games":
+                entries.sort(key=lambda x: x[1].games_played, reverse=True)
+            else:
+                entries.sort(key=lambda x: x[1].total_score, reverse=True)
+
+            return entries[:limit]
 
         async with self._session_factory() as db_session:
             storage = self._get_storage(db_session)
