@@ -49,6 +49,8 @@ COPY frontend/package.json frontend/bun.lock* ./
 RUN bun install --frozen-lockfile
 
 COPY frontend/ ./
+# Copy templates so Tailwind can scan them for utility classes
+COPY src/scribbl_py/templates/ ../src/scribbl_py/templates/
 RUN bun run build
 
 
