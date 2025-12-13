@@ -218,7 +218,7 @@ frontend-dev: ## Watch and rebuild frontend assets
 ##@ Application
 
 .PHONY: serve
-serve: frontend-build ## Run the full application (port 8000)
+serve: frontend-build ## Run the full application (production mode, port 8000)
 	@echo "=> Starting scribbl-py at http://127.0.0.1:8000"
 	@echo "=> UI: http://127.0.0.1:8000/ui/"
 	@echo "=> API: http://127.0.0.1:8000/api/"
@@ -226,10 +226,15 @@ serve: frontend-build ## Run the full application (port 8000)
 	@$(UV) run uvicorn scribbl_py.app:app --reload --reload-dir src --port 8000
 
 .PHONY: serve-dev
-serve-dev: ## Run app with hot reload (run 'make frontend-dev' in another terminal)
-	@echo "=> Starting scribbl-py at http://127.0.0.1:8000"
-	@echo "=> Run 'make frontend-dev' in another terminal for CSS hot reload"
-	@$(UV) run uvicorn scribbl_py.app:app --reload --reload-dir src --port 8000
+serve-dev: ## Run with Vite HMR (starts both backend and Vite dev server)
+	@echo "=> Starting scribbl-py with Vite HMR"
+	@echo "=> UI: http://127.0.0.1:8000/ui/"
+	@echo "=> Vite: http://localhost:5173"
+	@echo ""
+	@trap 'kill 0' EXIT; \
+		(cd frontend && bun run dev) & \
+		sleep 2 && \
+		SCRIBBL_DEBUG=true $(UV) run uvicorn scribbl_py.app:app --reload --reload-dir src --port 8000
 
 .PHONY: serve-api
 serve-api: ## Run API only without UI (port 8000)
