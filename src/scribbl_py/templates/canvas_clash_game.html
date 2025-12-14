@@ -504,6 +504,7 @@ const gameRoomId = '{{ room.id }}';
 document.addEventListener('DOMContentLoaded', function() {
     const roomId = gameRoomId;
     const userId = '{{ user_id }}';
+    const authUserId = {{ auth_user_id | tojson | safe if auth_user_id else 'null' }};
     const isDrawing = {{ is_drawing|lower }};
     const canvas = document.getElementById('game-canvas');
     const ctx = canvas ? canvas.getContext('2d') : null;
@@ -532,7 +533,8 @@ document.addEventListener('DOMContentLoaded', function() {
             hideCanvasLoading();
             ws.send(JSON.stringify({
                 type: 'join',
-                user_id: userId
+                user_id: userId,
+                auth_user_id: authUserId
             }));
         };
 

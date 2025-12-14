@@ -26,6 +26,7 @@ from scribbl_py.services.telemetry import get_telemetry
 if TYPE_CHECKING:
     from litestar import Router, WebSocket
 
+    from scribbl_py.auth.db_service import DatabaseAuthService
     from scribbl_py.game.models import GameRoom
     from scribbl_py.services.game import GameService
 
@@ -41,6 +42,7 @@ class GameConnection:
     player_id: UUID
     user_id: str
     user_name: str
+    auth_user_id: UUID | None = None  # Linked auth user for stats
     connected_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
@@ -100,19 +102,31 @@ class GameWebSocketHandler:
         self,
         game_service: GameService,
         connection_manager: ConnectionManager | None = None,
+        auth_service: DatabaseAuthService | None = None,
     ) -> None:
         """Initialize the game WebSocket handler.
 
         Args:
             game_service: The game service instance.
             connection_manager: Optional connection manager for advanced tracking.
+            auth_service: Optional auth service for user stats tracking.
         """
         self._service = game_service
         self._manager = connection_manager or ConnectionManager()
+        self._auth_service = auth_service
+        self._plugin: Any = None  # Set by plugin for lazy auth service access
         self._connections: dict[int, GameConnection] = {}  # socket_id -> connection
         self._room_sockets: dict[UUID, set[int]] = {}  # room_id -> socket_ids
         self._timer_tasks: dict[UUID, asyncio.Task] = {}  # room_id -> timer task
         self._lobby_browsers: dict[int, WebSocket] = {}  # socket_id -> socket for lobby browsers
+
+    def _get_auth_service(self) -> DatabaseAuthService | None:
+        """Get auth service, trying plugin reference if direct reference is None."""
+        if self._auth_service is not None:
+            return self._auth_service
+        if self._plugin is not None and hasattr(self._plugin, "_auth_service"):
+            return self._plugin._auth_service
+        return None
 
     async def handle_lobby_connection(self, socket: WebSocket, room_id: UUID) -> None:
         """Handle WebSocket connection to game lobby.
@@ -336,13 +350,18 @@ class GameWebSocketHandler:
             socket: The WebSocket connection.
             socket_id: Socket identifier.
             room_id: The room ID.
-            data: Message data with user_id and user_name.
+            data: Message data with user_id, user_name, and optional auth_user_id.
         """
         user_id = data.get("user_id", "")
         user_name = data.get("user_name", "Anonymous")
+        auth_user_id_str = data.get("auth_user_id")
+        auth_user_id = UUID(auth_user_id_str) if auth_user_id_str else None
 
         try:
             player = self._service.join_room(room_id, user_id, user_name)
+            # Store auth user ID on player for stats tracking
+            if auth_user_id:
+                player.auth_user_id = auth_user_id
         except (GameNotFoundError, GameStateError) as e:
             await self._send_error(socket, "join_failed", str(e))
             return
@@ -354,6 +373,7 @@ class GameWebSocketHandler:
             player_id=player.id,
             user_id=user_id,
             user_name=user_name,
+            auth_user_id=auth_user_id,
         )
         self._connections[socket_id] = connection
 
@@ -1513,6 +1533,11 @@ class GameWebSocketHandler:
                     ],
                 },
             )
+
+            # Record game stats for authenticated players
+            auth_svc = self._get_auth_service()
+            if auth_svc:
+                await self._record_game_stats(room, results, auth_svc)
         else:
             # Start next round after delay
             await asyncio.sleep(5)
@@ -1522,6 +1547,59 @@ class GameWebSocketHandler:
                 await self._broadcast_round_started(room_id, next_round, room)
             except Exception:
                 pass
+
+    async def _record_game_stats(
+        self,
+        room: GameRoom,
+        results: dict[str, Any],
+        auth_service: DatabaseAuthService,
+    ) -> None:
+        """Record game stats for authenticated players.
+
+        Args:
+            room: The game room.
+            results: Game results from end_round.
+            auth_service: Auth service for recording stats.
+        """
+
+        leaderboard = results.get("leaderboard", [])
+        if not leaderboard:
+            return
+
+        # Winner is first in leaderboard
+        winner_player = leaderboard[0][0] if leaderboard else None
+
+        for player, score in leaderboard:
+            # Skip players without auth user ID
+            if not player.auth_user_id:
+                continue
+
+            won = player.id == winner_player.id if winner_player else False
+
+            try:
+                await auth_service.record_game_result(
+                    user_id=player.auth_user_id,
+                    score=score,
+                    won=won,
+                    correct_guesses=1 if player.has_guessed else 0,  # Simplified
+                    total_guesses=1,  # Simplified
+                    total_guess_time_ms=int((player.guess_time or 0) * 1000),
+                    fastest_guess_ms=int((player.guess_time or 0) * 1000) if player.guess_time else None,
+                    drawings_completed=1,  # Simplified - each player drew once per round
+                    drawings_guessed=1 if player.has_guessed else 0,
+                )
+                logger.info(
+                    "Recorded game stats",
+                    user_id=str(player.auth_user_id),
+                    score=score,
+                    won=won,
+                )
+            except Exception as e:
+                logger.error(
+                    "Failed to record game stats",
+                    user_id=str(player.auth_user_id),
+                    error=str(e),
+                )
 
     async def _broadcast_round_started(
         self,
@@ -1684,6 +1762,7 @@ def create_game_websocket_handler(
     path: str,
     game_service: GameService,
     connection_manager: ConnectionManager | None = None,
+    auth_service: DatabaseAuthService | None = None,
 ) -> tuple[Router, GameWebSocketHandler]:
     """Create a WebSocket router for game real-time communication.
 
@@ -1691,13 +1770,14 @@ def create_game_websocket_handler(
         path: Base path for WebSocket routes.
         game_service: The game service instance.
         connection_manager: Optional connection manager.
+        auth_service: Optional auth service for stats tracking.
 
     Returns:
         A tuple of (Litestar Router, GameWebSocketHandler instance).
     """
     from litestar import Router, websocket
 
-    handler = GameWebSocketHandler(game_service, connection_manager)
+    handler = GameWebSocketHandler(game_service, connection_manager, auth_service)
 
     @websocket(path="/lobby/{room_id:uuid}")
     async def lobby_websocket(socket: WebSocket, room_id: UUID) -> None:

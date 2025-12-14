@@ -207,8 +207,8 @@ def create_app(
     # Root redirect handler
     @get("/", include_in_schema=False)
     async def root_redirect() -> Redirect:
-        """Redirect root to UI dashboard."""
-        return Redirect(path="/ui/")
+        """Redirect root to Canvas Clash game."""
+        return Redirect(path="/canvas-clash/")
 
     # Favicon redirect
     @get("/favicon.ico", include_in_schema=False)
@@ -216,7 +216,13 @@ def create_app(
         """Redirect favicon.ico to SVG favicon."""
         return Redirect(path="/static/favicon.svg")
 
-    route_handlers = [root_redirect, favicon_redirect, HealthController] if enable_ui else [HealthController]
+    # Profile shortcut (redirects to /auth/profile)
+    @get("/profile", include_in_schema=False)
+    async def profile_redirect() -> Redirect:
+        """Redirect /profile to auth profile page."""
+        return Redirect(path="/auth/profile")
+
+    route_handlers = [root_redirect, favicon_redirect, profile_redirect, HealthController] if enable_ui else [HealthController]
 
     # Configure templates if UI is enabled (must be before Litestar init for VitePlugin)
     template_config = None

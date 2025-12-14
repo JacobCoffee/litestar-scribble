@@ -345,8 +345,12 @@ class ScribblPlugin(InitPluginProtocol):
                 path=f"{self._config.ws_path}/canvas-clash",
                 game_service=self._game_service,
                 connection_manager=self._connection_manager,
+                auth_service=self._auth_service,  # Will be set lazily
             )
             app_config.route_handlers.append(game_ws_router)
+
+            # Store reference to plugin on handler for lazy auth service access
+            self._game_ws_handler._plugin = self
 
             # Register game WebSocket handler as a dependency
             def provide_game_ws_handler() -> Any:

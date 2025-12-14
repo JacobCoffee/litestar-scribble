@@ -368,6 +368,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get user_id from localStorage (set on home page) or fall back to cookie
     const userId = localStorage.getItem('canvas_clash_user_id') || '{{ user_id }}';
     const userName = localStorage.getItem('canvas_clash_user_name') || 'Anonymous';
+    // Auth user ID for stats tracking (null if not logged in)
+    const authUserId = {{ auth_user_id | tojson | safe if auth_user_id else 'null' }};
     const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/canvas-clash/lobby/${roomId}`;
 
     // Ensure cookie is set for server-side access
@@ -384,11 +386,12 @@ document.addEventListener('DOMContentLoaded', function() {
             reconnectAttempts = 0;
             updateConnectionStatus('connected');
 
-            // Send join message with user_name
+            // Send join message with user_name and auth_user_id
             lobbyWs.send(JSON.stringify({
                 type: 'join',
                 user_id: userId,
-                user_name: userName
+                user_name: userName,
+                auth_user_id: authUserId
             }));
         };
 

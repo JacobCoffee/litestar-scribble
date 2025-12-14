@@ -597,6 +597,7 @@ class GameUIController(Controller):
         self,
         room_id: UUID,
         game_service: GameService,
+        auth_service: DatabaseAuthService,
         request: Request,
     ) -> Template:
         """Render the game lobby page.
@@ -604,6 +605,7 @@ class GameUIController(Controller):
         Args:
             room_id: The room UUID.
             game_service: Game service instance.
+            auth_service: Auth service instance.
             request: The request object.
 
         Returns:
@@ -611,6 +613,14 @@ class GameUIController(Controller):
         """
         room = game_service.get_room(room_id)
         user_id = request.cookies.get("user_id", "")
+
+        # Get auth user ID if logged in
+        auth_user_id = None
+        session_id = request.cookies.get(auth_service._config.session_cookie_name)
+        if session_id:
+            session = await auth_service.get_session(session_id)
+            if session and session.user_id:
+                auth_user_id = str(session.user_id)
 
         # Find current player
         current_player = next((p for p in room.players if p.user_id == user_id), None)
@@ -653,6 +663,7 @@ class GameUIController(Controller):
                     for p in spectators
                 ],
                 "user_id": user_id,
+                "auth_user_id": auth_user_id,
                 "is_host": is_host,
                 "is_spectator": is_spectator,
             },
@@ -663,6 +674,7 @@ class GameUIController(Controller):
         self,
         room_id: UUID,
         game_service: GameService,
+        auth_service: DatabaseAuthService,
         request: Request,
     ) -> Template:
         """Render the active game screen.
@@ -670,6 +682,7 @@ class GameUIController(Controller):
         Args:
             room_id: The room UUID.
             game_service: Game service instance.
+            auth_service: Auth service instance.
             request: The request object.
 
         Returns:
@@ -677,6 +690,14 @@ class GameUIController(Controller):
         """
         room = game_service.get_room(room_id)
         user_id = request.cookies.get("user_id", "")
+
+        # Get auth user ID if logged in
+        auth_user_id = None
+        session_id = request.cookies.get(auth_service._config.session_cookie_name)
+        if session_id:
+            session = await auth_service.get_session(session_id)
+            if session and session.user_id:
+                auth_user_id = str(session.user_id)
 
         # Find current player
         current_player = next((p for p in room.players if p.user_id == user_id), None)
@@ -731,6 +752,7 @@ class GameUIController(Controller):
                     ],
                 },
                 "user_id": user_id,
+                "auth_user_id": auth_user_id,
                 "is_drawing": is_drawing,
                 "is_spectator": is_spectator,
                 "current_word": current_word,

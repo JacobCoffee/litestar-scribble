@@ -107,6 +107,7 @@ class Player:
     user_id: str = ""
     user_name: str = "Anonymous"
     avatar_url: str | None = None
+    auth_user_id: UUID | None = None  # Linked auth user for stats tracking
     score: int = 0
     is_host: bool = False
     is_spectator: bool = False
