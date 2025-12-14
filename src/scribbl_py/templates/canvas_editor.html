@@ -180,27 +180,39 @@
         </div>
         <div class="flex-1 overflow-auto p-2" id="layers-list">
             <!-- Layers will be populated dynamically -->
-            <div class="text-center text-base-content/50 py-8">
+            <div id="layers-empty" class="text-center text-base-content/50 py-8">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mx-auto mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                 </svg>
                 <p class="text-sm">No elements yet</p>
                 <p class="text-xs">Start drawing to add layers</p>
             </div>
+            <!-- Layer items container -->
+            <div id="layers-container" class="space-y-1 hidden"></div>
         </div>
         <div class="p-2 border-t border-base-300">
             <div class="btn-group w-full">
-                <button class="btn btn-sm flex-1" title="Move layer up">
+                <button class="btn btn-sm flex-1" id="layer-bring-front" title="Bring to front" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11l7-7 7 7M5 19l7-7 7 7"/>
+                    </svg>
+                </button>
+                <button class="btn btn-sm flex-1" id="layer-move-up" title="Move layer up" disabled>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
                     </svg>
                 </button>
-                <button class="btn btn-sm flex-1" title="Move layer down">
+                <button class="btn btn-sm flex-1" id="layer-move-down" title="Move layer down" disabled>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                     </svg>
                 </button>
-                <button class="btn btn-sm flex-1" title="Delete layer">
+                <button class="btn btn-sm flex-1" id="layer-send-back" title="Send to back" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13l-7 7-7-7M19 5l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <button class="btn btn-sm flex-1 btn-error" id="layer-delete" title="Delete layer" disabled>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                     </svg>
@@ -213,6 +225,242 @@
 
 {% block scripts %}
 <script>
+// Layer Management System
+const LayerManager = {
+    elements: [],
+    selectedId: null,
+    ws: null,
+
+    init(websocket) {
+        this.ws = websocket;
+        this.bindEvents();
+    },
+
+    bindEvents() {
+        document.getElementById('layer-bring-front')?.addEventListener('click', () => this.bringToFront());
+        document.getElementById('layer-move-up')?.addEventListener('click', () => this.moveUp());
+        document.getElementById('layer-move-down')?.addEventListener('click', () => this.moveDown());
+        document.getElementById('layer-send-back')?.addEventListener('click', () => this.sendToBack());
+        document.getElementById('layer-delete')?.addEventListener('click', () => this.deleteSelected());
+    },
+
+    updateElements(elements) {
+        this.elements = elements.sort((a, b) => b.z_index - a.z_index);
+        this.render();
+    },
+
+    addElement(element) {
+        this.elements.push(element);
+        this.elements.sort((a, b) => b.z_index - a.z_index);
+        this.render();
+    },
+
+    removeElement(elementId) {
+        this.elements = this.elements.filter(e => e.id !== elementId);
+        if (this.selectedId === elementId) {
+            this.selectedId = null;
+        }
+        this.render();
+    },
+
+    updateElement(elementId, updates) {
+        const idx = this.elements.findIndex(e => e.id === elementId);
+        if (idx !== -1) {
+            this.elements[idx] = { ...this.elements[idx], ...updates };
+            this.elements.sort((a, b) => b.z_index - a.z_index);
+            this.render();
+        }
+    },
+
+    selectElement(elementId) {
+        this.selectedId = elementId;
+        this.render();
+        this.updateButtonStates();
+    },
+
+    render() {
+        const container = document.getElementById('layers-container');
+        const empty = document.getElementById('layers-empty');
+        if (!container || !empty) return;
+
+        if (this.elements.length === 0) {
+            empty.classList.remove('hidden');
+            container.classList.add('hidden');
+            return;
+        }
+
+        empty.classList.add('hidden');
+        container.classList.remove('hidden');
+        container.innerHTML = '';
+
+        this.elements.forEach(el => {
+            const item = this.createLayerItem(el);
+            container.appendChild(item);
+        });
+
+        this.updateButtonStates();
+    },
+
+    createLayerItem(element) {
+        const item = document.createElement('div');
+        item.className = `layer-item flex items-center gap-2 p-2 rounded cursor-pointer hover:bg-base-200 ${this.selectedId === element.id ? 'bg-primary/20 border border-primary' : 'border border-transparent'}`;
+        item.dataset.elementId = element.id;
+
+        // Element type icon
+        const typeIcon = this.getTypeIcon(element.element_type);
+
+        // Visibility button
+        const visibleBtn = document.createElement('button');
+        visibleBtn.className = `btn btn-ghost btn-xs ${element.visible ? '' : 'opacity-40'}`;
+        visibleBtn.title = element.visible ? 'Hide layer' : 'Show layer';
+        visibleBtn.innerHTML = element.visible
+            ? '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>'
+            : '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>';
+        visibleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleVisibility(element.id);
+        });
+
+        // Lock button
+        const lockBtn = document.createElement('button');
+        lockBtn.className = `btn btn-ghost btn-xs ${element.locked ? 'text-warning' : ''}`;
+        lockBtn.title = element.locked ? 'Unlock layer' : 'Lock layer';
+        lockBtn.innerHTML = element.locked
+            ? '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>'
+            : '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg>';
+        lockBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleLock(element.id);
+        });
+
+        // Element name/label
+        const label = document.createElement('span');
+        label.className = `flex-1 text-sm truncate ${element.visible ? '' : 'opacity-40'} ${element.locked ? 'italic' : ''}`;
+        label.textContent = this.getElementLabel(element);
+
+        item.innerHTML = typeIcon;
+        item.appendChild(visibleBtn);
+        item.appendChild(lockBtn);
+        item.appendChild(label);
+
+        item.addEventListener('click', () => this.selectElement(element.id));
+
+        return item;
+    },
+
+    getTypeIcon(type) {
+        const icons = {
+            'stroke': '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>',
+            'shape': '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"/></svg>',
+            'text': '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M8 6v14M16 6v14"/></svg>',
+            'group': '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>'
+        };
+        return icons[type] || icons['stroke'];
+    },
+
+    getElementLabel(element) {
+        const typeLabels = { stroke: 'Stroke', shape: 'Shape', text: 'Text', group: 'Group' };
+        const baseLabel = typeLabels[element.element_type] || 'Element';
+        if (element.element_type === 'text' && element.content) {
+            return element.content.substring(0, 20) + (element.content.length > 20 ? '...' : '');
+        }
+        if (element.element_type === 'group' && element.name) {
+            return element.name;
+        }
+        return `${baseLabel} ${element.z_index}`;
+    },
+
+    updateButtonStates() {
+        const hasSelection = this.selectedId !== null;
+        const selectedElement = this.elements.find(e => e.id === this.selectedId);
+        const isLocked = selectedElement?.locked || false;
+
+        ['layer-bring-front', 'layer-move-up', 'layer-move-down', 'layer-send-back'].forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) btn.disabled = !hasSelection || isLocked;
+        });
+
+        const deleteBtn = document.getElementById('layer-delete');
+        if (deleteBtn) deleteBtn.disabled = !hasSelection;
+    },
+
+    // WebSocket actions
+    toggleVisibility(elementId) {
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({
+                type: 'layer_action',
+                action: 'toggle_visibility',
+                element_id: elementId
+            }));
+        }
+    },
+
+    toggleLock(elementId) {
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({
+                type: 'layer_action',
+                action: 'toggle_lock',
+                element_id: elementId
+            }));
+        }
+    },
+
+    bringToFront() {
+        if (!this.selectedId) return;
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({
+                type: 'layer_action',
+                action: 'bring_to_front',
+                element_id: this.selectedId
+            }));
+        }
+    },
+
+    moveUp() {
+        if (!this.selectedId) return;
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({
+                type: 'layer_action',
+                action: 'move_forward',
+                element_id: this.selectedId
+            }));
+        }
+    },
+
+    moveDown() {
+        if (!this.selectedId) return;
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({
+                type: 'layer_action',
+                action: 'move_backward',
+                element_id: this.selectedId
+            }));
+        }
+    },
+
+    sendToBack() {
+        if (!this.selectedId) return;
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({
+                type: 'layer_action',
+                action: 'send_to_back',
+                element_id: this.selectedId
+            }));
+        }
+    },
+
+    deleteSelected() {
+        if (!this.selectedId) return;
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({
+                type: 'layer_action',
+                action: 'delete',
+                element_id: this.selectedId
+            }));
+        }
+    }
+};
+
 // Initialize canvas-specific WebSocket connection
 document.addEventListener('DOMContentLoaded', function() {
     const canvas = document.getElementById('drawing-canvas');
@@ -221,6 +469,36 @@ document.addEventListener('DOMContentLoaded', function() {
         const container = canvas.parentElement;
         canvas.width = container.offsetWidth;
         canvas.height = container.offsetHeight;
+
+        // Initialize WebSocket and layer manager
+        const canvasId = canvas.dataset.canvasId;
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const ws = new WebSocket(`${protocol}//${window.location.host}/ws/canvas/${canvasId}`);
+
+        ws.onopen = () => {
+            LayerManager.init(ws);
+            // Request initial elements
+            ws.send(JSON.stringify({ type: 'get_elements' }));
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+
+            switch(data.type) {
+                case 'elements_list':
+                    LayerManager.updateElements(data.elements || []);
+                    break;
+                case 'element_added':
+                    LayerManager.addElement(data.element);
+                    break;
+                case 'element_updated':
+                    LayerManager.updateElement(data.element_id, data.updates);
+                    break;
+                case 'element_deleted':
+                    LayerManager.removeElement(data.element_id);
+                    break;
+            }
+        };
     }
 });
 </script>
