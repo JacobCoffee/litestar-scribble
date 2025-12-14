@@ -223,8 +223,7 @@ serve: frontend-build ## Run the full application (production mode, port 8000)
 	@echo "=> UI: http://127.0.0.1:8000/ui/"
 	@echo "=> API: http://127.0.0.1:8000/api/"
 	@echo "=> Schema: http://127.0.0.1:8000/schema"
-	@set -a && [ -f .env ] && . ./.env && set +a && \
-		$(UV) run uvicorn scribbl_py.app:app --reload --reload-dir src --port 8000
+	@$(UV) run uvicorn scribbl_py.app:app --reload --reload-dir src --port 8000
 
 .PHONY: serve-dev
 serve-dev: ## Run with Vite HMR (starts both backend and Vite dev server)
@@ -235,7 +234,6 @@ serve-dev: ## Run with Vite HMR (starts both backend and Vite dev server)
 	@trap 'kill 0' EXIT; \
 		(cd frontend && bun run dev) & \
 		sleep 2 && \
-		set -a && [ -f .env ] && . ./.env && set +a && \
 		SCRIBBL_DEBUG=true $(UV) run uvicorn scribbl_py.app:app --reload --reload-dir src --port 8000
 
 .PHONY: serve-api

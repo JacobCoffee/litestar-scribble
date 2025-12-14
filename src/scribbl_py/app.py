@@ -6,25 +6,39 @@ for running scribbl-py as a standalone application.
 
 from __future__ import annotations
 
-import mimetypes
-import os
-from contextlib import asynccontextmanager
-from typing import TYPE_CHECKING
+# Load .env file first for local development
+from dotenv import load_dotenv
 
-from advanced_alchemy.extensions.litestar import AlembicAsyncConfig, SQLAlchemyPlugin
-from advanced_alchemy.extensions.litestar.plugins.init.config.asyncio import SQLAlchemyAsyncConfig
-from litestar import Litestar, get
-from litestar.openapi import OpenAPIConfig
-from litestar.response import Redirect
-from litestar_vite import ViteConfig, VitePlugin
+load_dotenv()
 
-from scribbl_py import ScribblConfig, ScribblPlugin
-from scribbl_py.cli import ScribblCLIPlugin
-from scribbl_py.core.error_handling import get_exception_handlers
-from scribbl_py.core.logging import CorrelationIdMiddleware, RequestLoggingMiddleware, configure_logging
-from scribbl_py.core.openapi import get_openapi_plugins
-from scribbl_py.core.rate_limit import get_rate_limit_middleware
-from scribbl_py.web.health import HealthController
+import mimetypes  # noqa: E402
+import os  # noqa: E402
+from contextlib import asynccontextmanager  # noqa: E402
+from typing import TYPE_CHECKING  # noqa: E402
+
+from advanced_alchemy.extensions.litestar import (  # noqa: E402
+    AlembicAsyncConfig,
+    SQLAlchemyPlugin,
+)
+from advanced_alchemy.extensions.litestar.plugins.init.config.asyncio import (  # noqa: E402
+    SQLAlchemyAsyncConfig,
+)
+from litestar import Litestar, get  # noqa: E402
+from litestar.openapi import OpenAPIConfig  # noqa: E402
+from litestar.response import Redirect  # noqa: E402
+from litestar_vite import ViteConfig, VitePlugin  # noqa: E402
+
+from scribbl_py import ScribblConfig, ScribblPlugin  # noqa: E402
+from scribbl_py.cli import ScribblCLIPlugin  # noqa: E402
+from scribbl_py.core.error_handling import get_exception_handlers  # noqa: E402
+from scribbl_py.core.logging import (  # noqa: E402
+    CorrelationIdMiddleware,
+    RequestLoggingMiddleware,
+    configure_logging,
+)
+from scribbl_py.core.openapi import get_openapi_plugins  # noqa: E402
+from scribbl_py.core.rate_limit import get_rate_limit_middleware  # noqa: E402
+from scribbl_py.web.health import HealthController  # noqa: E402
 
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator

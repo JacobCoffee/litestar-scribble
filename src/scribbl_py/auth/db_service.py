@@ -95,15 +95,21 @@ class DatabaseAuthService:
 
     async def get_session(self, session_id: str) -> Session | None:
         """Get a session by ID."""
+        now = datetime.now(UTC)
+
         if not self._session_factory:
             # In-memory fallback
             session = self._memory_sessions.get(session_id)
             if not session:
                 return None
-            # Check expiration
-            if session.expires_at and session.expires_at < datetime.now(UTC):
-                del self._memory_sessions[session_id]
-                return None
+            # Check expiration (handle both naive and aware datetimes)
+            if session.expires_at:
+                expires = session.expires_at
+                if expires.tzinfo is None:
+                    expires = expires.replace(tzinfo=UTC)
+                if expires < now:
+                    del self._memory_sessions[session_id]
+                    return None
             return session
 
         async with self._session_factory() as db_session:
@@ -113,11 +119,15 @@ class DatabaseAuthService:
             if not session:
                 return None
 
-            # Check expiration
-            if session.expires_at and session.expires_at < datetime.now(UTC):
-                await storage.delete_session(session_id)
-                await db_session.commit()
-                return None
+            # Check expiration (handle both naive and aware datetimes)
+            if session.expires_at:
+                expires = session.expires_at
+                if expires.tzinfo is None:
+                    expires = expires.replace(tzinfo=UTC)
+                if expires < now:
+                    await storage.delete_session(session_id)
+                    await db_session.commit()
+                    return None
 
             return session
 
