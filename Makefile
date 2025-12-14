@@ -234,7 +234,7 @@ serve-dev: ## Run with Vite HMR (starts both backend and Vite dev server)
 	@trap 'kill 0' EXIT; \
 		(cd frontend && bun run dev) & \
 		sleep 2 && \
-		SCRIBBL_DEBUG=true $(UV) run uvicorn scribbl_py.app:app --reload --reload-dir src --port 8000
+		DEBUG=true $(UV) run uvicorn scribbl_py.app:app --reload --reload-dir src --port 8000
 
 .PHONY: serve-api
 serve-api: ## Run API only without UI (port 8000)
