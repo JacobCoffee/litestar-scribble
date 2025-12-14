@@ -496,7 +496,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         document.addEventListener('element-updated', (e) => {
-            LayerManager.updateElement(e.detail.element_id, e.detail);
+            // Server sends { element_id, updates: { visible, locked, z_index } }
+            LayerManager.updateElement(e.detail.element_id, e.detail.updates || e.detail);
         });
 
         document.addEventListener('element-deleted', (e) => {
