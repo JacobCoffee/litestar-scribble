@@ -472,30 +472,59 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Initialize WebSocket and layer manager
         const canvasId = canvas.dataset.canvasId;
+        const userId = canvas.dataset.userId || `user_${Date.now()}`;
+        const userName = canvas.dataset.userName || 'Anonymous';
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const ws = new WebSocket(`${protocol}//${window.location.host}/ws/canvas/${canvasId}`);
 
         ws.onopen = () => {
             LayerManager.init(ws);
-            // Request initial elements
-            ws.send(JSON.stringify({ type: 'get_elements' }));
+            // Join the canvas to receive sync message with elements
+            ws.send(JSON.stringify({
+                type: 'join',
+                user_id: userId,
+                user_name: userName
+            }));
         };
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
 
             switch(data.type) {
+                case 'sync':
+                    // Initial sync - extract elements from canvas_data
+                    if (data.canvas_data && data.canvas_data.elements) {
+                        LayerManager.updateElements(data.canvas_data.elements);
+                    }
+                    break;
                 case 'elements_list':
                     LayerManager.updateElements(data.elements || []);
                     break;
                 case 'element_added':
-                    LayerManager.addElement(data.element);
+                    if (data.element_data) {
+                        LayerManager.addElement(data.element_data);
+                    } else if (data.element) {
+                        LayerManager.addElement(data.element);
+                    }
+                    break;
+                case 'stroke_ended':
+                    // New stroke completed - add to layer list
+                    if (data.element_data) {
+                        LayerManager.addElement(data.element_data);
+                    }
                     break;
                 case 'element_updated':
                     LayerManager.updateElement(data.element_id, data.updates);
                     break;
                 case 'element_deleted':
                     LayerManager.removeElement(data.element_id);
+                    break;
+                case 'undo_result':
+                case 'redo_result':
+                    // Full state sync after undo/redo
+                    if (data.elements) {
+                        LayerManager.updateElements(data.elements);
+                    }
                     break;
             }
         };
