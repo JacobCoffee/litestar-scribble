@@ -169,15 +169,84 @@
   - [x] Manual task runners: `cleanup-sessions`, `cleanup-canvases`, `reset-weekly`
   - [x] `[tasks]` optional extra for Huey dependency
 
-### Phase 9.2: Collaborative Mode (Low Priority)
+### Phase 9.2: Collaborative Mode ✅
 Free-form collaborative whiteboard where everyone draws simultaneously.
 
 **Features:**
-- [ ] All users can draw at same time (already works in Free Draw)
-- [ ] Real-time cursor positions (already implemented)
-- [ ] Layer management (UI exists, needs backend)
-- [x] Export to PNG/SVG (already implemented in canvas editor)
-- [ ] No scoring, pure collaboration
+- [x] All users can draw at same time
+- [x] Real-time cursor positions
+- [x] Layer management (visibility, lock, reorder, delete)
+- [x] Export to PNG/SVG
+
+---
+
+## Future Phases
+
+### Phase 13: Canvas Editor Enhancements
+Advanced drawing tools and capabilities.
+
+- [ ] Image Upload & Manipulation (upload, resize, rotate, crop, opacity)
+- [ ] Advanced Shape Tools (polygon, star, arrows, speech bubbles, Bezier curves)
+- [ ] Text Formatting (font selection, bold/italic/underline, alignment, text-along-path)
+- [ ] Layer opacity sliders
+- [ ] Blend modes for layers
+- [ ] Infinite canvas with pan/zoom
+
+### Phase 14: Additional Game Modes
+New Canvas Clash variations.
+
+- [ ] **Speed Draw** - Rapid-fire 15-30 second rounds
+- [ ] **Blind Contour** - Can't see strokes until time's up
+- [ ] **Telephone Game** - Alternating draw/guess, each sees only previous entry
+- [ ] **Multiplayer Canvas** - Everyone draws simultaneously, layer per user, time-lapse export
+
+### Phase 15: Social Features
+Community and engagement features.
+
+- [ ] User Profiles (public gallery, achievements, badges)
+- [ ] Drawing Gallery (browse, like, comment, share community art)
+- [ ] Drawing Challenges (daily/weekly prompts with voting)
+- [ ] Following/followers system
+- [ ] Sticky notes and annotations for collaborative mode
+
+### Phase 16: Print & Merchandise
+Monetization and physical products.
+
+- [ ] Image to T-Shirt (print-on-demand integration: Printful, Printify)
+- [ ] Sticker Sheets (print-ready PDF with cut lines)
+- [ ] Canvas Prints (high-res export, standard print sizes)
+- [ ] Design marketplace
+- [ ] NFT Minting (optional blockchain integration)
+
+### Phase 17: Mobile & Desktop Apps
+Native applications.
+
+- [ ] Progressive Web App (PWA) with offline support
+- [ ] Native iOS app with Apple Pencil support
+- [ ] Native Android app with stylus support
+- [ ] Desktop apps (Electron or Tauri)
+- [ ] Tablet-optimized interface
+
+### Phase 18: API & Integrations
+Third-party connectivity.
+
+- [ ] Webhooks (canvas updates, game events, Discord/Slack integration)
+- [ ] Public API with OAuth2 and rate limiting
+- [ ] Embed Widget (customizable canvas for external sites)
+- [ ] AI Assistance (auto-complete strokes, style transfer, background removal, upscaling)
+- [ ] Video/voice chat integration
+
+### Phase 19: Infrastructure Scaling
+Production-grade deployment.
+
+- [ ] Redis session storage for horizontal scaling
+- [ ] WebSocket message broker (Redis Pub/Sub) for multi-instance
+- [ ] CDN integration for static assets
+- [ ] S3/GCS storage backend for large canvases
+- [ ] Kubernetes Helm chart
+- [ ] Terraform modules for cloud deployment
+
+---
 
 ## Completed
 
