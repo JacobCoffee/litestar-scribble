@@ -828,7 +828,8 @@ const CanvasManager = {
   updateRemoteElement(data) {
     const index = this.elements.findIndex(e => e.id === data.element_id);
     if (index !== -1) {
-      Object.assign(this.elements[index], data);
+      // Apply only the updates, not the whole message (which has type: "element_updated")
+      Object.assign(this.elements[index], data.updates || {});
       this.redraw();
     }
   },
@@ -840,7 +841,8 @@ const CanvasManager = {
 
   redraw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.elements.forEach(element => this.drawElement(element));
+    // Only draw visible elements
+    this.elements.filter(el => el.visible !== false).forEach(element => this.drawElement(element));
 
     // Draw remote strokes in progress
     this.remoteStrokes.forEach(stroke => {

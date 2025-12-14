@@ -386,12 +386,16 @@ const LayerManager = {
 
     // WebSocket actions - uses WebSocketManager from main.js
     toggleVisibility(elementId) {
+        console.log('[LayerManager] toggleVisibility called for:', elementId);
         if (this.ws && this.ws.send) {
+            console.log('[LayerManager] Sending toggle_visibility');
             this.ws.send({
                 type: 'layer_action',
                 action: 'toggle_visibility',
                 element_id: elementId
             });
+        } else {
+            console.error('[LayerManager] No WebSocket connection');
         }
     },
 
