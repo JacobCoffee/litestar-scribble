@@ -204,11 +204,63 @@ def create_app(
         )
     )
 
-    # Root redirect handler
+    # Dashboard at root
+    from scribbl_py.auth.db_service import DatabaseAuthService  # noqa: E402, PLC0415
+    from scribbl_py.services.game import GameService  # noqa: E402, PLC0415
+
     @get("/", include_in_schema=False)
-    async def root_redirect() -> Redirect:
-        """Redirect root to Canvas Clash game."""
-        return Redirect(path="/canvas-clash/")
+    async def dashboard(
+        game_service: GameService,
+        auth_service: DatabaseAuthService,
+        request: Request,
+    ) -> Template:
+        """Render the main dashboard/home page."""
+        from litestar.response import Template  # noqa: PLC0415
+
+        # Get available lobby rooms
+        lobby_rooms = game_service.get_lobby_rooms()
+        active_games = game_service.get_active_games()
+        is_debug = getattr(request.app, "debug", False)
+
+        # Get logged-in user info
+        username = None
+        session_id = request.cookies.get(auth_service._config.session_cookie_name)
+        if session_id:
+            session = await auth_service.get_session(session_id)
+            if session and session.user_id:
+                user = await auth_service.get_user(session.user_id)
+                if user:
+                    username = user.username
+
+        return Template(
+            template_name="canvas_clash_home.html",
+            context={
+                "rooms": [
+                    {
+                        "id": str(r.id),
+                        "code": r.room_code,
+                        "name": r.name,
+                        "player_count": len(r.active_guessers()),
+                        "max_players": r.settings.max_players,
+                    }
+                    for r in lobby_rooms
+                ],
+                "active_games": [
+                    {
+                        "id": str(r.id),
+                        "code": r.room_code,
+                        "name": r.name,
+                        "player_count": len(r.active_guessers()),
+                        "spectator_count": len(r.spectators()),
+                        "current_round": r.current_round_number,
+                        "total_rounds": r.settings.rounds_per_game,
+                    }
+                    for r in active_games
+                ],
+                "debug_mode": is_debug,
+                "username": username,
+            },
+        )
 
     # Favicon redirect
     @get("/favicon.ico", include_in_schema=False)
@@ -222,7 +274,7 @@ def create_app(
         """Redirect /profile to auth profile page."""
         return Redirect(path="/auth/profile")
 
-    route_handlers = [root_redirect, favicon_redirect, profile_redirect, HealthController] if enable_ui else [HealthController]
+    route_handlers = [dashboard, favicon_redirect, profile_redirect, HealthController] if enable_ui else [HealthController]
 
     # Configure templates if UI is enabled (must be before Litestar init for VitePlugin)
     template_config = None
