@@ -11,6 +11,7 @@ from litestar import Controller, delete, get, patch, post
 from litestar.response import Redirect, Response, Template
 from litestar.status_codes import HTTP_204_NO_CONTENT
 
+from scribbl_py.auth.db_service import DatabaseAuthService  # noqa: TC001
 from scribbl_py.game.moderation import validate_custom_words
 from scribbl_py.services.game import (
     GameService,
@@ -534,6 +535,7 @@ class GameUIController(Controller):
     async def game_home(
         self,
         game_service: GameService,
+        auth_service: DatabaseAuthService,
         request: Request,
     ) -> Template:
         """Render the CanvasClash game home page.
@@ -549,6 +551,16 @@ class GameUIController(Controller):
 
         # Check if app is in debug mode
         is_debug = getattr(request.app, "debug", False)
+
+        # Get logged-in user info if available
+        username = None
+        session_id = request.cookies.get(auth_service._config.session_cookie_name)
+        if session_id:
+            session = await auth_service.get_session(session_id)
+            if session and session.user_id:
+                user = await auth_service.get_user(session.user_id)
+                if user:
+                    username = user.username
 
         return Template(
             template_name="canvas_clash_home.html",
@@ -576,6 +588,7 @@ class GameUIController(Controller):
                     for r in active_games
                 ],
                 "debug_mode": is_debug,
+                "username": username,
             },
         )
 

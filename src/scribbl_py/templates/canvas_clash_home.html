@@ -24,6 +24,15 @@
                     Create Room
                 </h2>
                 <div id="create-room-form" class="space-y-4">
+                    {% if username %}
+                    <div class="flex items-center gap-2 text-base-content/70">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        <span>Playing as <strong class="text-base-content">{{ username }}</strong></span>
+                    </div>
+                    <input type="hidden" id="create-host-name" value="{{ username }}">
+                    {% else %}
                     <div class="form-control">
                         <label class="label">
                             <span class="label-text">Your Name</span>
@@ -36,6 +45,7 @@
                             maxlength="20"
                         >
                     </div>
+                    {% endif %}
                     <div class="form-control">
                         <label class="label">
                             <span class="label-text">Room Name (optional)</span>
@@ -81,6 +91,15 @@
                     Join Room
                 </h2>
                 <div id="join-room-form" class="space-y-4">
+                    {% if username %}
+                    <div class="flex items-center gap-2 text-base-content/70">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        <span>Playing as <strong class="text-base-content">{{ username }}</strong></span>
+                    </div>
+                    <input type="hidden" id="join-user-name" value="{{ username }}">
+                    {% else %}
                     <div class="form-control">
                         <label class="label">
                             <span class="label-text">Your Name</span>
@@ -93,6 +112,7 @@
                             maxlength="20"
                         >
                     </div>
+                    {% endif %}
                     <div class="form-control">
                         <label class="label">
                             <span class="label-text">Room Code</span>
@@ -299,6 +319,9 @@
 <script>
 console.log('[Canvas Clash] Script loaded');
 
+// Server-provided username (if logged in)
+const LOGGED_IN_USERNAME = {{ username | tojson | safe if username else 'null' }};
+
 // Use a function so we can call it on both initial load and HTMX swap
 function initCanvasClash() {
     console.log('[Canvas Clash] initCanvasClash called');
@@ -466,7 +489,7 @@ document.body.addEventListener('htmx:afterSettle', function(evt) {
 
 // Quick join from lobby list
 window.quickJoin = async function(roomCode) {
-    const userName = localStorage.getItem('canvas_clash_user_name') || prompt('Enter your name:');
+    const userName = LOGGED_IN_USERNAME || localStorage.getItem('canvas_clash_user_name') || prompt('Enter your name:');
     if (!userName) return;
 
     localStorage.setItem('canvas_clash_user_name', userName);
@@ -508,7 +531,7 @@ window.quickJoin = async function(roomCode) {
 
 // Watch a game in progress as a spectator
 window.watchGame = async function(roomId) {
-    const userName = localStorage.getItem('canvas_clash_user_name') || prompt('Enter your name to watch:');
+    const userName = LOGGED_IN_USERNAME || localStorage.getItem('canvas_clash_user_name') || prompt('Enter your name to watch:');
     if (!userName) return;
 
     localStorage.setItem('canvas_clash_user_name', userName);

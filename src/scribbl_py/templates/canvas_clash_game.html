@@ -206,9 +206,10 @@
                 <div class="text-2xl font-bold mt-1" id="word-display">{{ current_word }}</div>
                 {% else %}
                 <div class="text-xs opacity-50 uppercase font-medium mb-1">Guess the word</div>
-                <div class="text-3xl font-bold font-mono tracking-widest" id="word-hint">
+                <div class="text-3xl font-bold font-mono" id="word-hint">
                     _ _ _ _ _ _ _
                 </div>
+                <div class="text-xs opacity-50 mt-1" id="word-lengths"></div>
                 {% endif %}
                 {% if debug_mode %}
                 <!-- Debug: Show actual word -->
@@ -305,6 +306,27 @@
                             <button class="btn btn-sm btn-square btn-ghost" data-tool="circle">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <circle cx="12" cy="12" r="9" stroke-width="2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Undo/Redo -->
+                <div class="flex flex-col gap-1">
+                    <span class="text-[10px] text-center opacity-50 uppercase mb-1">History</span>
+                    <div class="grid grid-cols-2 gap-1">
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Undo (Ctrl+Z)">
+                            <button class="btn btn-sm btn-square btn-ghost" id="undo-btn" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Redo (Ctrl+Y)">
+                            <button class="btn btn-sm btn-square btn-ghost" id="redo-btn" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"/>
                                 </svg>
                             </button>
                         </div>
@@ -587,6 +609,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 break;
 
+            case 'canvas_state':
+                // Full canvas state sync (used for undo/redo)
+                if (ctx && !isDrawing && data.imageData) {
+                    const img = new Image();
+                    img.onload = function() {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(img, 0, 0);
+                    };
+                    img.src = data.imageData;
+                }
+                break;
+
             case 'chat_message':
                 addChatMessage(data);
                 break;
@@ -699,6 +733,73 @@ document.addEventListener('DOMContentLoaded', function() {
         let shapeStartX = 0;
         let shapeStartY = 0;
         let savedImageData = null;  // For shape preview
+
+        // Undo/Redo history
+        const undoStack = [];
+        const redoStack = [];
+        const MAX_HISTORY = 50;
+
+        function saveState() {
+            undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+            if (undoStack.length > MAX_HISTORY) {
+                undoStack.shift();
+            }
+            redoStack.length = 0;  // Clear redo on new action
+            updateUndoRedoButtons();
+        }
+
+        function undo() {
+            if (undoStack.length === 0) return;
+            redoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+            const state = undoStack.pop();
+            ctx.putImageData(state, 0, 0);
+            updateUndoRedoButtons();
+            // Clear canvas and redraw from history for other players
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'canvas_state', imageData: canvas.toDataURL() }));
+            }
+        }
+
+        function redo() {
+            if (redoStack.length === 0) return;
+            undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+            const state = redoStack.pop();
+            ctx.putImageData(state, 0, 0);
+            updateUndoRedoButtons();
+            // Sync canvas state to other players
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'canvas_state', imageData: canvas.toDataURL() }));
+            }
+        }
+
+        function updateUndoRedoButtons() {
+            const undoBtn = document.getElementById('undo-btn');
+            const redoBtn = document.getElementById('redo-btn');
+            if (undoBtn) undoBtn.disabled = undoStack.length === 0;
+            if (redoBtn) redoBtn.disabled = redoStack.length === 0;
+        }
+
+        // Undo/Redo button handlers
+        const undoBtn = document.getElementById('undo-btn');
+        const redoBtn = document.getElementById('redo-btn');
+        if (undoBtn) undoBtn.addEventListener('click', undo);
+        if (redoBtn) redoBtn.addEventListener('click', redo);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                if (e.key === 'z' && !e.shiftKey) {
+                    e.preventDefault();
+                    undo();
+                } else if (e.key === 'y' || (e.key === 'z' && e.shiftKey)) {
+                    e.preventDefault();
+                    redo();
+                }
+            }
+        });
+
+        // Save initial blank state
+        saveState();
 
         // Apply background colors to color buttons
         document.querySelectorAll('.color-btn').forEach(btn => {
@@ -861,6 +962,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Handle fill tool immediately on click
             if (currentTool === 'fill') {
+                saveState();  // Save for undo
                 floodFill(lastX, lastY, currentColor);
 
                 // Send fill to server
@@ -876,6 +978,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             isDrawingActive = true;
+
+            // Save state before starting to draw (for undo)
+            saveState();
 
             // For shape tools, save starting position and canvas state
             if (isShapeTool(currentTool)) {
@@ -997,6 +1102,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const clearBtn = document.getElementById('clear-canvas-btn');
         if (clearBtn) {
             clearBtn.addEventListener('click', function() {
+                saveState();  // Save for undo
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 if (ws && ws.readyState === WebSocket.OPEN) {
                     ws.send(JSON.stringify({ type: 'clear' }));
@@ -1161,8 +1267,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateWordHint(hint) {
         const hintEl = document.getElementById('word-hint');
-        if (hintEl) {
+        const lengthsEl = document.getElementById('word-lengths');
+        if (!hintEl) return;
+
+        // Split hint by multiple spaces to detect word boundaries
+        // The hint comes as "_ _ _   _ _ _ _ _" (3 spaces between words)
+        const words = hint.split(/\s{2,}/);
+
+        if (words.length > 1) {
+            // Multi-word: display with visual separator
+            const formattedWords = words.map(w => {
+                // Add letter spacing within each word
+                return w.split(' ').join(' ');
+            });
+            hintEl.innerHTML = formattedWords.join(' <span class="text-base-content/30 mx-2">/</span> ');
+
+            // Show word lengths
+            if (lengthsEl) {
+                const lengths = words.map(w => {
+                    // Count underscores/letters (excluding spaces between letters)
+                    return w.split(' ').filter(c => c === '_' || c.match(/[a-zA-Z]/)).length;
+                });
+                lengthsEl.textContent = `(${lengths.join(' + ')} letters)`;
+            }
+        } else {
+            // Single word
             hintEl.textContent = hint;
+            if (lengthsEl) {
+                const length = hint.split(' ').filter(c => c === '_' || c.match(/[a-zA-Z]/)).length;
+                lengthsEl.textContent = `(${length} letters)`;
+            }
         }
     }
 

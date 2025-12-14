@@ -58,6 +58,7 @@ class GameMessageType:
     DRAW_SHAPE = "draw_shape"
     FILL = "fill"
     CLEAR = "clear"
+    CANVAS_STATE = "canvas_state"  # Full canvas sync (for undo/redo)
     KICK_PLAYER = "kick_player"
     BAN_PLAYER = "ban_player"
     TRANSFER_HOST = "transfer_host"
@@ -310,6 +311,7 @@ class GameWebSocketHandler:
             GameMessageType.DRAW_SHAPE: self._handle_draw_shape,
             GameMessageType.FILL: self._handle_fill,
             GameMessageType.CLEAR: self._handle_clear,
+            GameMessageType.CANVAS_STATE: self._handle_canvas_state,
             GameMessageType.KICK_PLAYER: self._handle_kick_player,
             GameMessageType.BAN_PLAYER: self._handle_ban_player,
             GameMessageType.TRANSFER_HOST: self._handle_transfer_host,
@@ -899,6 +901,41 @@ class GameWebSocketHandler:
         await self._broadcast_to_room(
             room_id,
             {"type": GameMessageType.CLEAR_CANVAS},
+            exclude_socket=socket_id,
+        )
+
+    async def _handle_canvas_state(
+        self,
+        socket: WebSocket,
+        socket_id: int,
+        room_id: UUID,
+        data: dict[str, Any],
+    ) -> None:
+        """Handle full canvas state sync from drawer (for undo/redo).
+
+        Args:
+            socket: The WebSocket connection.
+            socket_id: Socket identifier.
+            room_id: The room ID.
+            data: Message data with imageData (base64 canvas).
+        """
+        connection = self._connections.get(socket_id)
+        if not connection:
+            return
+
+        room = self._service.get_room(room_id)
+
+        # Only drawer can send canvas state
+        if not room.current_round or room.current_round.drawer_id != connection.player_id:
+            return
+
+        # Broadcast canvas state to other players
+        await self._broadcast_to_room(
+            room_id,
+            {
+                "type": GameMessageType.CANVAS_STATE,
+                "imageData": data.get("imageData", ""),
+            },
             exclude_socket=socket_id,
         )
 
