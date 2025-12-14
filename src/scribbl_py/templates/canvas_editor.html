@@ -384,151 +384,147 @@ const LayerManager = {
         if (deleteBtn) deleteBtn.disabled = !hasSelection;
     },
 
-    // WebSocket actions
+    // WebSocket actions - uses WebSocketManager from main.js
     toggleVisibility(elementId) {
-        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-            this.ws.send(JSON.stringify({
+        if (this.ws && this.ws.send) {
+            this.ws.send({
                 type: 'layer_action',
                 action: 'toggle_visibility',
                 element_id: elementId
-            }));
+            });
         }
     },
 
     toggleLock(elementId) {
-        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-            this.ws.send(JSON.stringify({
+        if (this.ws && this.ws.send) {
+            this.ws.send({
                 type: 'layer_action',
                 action: 'toggle_lock',
                 element_id: elementId
-            }));
+            });
         }
     },
 
     bringToFront() {
         if (!this.selectedId) return;
-        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-            this.ws.send(JSON.stringify({
+        if (this.ws && this.ws.send) {
+            this.ws.send({
                 type: 'layer_action',
                 action: 'bring_to_front',
                 element_id: this.selectedId
-            }));
+            });
         }
     },
 
     moveUp() {
         if (!this.selectedId) return;
-        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-            this.ws.send(JSON.stringify({
+        if (this.ws && this.ws.send) {
+            this.ws.send({
                 type: 'layer_action',
                 action: 'move_forward',
                 element_id: this.selectedId
-            }));
+            });
         }
     },
 
     moveDown() {
         if (!this.selectedId) return;
-        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-            this.ws.send(JSON.stringify({
+        if (this.ws && this.ws.send) {
+            this.ws.send({
                 type: 'layer_action',
                 action: 'move_backward',
                 element_id: this.selectedId
-            }));
+            });
         }
     },
 
     sendToBack() {
         if (!this.selectedId) return;
-        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-            this.ws.send(JSON.stringify({
+        if (this.ws && this.ws.send) {
+            this.ws.send({
                 type: 'layer_action',
                 action: 'send_to_back',
                 element_id: this.selectedId
-            }));
+            });
         }
     },
 
     deleteSelected() {
         if (!this.selectedId) return;
-        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-            this.ws.send(JSON.stringify({
+        if (this.ws && this.ws.send) {
+            this.ws.send({
                 type: 'layer_action',
                 action: 'delete',
                 element_id: this.selectedId
-            }));
+            });
         }
     }
 };
 
-// Initialize canvas-specific WebSocket connection
+// Initialize LayerManager with the main.js WebSocket/CanvasManager
 document.addEventListener('DOMContentLoaded', function() {
     const canvas = document.getElementById('drawing-canvas');
-    if (canvas) {
-        // Resize canvas to container
-        const container = canvas.parentElement;
-        canvas.width = container.offsetWidth;
-        canvas.height = container.offsetHeight;
+    if (!canvas) return;
 
-        // Initialize WebSocket and layer manager
-        const canvasId = canvas.dataset.canvasId;
-        const userId = canvas.dataset.userId || `user_${Date.now()}`;
-        const userName = canvas.dataset.userName || 'Anonymous';
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const ws = new WebSocket(`${protocol}//${window.location.host}/ws/canvas/${canvasId}`);
+    // Wait for main.js to initialize, then connect LayerManager
+    const initLayerManager = () => {
+        if (!window.Scribbl || !window.Scribbl.WebSocketManager) {
+            setTimeout(initLayerManager, 100);
+            return;
+        }
 
-        ws.onopen = () => {
-            LayerManager.init(ws);
-            // Join the canvas to receive sync message with elements
-            ws.send(JSON.stringify({
-                type: 'join',
-                user_id: userId,
-                user_name: userName
-            }));
-        };
+        const ws = window.Scribbl.WebSocketManager;
+        LayerManager.init(ws);
 
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
+        // Listen for custom events dispatched by main.js
+        document.addEventListener('canvas-sync', (e) => {
+            const data = e.detail;
+            const elements = data.canvas_data?.elements || data.elements || [];
+            LayerManager.updateElements(elements);
+        });
 
-            switch(data.type) {
-                case 'sync':
-                    // Initial sync - extract elements from canvas_data
-                    if (data.canvas_data && data.canvas_data.elements) {
-                        LayerManager.updateElements(data.canvas_data.elements);
-                    }
-                    break;
-                case 'elements_list':
-                    LayerManager.updateElements(data.elements || []);
-                    break;
-                case 'element_added':
-                    if (data.element_data) {
-                        LayerManager.addElement(data.element_data);
-                    } else if (data.element) {
-                        LayerManager.addElement(data.element);
-                    }
-                    break;
-                case 'stroke_ended':
-                    // New stroke completed - add to layer list
-                    if (data.element_data) {
-                        LayerManager.addElement(data.element_data);
-                    }
-                    break;
-                case 'element_updated':
-                    LayerManager.updateElement(data.element_id, data.updates);
-                    break;
-                case 'element_deleted':
-                    LayerManager.removeElement(data.element_id);
-                    break;
-                case 'undo_result':
-                case 'redo_result':
-                    // Full state sync after undo/redo
-                    if (data.elements) {
-                        LayerManager.updateElements(data.elements);
-                    }
-                    break;
+        document.addEventListener('element-added', (e) => {
+            if (e.detail.element_data) {
+                LayerManager.addElement(e.detail.element_data);
+            }
+        });
+
+        document.addEventListener('stroke-ended', (e) => {
+            if (e.detail.element_data) {
+                LayerManager.addElement(e.detail.element_data);
+            }
+        });
+
+        document.addEventListener('element-updated', (e) => {
+            LayerManager.updateElement(e.detail.element_id, e.detail);
+        });
+
+        document.addEventListener('element-deleted', (e) => {
+            LayerManager.removeElement(e.detail.element_id);
+        });
+
+        // Also sync from CanvasManager.elements after initial sync
+        const checkForElements = () => {
+            if (window.Scribbl.CanvasManager && window.Scribbl.CanvasManager.elements.length > 0) {
+                // Convert CanvasManager elements to layer format
+                const elements = window.Scribbl.CanvasManager.elements.map(el => ({
+                    id: el.id,
+                    element_type: el.type,
+                    z_index: el.z_index || 0,
+                    visible: el.visible !== false,
+                    locked: el.locked || false,
+                    content: el.content,
+                    name: el.name
+                }));
+                LayerManager.updateElements(elements);
             }
         };
-    }
+
+        // Check after a short delay for elements already loaded
+        setTimeout(checkForElements, 500);
+    };
+
+    initLayerManager();
 });
 </script>
 {% endblock %}
