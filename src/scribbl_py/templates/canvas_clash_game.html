@@ -4,14 +4,22 @@
 
 {% block head %}
 <style>
-    /* Full height game layout */
-    body {
+    /* Full height game layout - use viewport height minus navbar */
+    #main-content {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: none;
+        height: calc(100vh - 64px);
         overflow: hidden;
     }
-    #main-content {
-        height: calc(100vh - 64px);
-        padding: 0;
-        max-width: none;
+    /* Hide footer on game page */
+    footer {
+        display: none !important;
+    }
+    /* Game container fills the main content area */
+    .game-container {
+        height: 100%;
+        overflow: hidden;
     }
 
     /* Chat messages */
@@ -77,16 +85,16 @@
 
     /* Correct guess celebration */
     .correct-banner {
-        animation: slideDown 0.4s ease-out, pulse 2s ease-in-out infinite;
+        animation: slideUp 0.4s ease-out;
     }
-    @keyframes slideDown {
+    @keyframes slideUp {
         from {
             opacity: 0;
-            transform: translateY(-100%);
+            transform: translateX(100%);
         }
         to {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateX(0);
         }
     }
 
@@ -131,7 +139,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex h-full bg-base-200" x-data="{ showScoreboard: true }">
+<div class="flex bg-base-200 game-container" x-data="{ showScoreboard: true }">
     <!-- Left Section - Scoreboard -->
     <div
         class="w-64 bg-base-100 border-r border-base-300 flex flex-col"
@@ -187,7 +195,7 @@
     <!-- Center Section - Canvas & Game Area -->
     <div class="flex-1 flex flex-col overflow-hidden">
         <!-- Top Bar - Timer & Word Hint -->
-        <div class="h-16 bg-base-100 border-b border-base-300 flex items-center justify-between px-6">
+        <div class="bg-base-100 border-b border-base-300 flex items-center justify-between px-6 py-4">
             <!-- Timer -->
             <div class="flex items-center gap-3">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -202,8 +210,7 @@
             <!-- Word Hint / Current Drawer -->
             <div class="text-center flex-1">
                 {% if is_drawing %}
-                <div class="badge badge-primary badge-lg">You are drawing!</div>
-                <div class="text-2xl font-bold mt-1" id="word-display">{{ current_word }}</div>
+                <div class="text-2xl font-bold" id="word-display">{{ current_word }}</div>
                 {% else %}
                 <div class="text-xs opacity-50 uppercase font-medium mb-1">Guess the word</div>
                 <div class="text-3xl font-bold font-mono" id="word-hint">
@@ -223,22 +230,38 @@
                 {% endif %}
             </div>
 
-            <!-- Toggle Scoreboard -->
-            <button
-                class="btn btn-ghost btn-sm"
-                @click="showScoreboard = !showScoreboard"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                </svg>
-            </button>
+            <div class="flex gap-1">
+                <!-- Drawing Settings (shown/hidden via JS based on drawer state) -->
+                <button
+                    id="drawing-settings-btn"
+                    class="btn btn-ghost btn-sm"
+                    onclick="openDrawingSettings()"
+                    title="Drawing Settings"
+                    style="display: none;"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                </button>
+
+                <!-- Toggle Scoreboard -->
+                <button
+                    class="btn btn-ghost btn-sm"
+                    @click="showScoreboard = !showScoreboard"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                </button>
+            </div>
         </div>
 
         <!-- Canvas Area -->
         <div class="flex-1 overflow-hidden flex">
             <!-- Drawing Toolbar (Only for drawer) -->
             <div
-                class="w-20 bg-base-100 border-r border-base-300 flex flex-col items-center py-3 gap-2"
+                class="w-20 bg-base-100 border-r border-base-300 flex flex-col items-center py-2 gap-1 overflow-y-auto"
                 id="drawing-toolbar"
                 {% if not is_drawing %}style="display: none;"{% endif %}
             >
@@ -246,28 +269,28 @@
                 <div class="flex flex-col gap-1">
                     <span class="text-[10px] text-center opacity-50 uppercase mb-1">Tools</span>
                     <div class="grid grid-cols-2 gap-1">
-                        <div class="tooltip tooltip-bottom z-50" data-tip="Pen">
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Pen (P)">
                             <button class="btn btn-sm btn-square btn-primary" data-tool="pen">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                                 </svg>
                             </button>
                         </div>
-                        <div class="tooltip tooltip-bottom z-50" data-tip="Fill">
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Fill (G)">
                             <button class="btn btn-sm btn-square btn-ghost" data-tool="fill">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
                                 </svg>
                             </button>
                         </div>
-                        <div class="tooltip tooltip-bottom z-50" data-tip="Line">
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Line (L)">
                             <button class="btn btn-sm btn-square btn-ghost" data-tool="line">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 20L20 4"/>
                                 </svg>
                             </button>
                         </div>
-                        <div class="tooltip tooltip-bottom z-50" data-tip="Eraser">
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Eraser (E)">
                             <button class="btn btn-sm btn-square btn-ghost" data-tool="eraser">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
@@ -281,28 +304,28 @@
                 <div class="flex flex-col gap-1">
                     <span class="text-[10px] text-center opacity-50 uppercase mb-1">Shapes</span>
                     <div class="grid grid-cols-2 gap-1">
-                        <div class="tooltip tooltip-bottom z-50" data-tip="Rectangle">
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Rectangle (R)">
                             <button class="btn btn-sm btn-square btn-ghost" data-tool="rectangle">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <rect x="3" y="5" width="18" height="14" rx="2" stroke-width="2"/>
                                 </svg>
                             </button>
                         </div>
-                        <div class="tooltip tooltip-bottom z-50" data-tip="Ellipse">
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Ellipse (O)">
                             <button class="btn btn-sm btn-square btn-ghost" data-tool="ellipse">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <ellipse cx="12" cy="12" rx="9" ry="7" stroke-width="2"/>
                                 </svg>
                             </button>
                         </div>
-                        <div class="tooltip tooltip-bottom z-50" data-tip="Triangle">
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Triangle (T)">
                             <button class="btn btn-sm btn-square btn-ghost" data-tool="triangle">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4L3 20h18L12 4z"/>
                                 </svg>
                             </button>
                         </div>
-                        <div class="tooltip tooltip-bottom z-50" data-tip="Circle">
+                        <div class="tooltip tooltip-bottom z-50" data-tip="Circle (C)">
                             <button class="btn btn-sm btn-square btn-ghost" data-tool="circle">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <circle cx="12" cy="12" r="9" stroke-width="2"/>
@@ -333,91 +356,74 @@
                     </div>
                 </div>
 
-                <div class="divider my-0 w-14"></div>
-
-                <!-- Color Palette -->
-                <div class="flex flex-col gap-1">
-                    <span class="text-[10px] text-center opacity-50 uppercase">Colors</span>
-                    <div class="grid grid-cols-2 gap-1 px-1">
-                        <!-- Row 1: Black & White -->
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform ring-2 ring-primary ring-offset-1" data-color="#000000"></button>
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#ffffff"></button>
-                        <!-- Row 2: Grays -->
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#9ca3af"></button>
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#4b5563"></button>
-                        <!-- Row 3: Reds -->
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#ef4444"></button>
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#991b1b"></button>
-                        <!-- Row 4: Oranges -->
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#f97316"></button>
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#c2410c"></button>
-                        <!-- Row 5: Yellows -->
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#eab308"></button>
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#fde047"></button>
-                        <!-- Row 6: Greens -->
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#22c55e"></button>
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#15803d"></button>
-                        <!-- Row 7: Cyans -->
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#06b6d4"></button>
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#0e7490"></button>
-                        <!-- Row 8: Blues -->
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#3b82f6"></button>
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#1d4ed8"></button>
-                        <!-- Row 9: Purples -->
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#a855f7"></button>
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#7e22ce"></button>
-                        <!-- Row 10: Pinks -->
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#ec4899"></button>
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#be185d"></button>
-                        <!-- Row 11: Browns -->
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#a16207"></button>
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#78350f"></button>
-                        <!-- Row 12: Skin tones -->
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#fcd9bd"></button>
-                        <button class="color-btn w-7 h-7 rounded-md border-2 border-gray-400 hover:scale-110 transition-transform" data-color="#d4a373"></button>
+                <!-- Color Palette - 3 columns for compactness -->
+                <div class="flex flex-col gap-0.5">
+                    <span class="text-[9px] text-center opacity-50 uppercase">Colors</span>
+                    <div class="grid grid-cols-3 gap-0.5 px-0.5">
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform ring-2 ring-primary ring-offset-1" data-color="#000000"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#ffffff"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#9ca3af"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#ef4444"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#f97316"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#eab308"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#22c55e"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#06b6d4"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#3b82f6"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#a855f7"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#ec4899"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#78350f"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#991b1b"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#15803d"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#1d4ed8"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#fcd9bd"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#d4a373"></button>
+                        <button class="color-btn w-5 h-5 rounded border border-gray-300 hover:scale-110 transition-transform" data-color="#4b5563"></button>
                     </div>
                 </div>
 
-                <div class="divider my-0 w-14"></div>
-
-                <!-- Stroke Width - Size Buttons -->
-                <div class="flex flex-col gap-1">
-                    <span class="text-[10px] text-center opacity-50 uppercase">Brush Size</span>
-                    <div class="grid grid-cols-2 gap-1 px-1">
-                        <button class="size-btn w-7 h-7 rounded-md bg-gray-100 hover:bg-gray-200 border-2 border-gray-300 flex items-center justify-center" data-size="2" title="Small">
-                            <div class="w-1.5 h-1.5 bg-gray-800 rounded-full"></div>
+                <!-- Brush Size - inline -->
+                <div class="flex flex-col gap-0.5">
+                    <span class="text-[9px] text-center opacity-50 uppercase">Size</span>
+                    <div class="grid grid-cols-4 gap-0.5 px-0.5">
+                        <button class="size-btn w-4 h-4 rounded bg-gray-100 hover:bg-gray-200 border border-gray-300 flex items-center justify-center" data-size="2" title="Small">
+                            <div class="w-1 h-1 bg-gray-800 rounded-full"></div>
                         </button>
-                        <button class="size-btn w-7 h-7 rounded-md bg-primary border-2 border-primary flex items-center justify-center selected" data-size="4" title="Medium">
-                            <div class="w-2.5 h-2.5 bg-white rounded-full"></div>
+                        <button class="size-btn w-4 h-4 rounded bg-primary border border-primary flex items-center justify-center selected" data-size="4" title="Medium">
+                            <div class="w-1.5 h-1.5 bg-white rounded-full"></div>
                         </button>
-                        <button class="size-btn w-7 h-7 rounded-md bg-gray-100 hover:bg-gray-200 border-2 border-gray-300 flex items-center justify-center" data-size="8" title="Large">
-                            <div class="w-3.5 h-3.5 bg-gray-800 rounded-full"></div>
+                        <button class="size-btn w-4 h-4 rounded bg-gray-100 hover:bg-gray-200 border border-gray-300 flex items-center justify-center" data-size="8" title="Large">
+                            <div class="w-2 h-2 bg-gray-800 rounded-full"></div>
                         </button>
-                        <button class="size-btn w-7 h-7 rounded-md bg-gray-100 hover:bg-gray-200 border-2 border-gray-300 flex items-center justify-center" data-size="16" title="X-Large">
-                            <div class="w-5 h-5 bg-gray-800 rounded-full"></div>
+                        <button class="size-btn w-4 h-4 rounded bg-gray-100 hover:bg-gray-200 border border-gray-300 flex items-center justify-center" data-size="16" title="X-Large">
+                            <div class="w-3 h-3 bg-gray-800 rounded-full"></div>
                         </button>
                     </div>
                 </div>
-
-                <div class="flex-1"></div>
 
                 <!-- Clear Canvas -->
-                <div class="tooltip tooltip-bottom z-50" data-tip="Clear Canvas">
-                    <button class="btn btn-sm btn-error" id="clear-canvas-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="tooltip tooltip-right z-50 mt-1" data-tip="Clear Canvas">
+                    <button class="btn btn-xs btn-error" id="clear-canvas-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                         </svg>
+                        Clear
                     </button>
                 </div>
             </div>
 
             <!-- Canvas Container -->
-            <div class="flex-1 overflow-auto p-4 flex items-center justify-center">
-                <div class="canvas-container relative bg-white rounded-lg shadow-xl" style="width: 800px; height: 600px;">
+            <div class="flex-1 overflow-auto p-2 flex items-center justify-center">
+                <div class="canvas-container relative bg-white rounded-lg shadow-xl" style="width: 950px; height: 680px;">
+                    {% if is_drawing %}
+                    <!-- Floating "You are drawing" badge on canvas -->
+                    <div class="absolute top-3 left-1/2 -translate-x-1/2 z-20">
+                        <div class="badge badge-primary badge-lg shadow-lg">You are drawing!</div>
+                    </div>
+                    {% endif %}
                     <canvas
                         id="game-canvas"
-                        width="800"
-                        height="600"
+                        width="950"
+                        height="680"
                         data-room-id="{{ room.id }}"
                         data-user-id="{{ user_id }}"
                         data-is-drawing="{{ is_drawing|lower }}"
@@ -491,12 +497,185 @@
     </div>
 </div>
 
-<!-- Modals Container -->
-<div id="game-modals"></div>
+<!-- Drawing Settings Modal -->
+<dialog id="drawing-settings-modal" class="modal">
+    <div class="modal-box max-w-lg">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold">Drawing Settings</h3>
+            <form method="dialog">
+                <button class="btn btn-sm btn-ghost btn-circle">✕</button>
+            </form>
+        </div>
+
+        <!-- Pressure Sensitivity -->
+        <div class="form-control mb-4">
+            <label class="label cursor-pointer">
+                <span class="label-text font-medium">Pressure Sensitivity</span>
+                <input type="checkbox" id="setting-pressure" class="toggle toggle-primary" />
+            </label>
+            <p class="text-xs opacity-60 ml-1">Vary brush size based on pen/stylus pressure (if supported)</p>
+        </div>
+
+        <div class="divider my-2">Keyboard Shortcuts</div>
+
+        <!-- Keybinds -->
+        <div class="space-y-2 text-sm">
+            <div class="flex items-center justify-between py-1">
+                <span>Pen Tool</span>
+                <kbd class="kbd kbd-sm keybind-display" data-action="pen">P</kbd>
+            </div>
+            <div class="flex items-center justify-between py-1">
+                <span>Eraser</span>
+                <kbd class="kbd kbd-sm keybind-display" data-action="eraser">E</kbd>
+            </div>
+            <div class="flex items-center justify-between py-1">
+                <span>Fill Bucket</span>
+                <kbd class="kbd kbd-sm keybind-display" data-action="fill">G</kbd>
+            </div>
+            <div class="flex items-center justify-between py-1">
+                <span>Line Tool</span>
+                <kbd class="kbd kbd-sm keybind-display" data-action="line">L</kbd>
+            </div>
+            <div class="flex items-center justify-between py-1">
+                <span>Rectangle</span>
+                <kbd class="kbd kbd-sm keybind-display" data-action="rectangle">R</kbd>
+            </div>
+            <div class="flex items-center justify-between py-1">
+                <span>Circle</span>
+                <kbd class="kbd kbd-sm keybind-display" data-action="circle">C</kbd>
+            </div>
+            <div class="flex items-center justify-between py-1">
+                <span>Ellipse</span>
+                <kbd class="kbd kbd-sm keybind-display" data-action="ellipse">O</kbd>
+            </div>
+            <div class="flex items-center justify-between py-1">
+                <span>Triangle</span>
+                <kbd class="kbd kbd-sm keybind-display" data-action="triangle">T</kbd>
+            </div>
+            <div class="divider my-1"></div>
+            <div class="flex items-center justify-between py-1">
+                <span>Undo</span>
+                <kbd class="kbd kbd-sm">Ctrl+Z</kbd>
+            </div>
+            <div class="flex items-center justify-between py-1">
+                <span>Redo</span>
+                <kbd class="kbd kbd-sm">Ctrl+Y</kbd>
+            </div>
+            <div class="flex items-center justify-between py-1">
+                <span>Brush Size 1-4</span>
+                <kbd class="kbd kbd-sm">1-4</kbd>
+            </div>
+        </div>
+
+        <div class="modal-action">
+            <button class="btn btn-sm btn-ghost" onclick="resetDrawingSettings()">Reset to Defaults</button>
+            <form method="dialog">
+                <button class="btn btn-sm btn-primary">Done</button>
+            </form>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+
+<!-- Modals Container (z-[60] to be above navbar which is z-50) -->
+<div id="game-modals" class="relative z-[60]"></div>
 {% endblock %}
 
 {% block scripts %}
 <script>
+// ===== Drawing Settings Management =====
+const DEFAULT_DRAWING_SETTINGS = {
+    pressureEnabled: false,
+    keybinds: {
+        pen: 'p',
+        eraser: 'e',
+        fill: 'g',
+        line: 'l',
+        rectangle: 'r',
+        circle: 'c',
+        ellipse: 'o',
+        triangle: 't'
+    }
+};
+
+let drawingSettings = { ...DEFAULT_DRAWING_SETTINGS };
+
+function loadDrawingSettings() {
+    try {
+        const saved = localStorage.getItem('canvasClash_drawingSettings');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            drawingSettings = { ...DEFAULT_DRAWING_SETTINGS, ...parsed };
+        }
+    } catch (e) {
+        console.warn('Failed to load drawing settings:', e);
+    }
+    applyDrawingSettings();
+}
+
+function saveDrawingSettings() {
+    try {
+        localStorage.setItem('canvasClash_drawingSettings', JSON.stringify(drawingSettings));
+    } catch (e) {
+        console.warn('Failed to save drawing settings:', e);
+    }
+}
+
+function applyDrawingSettings() {
+    // Update pressure toggle
+    const pressureToggle = document.getElementById('setting-pressure');
+    if (pressureToggle) {
+        pressureToggle.checked = drawingSettings.pressureEnabled;
+    }
+
+    // Update keybind displays
+    document.querySelectorAll('.keybind-display').forEach(el => {
+        const action = el.dataset.action;
+        if (action && drawingSettings.keybinds[action]) {
+            el.textContent = drawingSettings.keybinds[action].toUpperCase();
+        }
+    });
+}
+
+function openDrawingSettings() {
+    const modal = document.getElementById('drawing-settings-modal');
+    if (modal) {
+        applyDrawingSettings();
+        modal.showModal();
+    }
+}
+
+function resetDrawingSettings() {
+    drawingSettings = { ...DEFAULT_DRAWING_SETTINGS, keybinds: { ...DEFAULT_DRAWING_SETTINGS.keybinds } };
+    saveDrawingSettings();
+    applyDrawingSettings();
+}
+
+// Initialize settings on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadDrawingSettings();
+
+    // Pressure toggle handler
+    const pressureToggle = document.getElementById('setting-pressure');
+    if (pressureToggle) {
+        pressureToggle.addEventListener('change', function() {
+            drawingSettings.pressureEnabled = this.checked;
+            saveDrawingSettings();
+        });
+    }
+
+    // Sync settings button visibility with toolbar (both controlled by isDrawing)
+    const toolbar = document.getElementById('drawing-toolbar');
+    const settingsBtn = document.getElementById('drawing-settings-btn');
+    if (settingsBtn && toolbar) {
+        // Show settings button if toolbar is visible (empty string or 'flex' means visible)
+        const toolbarVisible = toolbar.style.display !== 'none';
+        settingsBtn.style.display = toolbarVisible ? 'flex' : 'none';
+    }
+});
+
 // Game WebSocket connection - global for word selection partial access
 let gameWs = null;
 const gameRoomId = '{{ room.id }}';
@@ -521,6 +700,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const maxReconnectAttempts = 5;
     const reconnectDelay = 2000; // 2 seconds
     let myPlayerId = null; // Will be set from room_state message
+    window.isReloading = false; // Prevent multiple reloads (on window for modal access)
 
     function connect() {
         ws = new WebSocket(wsUrl);
@@ -547,6 +727,12 @@ document.addEventListener('DOMContentLoaded', function() {
         ws.onclose = function(event) {
             console.log('Game WebSocket disconnected', event.code, event.reason);
             gameWs = null;
+
+            // Don't reconnect if we're reloading for round transition
+            if (window.isReloading) {
+                console.log('Skipping reconnect - page is reloading for round transition');
+                return;
+            }
 
             // Attempt to reconnect unless it was a clean close or we've exhausted attempts
             if (event.code !== 1000 && reconnectAttempts < maxReconnectAttempts) {
@@ -655,8 +841,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Reload page to get correct drawer state (is_drawing template variable)
                 // This ensures the correct UI is shown (toolbar for drawer, guess input for guessers)
                 // Only reload for rounds after the first (round 1 state is set on initial page load)
-                if (data.round_number > 1) {
-                    window.location.reload();
+                if (data.round_number > 1 && !window.isReloading) {
+                    window.isReloading = true;
+                    console.log('[Game WS] Reloading for new round...');
+
+                    // Clear any round-end modal timer
+                    if (window._roundEndTimerInterval) {
+                        clearInterval(window._roundEndTimerInterval);
+                    }
+
+                    // Close WebSocket cleanly before reload
+                    if (ws) {
+                        ws.close(1000, 'Round transition');
+                    }
+
+                    // Small delay to ensure close is processed
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 100);
                 }
                 break;
 
@@ -787,8 +989,31 @@ document.addEventListener('DOMContentLoaded', function() {
         if (undoBtn) undoBtn.addEventListener('click', undo);
         if (redoBtn) redoBtn.addEventListener('click', redo);
 
+        // Helper function to select a tool programmatically
+        function selectTool(toolName) {
+            const toolBtn = document.querySelector(`[data-tool="${toolName}"]`);
+            if (toolBtn) {
+                toolBtn.click();
+            }
+        }
+
+        // Helper function to select brush size
+        function selectBrushSize(sizeIndex) {
+            const sizes = [2, 4, 8, 16];
+            const sizeBtn = document.querySelector(`.size-btn[data-size="${sizes[sizeIndex]}"]`);
+            if (sizeBtn) {
+                sizeBtn.click();
+            }
+        }
+
         // Keyboard shortcuts
         document.addEventListener('keydown', function(e) {
+            // Skip if typing in an input field
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                return;
+            }
+
+            // Ctrl/Cmd shortcuts
             if (e.ctrlKey || e.metaKey) {
                 if (e.key === 'z' && !e.shiftKey) {
                     e.preventDefault();
@@ -796,6 +1021,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else if (e.key === 'y' || (e.key === 'z' && e.shiftKey)) {
                     e.preventDefault();
                     redo();
+                }
+                return;
+            }
+
+            // Only process tool shortcuts if drawer
+            if (!isDrawing) return;
+
+            const key = e.key.toLowerCase();
+
+            // Brush size shortcuts (1-4)
+            if (key >= '1' && key <= '4') {
+                e.preventDefault();
+                selectBrushSize(parseInt(key) - 1);
+                return;
+            }
+
+            // Tool shortcuts from settings
+            for (const [tool, keybind] of Object.entries(drawingSettings.keybinds)) {
+                if (key === keybind.toLowerCase()) {
+                    e.preventDefault();
+                    selectTool(tool);
+                    return;
                 }
             }
         });
@@ -951,13 +1198,30 @@ document.addEventListener('DOMContentLoaded', function() {
             } : null;
         }
 
-        // Canvas drawing
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseout', stopDrawing);
+        // Canvas drawing - use pointer events for pressure support
+        canvas.addEventListener('pointerdown', startDrawing);
+        canvas.addEventListener('pointermove', draw);
+        canvas.addEventListener('pointerup', stopDrawing);
+        canvas.addEventListener('pointerout', stopDrawing);
+        canvas.addEventListener('pointercancel', stopDrawing);
+
+        // Get effective brush width (with optional pressure)
+        function getEffectiveWidth(e) {
+            if (!drawingSettings.pressureEnabled) {
+                return currentWidth;
+            }
+            // e.pressure is 0-1, we scale width from 0.5x to 1.5x
+            const pressure = e.pressure || 0.5;
+            const minScale = 0.3;
+            const maxScale = 1.5;
+            const scale = minScale + (maxScale - minScale) * pressure;
+            return Math.max(1, Math.round(currentWidth * scale));
+        }
 
         function startDrawing(e) {
+            // Capture pointer for better tracking
+            canvas.setPointerCapture(e.pointerId);
+
             const rect = canvas.getBoundingClientRect();
             lastX = e.clientX - rect.left;
             lastY = e.clientY - rect.top;
@@ -1005,8 +1269,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 drawShape(shapeStartX, shapeStartY, x, y, currentTool, false);
             } else {
                 // Free-hand drawing (pen, eraser)
+                const effectiveWidth = getEffectiveWidth(e);
                 ctx.strokeStyle = currentColor;
-                ctx.lineWidth = currentWidth;
+                ctx.lineWidth = effectiveWidth;
                 ctx.lineCap = 'round';
                 ctx.beginPath();
                 ctx.moveTo(lastX, lastY);
@@ -1019,7 +1284,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         type: 'draw',
                         tool: currentTool,
                         color: currentColor,
-                        width: currentWidth,
+                        width: effectiveWidth,
                         from_x: lastX,
                         from_y: lastY,
                         to_x: x,
@@ -1034,6 +1299,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function stopDrawing(e) {
             if (!isDrawingActive) return;
+
+            // Release pointer capture
+            if (e.pointerId) {
+                canvas.releasePointerCapture(e.pointerId);
+            }
 
             if (isShapeTool(currentTool) && e.type !== 'mouseout') {
                 const rect = canvas.getBoundingClientRect();
@@ -1353,7 +1623,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function showCorrectGuessBanner(playerName, isCurrentUser) {
         const banner = document.createElement('div');
         banner.id = 'correct-guess-banner';
-        banner.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 z-50 correct-banner';
+        // Position at bottom-right to not block game UI
+        banner.className = 'fixed bottom-24 right-4 z-[55] correct-banner';
 
         if (isCurrentUser) {
             banner.innerHTML = `
@@ -1554,7 +1825,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!modalsContainer) return;
 
         const modalHtml = `
-            <dialog id="word-selection-modal" class="modal modal-open">
+            <dialog id="word-selection-modal" class="modal modal-open z-[60]">
                 <div class="modal-box max-w-2xl">
                     <h3 class="text-2xl font-bold text-center mb-2">Choose a Word to Draw</h3>
                     <p class="text-center text-base-content/70 mb-6">Select one of the following words</p>

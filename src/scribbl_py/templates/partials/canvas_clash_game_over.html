@@ -1,186 +1,78 @@
-<!-- Game Over Modal -->
-<dialog id="game-over-modal" class="modal modal-open">
-    <div class="modal-box max-w-4xl">
-        <!-- Header with Confetti Effect -->
-        <div class="text-center mb-8">
-            <div class="text-6xl mb-4">🎉</div>
-            <h3 class="text-4xl font-bold mb-2">Game Over!</h3>
-            <p class="text-lg opacity-70">Thanks for playing!</p>
+<!-- Game Over Modal (z-[60] to be above navbar) -->
+<dialog id="game-over-modal" class="modal modal-open z-[60]">
+    <div class="modal-box max-w-2xl">
+        <!-- Header with Buttons -->
+        <div class="flex items-center justify-between mb-4">
+            <button class="btn btn-outline btn-sm" onclick="leaveLobby()">
+                ← Home
+            </button>
+            <h3 class="text-2xl font-bold">Game Over!</h3>
+            <button class="btn btn-primary btn-sm" onclick="playAgain()">
+                Play Again →
+            </button>
         </div>
 
-        <!-- Winner Podium -->
+        <!-- Winner Banner -->
         {% if final_scores|length >= 1 %}
-        <div class="mb-8">
-            <div class="flex gap-4 justify-center items-end mb-6">
-                <!-- 2nd Place -->
-                {% if final_scores|length >= 2 %}
-                <div class="text-center">
-                    <div class="avatar placeholder mb-3">
-                        <div class="bg-base-300 text-base-content w-20 h-20 rounded-full ring-4 ring-base-300">
-                            <span class="text-2xl">{{ final_scores[1].name[:2].upper() }}</span>
-                        </div>
-                    </div>
-                    <div class="bg-base-300 rounded-lg p-4 min-w-32">
-                        <div class="text-4xl mb-2">🥈</div>
-                        <div class="font-bold text-lg mb-1">{{ final_scores[1].name }}</div>
-                        <div class="text-2xl font-bold text-base-content/70">{{ final_scores[1].score }}</div>
-                        <div class="text-xs opacity-50">points</div>
-                    </div>
-                </div>
-                {% endif %}
-
-                <!-- 1st Place (Winner) -->
-                <div class="text-center transform scale-110">
-                    <div class="avatar placeholder mb-3">
-                        <div class="bg-warning text-warning-content w-24 h-24 rounded-full ring-4 ring-warning shadow-lg">
-                            <span class="text-3xl">{{ final_scores[0].name[:2].upper() }}</span>
-                        </div>
-                    </div>
-                    <div class="bg-gradient-to-b from-warning to-warning/80 text-warning-content rounded-lg p-6 min-w-36 shadow-xl">
-                        <div class="text-5xl mb-3">🏆</div>
-                        <div class="font-bold text-xl mb-2">{{ final_scores[0].name }}</div>
-                        <div class="text-3xl font-bold">{{ final_scores[0].score }}</div>
-                        <div class="text-sm opacity-80">points</div>
-                        <div class="badge badge-sm mt-2">WINNER</div>
-                    </div>
-                </div>
-
-                <!-- 3rd Place -->
-                {% if final_scores|length >= 3 %}
-                <div class="text-center">
-                    <div class="avatar placeholder mb-3">
-                        <div class="bg-base-300 text-base-content w-20 h-20 rounded-full ring-4 ring-base-300">
-                            <span class="text-2xl">{{ final_scores[2].name[:2].upper() }}</span>
-                        </div>
-                    </div>
-                    <div class="bg-base-300 rounded-lg p-4 min-w-32">
-                        <div class="text-4xl mb-2">🥉</div>
-                        <div class="font-bold text-lg mb-1">{{ final_scores[2].name }}</div>
-                        <div class="text-2xl font-bold text-base-content/70">{{ final_scores[2].score }}</div>
-                        <div class="text-xs opacity-50">points</div>
-                    </div>
-                </div>
-                {% endif %}
+        <div class="bg-gradient-to-r from-warning/30 to-warning/10 rounded-lg p-4 mb-4 flex items-center justify-center gap-4">
+            <span class="text-4xl">🏆</span>
+            <div class="text-center">
+                <div class="text-xs opacity-70 uppercase">Winner</div>
+                <div class="font-bold text-xl">{{ final_scores[0].name }}</div>
+                <div class="text-sm font-medium">{{ final_scores[0].score }} points</div>
             </div>
+            <span class="text-4xl">🏆</span>
         </div>
         {% endif %}
 
-        <!-- Full Leaderboard -->
-        <div class="mb-6">
-            <h4 class="font-bold text-xl mb-4 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                </svg>
-                Final Standings
-            </h4>
-            <div class="overflow-x-auto">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="w-16">Rank</th>
-                            <th>Player</th>
-                            <th class="text-right">Score</th>
-                            <th class="text-right">Words Guessed</th>
-                            <th class="text-right">Avg. Time</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for player in final_scores %}
-                        <tr class="{% if loop.index <= 3 %}bg-base-200{% endif %}">
-                            <td class="font-bold">
-                                {% if loop.index == 1 %}
-                                <span class="text-2xl">🥇</span>
-                                {% elif loop.index == 2 %}
-                                <span class="text-2xl">🥈</span>
-                                {% elif loop.index == 3 %}
-                                <span class="text-2xl">🥉</span>
-                                {% else %}
-                                #{{ loop.index }}
-                                {% endif %}
-                            </td>
-                            <td>
-                                <div class="flex items-center gap-3">
-                                    <div class="avatar placeholder">
-                                        <div class="bg-neutral text-neutral-content w-10 rounded-full">
-                                            <span class="text-xs">{{ player.name[:2].upper() }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="font-medium">{{ player.name }}</div>
-                                </div>
-                            </td>
-                            <td class="text-right">
-                                <span class="font-bold text-lg">{{ player.score }}</span>
-                            </td>
-                            <td class="text-right">
-                                <span class="badge badge-outline">{{ player.words_guessed or 0 }}</span>
-                            </td>
-                            <td class="text-right">
-                                {% if player.avg_guess_time %}
-                                <span class="text-sm opacity-70">{{ "%.1f"|format(player.avg_guess_time) }}s</span>
-                                {% else %}
-                                <span class="text-sm opacity-30">-</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <!-- Final Standings -->
+        <div class="mb-4">
+            <h4 class="font-bold text-xs mb-2 opacity-70">Final Standings</h4>
+            <!-- Top 5 always visible -->
+            <div class="space-y-1 text-sm">
+                {% for player in final_scores[:5] %}
+                <div class="flex items-center gap-2 py-1.5 px-2 rounded {% if loop.index <= 3 %}bg-base-200{% endif %}">
+                    <span class="w-6 text-center font-bold">
+                        {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}{{ loop.index }}{% endif %}
+                    </span>
+                    <span class="flex-1 font-medium truncate">{{ player.name }}</span>
+                    <span class="font-bold">{{ player.score }}</span>
+                </div>
+                {% endfor %}
             </div>
+            <!-- Expandable rest of players -->
+            {% if final_scores|length > 5 %}
+            <details class="mt-1">
+                <summary class="text-xs opacity-60 cursor-pointer hover:opacity-100 py-1">
+                    +{{ final_scores|length - 5 }} more players...
+                </summary>
+                <div class="space-y-1 text-sm max-h-32 overflow-y-auto">
+                    {% for player in final_scores[5:] %}
+                    <div class="flex items-center gap-2 py-1.5 px-2">
+                        <span class="w-6 text-center text-xs opacity-70">{{ loop.index + 5 }}</span>
+                        <span class="flex-1 truncate opacity-80">{{ player.name }}</span>
+                        <span class="text-xs opacity-70">{{ player.score }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </details>
+            {% endif %}
         </div>
 
-        <!-- Game Statistics -->
-        <div class="stats stats-vertical lg:stats-horizontal shadow w-full mb-6">
-            <div class="stat">
-                <div class="stat-figure text-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <div class="stat-title">Total Rounds</div>
-                <div class="stat-value text-primary">{{ game_stats.total_rounds }}</div>
+        <!-- Game Stats -->
+        <div class="flex justify-center gap-8 text-center">
+            <div>
+                <div class="font-bold text-xl text-primary">{{ game_stats.total_rounds }}</div>
+                <div class="text-xs opacity-70">Rounds</div>
             </div>
-
-            <div class="stat">
-                <div class="stat-figure text-secondary">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
-                </div>
-                <div class="stat-title">Players</div>
-                <div class="stat-value text-secondary">{{ final_scores|length }}</div>
+            <div>
+                <div class="font-bold text-xl text-secondary">{{ final_scores|length }}</div>
+                <div class="text-xs opacity-70">Players</div>
             </div>
-
-            <div class="stat">
-                <div class="stat-figure text-accent">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <div class="stat-title">Total Guesses</div>
-                <div class="stat-value text-accent">{{ game_stats.total_guesses or 0 }}</div>
+            <div>
+                <div class="font-bold text-xl text-accent">{{ game_stats.total_guesses or 0 }}</div>
+                <div class="text-xs opacity-70">Guesses</div>
             </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="modal-action justify-center gap-4">
-            <button
-                class="btn btn-primary btn-lg"
-                onclick="playAgain()"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                </svg>
-                Play Again
-            </button>
-            <button
-                class="btn btn-outline btn-lg"
-                onclick="leaveLobby()"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                </svg>
-                Back to Lobby
-            </button>
         </div>
     </div>
     <form method="dialog" class="modal-backdrop">
@@ -188,31 +80,85 @@
     </form>
 </dialog>
 
+<!-- Confetti container -->
+<div id="game-over-confetti" class="fixed inset-0 pointer-events-none z-[59]"></div>
+
+<style>
+.confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    animation: confetti-fall 4s ease-out forwards;
+}
+@keyframes confetti-fall {
+    0% {
+        opacity: 1;
+        transform: translateY(-10px) rotate(0deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(100vh) rotate(720deg);
+    }
+}
+</style>
+
 <script>
 (function() {
     const roomId = '{{ room_id }}';
 
-    window.playAgain = function() {
-        // Reset game and go back to lobby
-        fetch(`/canvas-clash/rooms/${roomId}/reset`, {
-            method: 'POST'
-        }).then(response => {
-            if (response.ok) {
-                window.location.href = `/canvas-clash/rooms/${roomId}/lobby`;
+    // Launch confetti!
+    function launchConfetti() {
+        const container = document.getElementById('game-over-confetti');
+        if (!container) return;
+
+        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1'];
+        const shapes = ['circle', 'square', 'triangle'];
+
+        for (let i = 0; i < 100; i++) {
+            const piece = document.createElement('div');
+            piece.className = 'confetti-piece';
+            piece.style.left = Math.random() * 100 + 'vw';
+            piece.style.top = '-10px';
+            piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.animationDelay = Math.random() * 2 + 's';
+            piece.style.animationDuration = (3 + Math.random() * 2) + 's';
+
+            const shape = shapes[Math.floor(Math.random() * shapes.length)];
+            if (shape === 'circle') {
+                piece.style.borderRadius = '50%';
+            } else if (shape === 'triangle') {
+                piece.style.width = '0';
+                piece.style.height = '0';
+                piece.style.backgroundColor = 'transparent';
+                piece.style.borderLeft = '5px solid transparent';
+                piece.style.borderRight = '5px solid transparent';
+                piece.style.borderBottom = '10px solid ' + colors[Math.floor(Math.random() * colors.length)];
             }
-        }).catch(error => {
-            console.error('Error resetting game:', error);
-        });
+
+            container.appendChild(piece);
+        }
+
+        // Clean up after animation
+        setTimeout(() => {
+            container.innerHTML = '';
+        }, 6000);
+    }
+
+    // Launch confetti on load
+    launchConfetti();
+
+    window.playAgain = function() {
+        fetch(`/canvas-clash/rooms/${roomId}/reset`, { method: 'POST' })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = `/canvas-clash/rooms/${roomId}/lobby`;
+                }
+            })
+            .catch(error => console.error('Error resetting game:', error));
     };
 
     window.leaveLobby = function() {
-        window.location.href = '/ui/';
+        window.location.href = '/';
     };
-
-    // Confetti effect on load (optional enhancement)
-    setTimeout(function() {
-        // Could integrate a confetti library here
-        console.log('Game over! Congratulations to the winner!');
-    }, 500);
 })();
 </script>
