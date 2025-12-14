@@ -6,7 +6,7 @@ from typing import Any
 from uuid import UUID
 
 from advanced_alchemy.base import UUIDAuditBase
-from sqlalchemy import JSON, Float, ForeignKey, Integer, String
+from sqlalchemy import JSON, Boolean, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
@@ -71,9 +71,11 @@ class ElementModel(UUIDAuditBase):
     position_y: Mapped[float] = mapped_column(Float, default=0.0)
     position_pressure: Mapped[float] = mapped_column(Float, default=1.0)
 
-    # Layer ordering
+    # Layer ordering and state
     z_index: Mapped[int] = mapped_column(Integer, default=0, index=True)
     group_id: Mapped[UUID | None] = mapped_column(ForeignKey("elements.id", ondelete="SET NULL"), nullable=True)
+    visible: Mapped[bool] = mapped_column(Boolean, default=True)
+    locked: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # Style stored as JSON for flexibility
     style_data: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
@@ -193,6 +195,8 @@ def element_to_model(element: Any, canvas_id: UUID) -> ElementModel:
         position_pressure=element.position.pressure,
         z_index=element.z_index,
         group_id=element.group_id,
+        visible=element.visible,
+        locked=element.locked,
         style_data=style_data,
         element_data=element_data,
         created_at=element.created_at,
@@ -247,6 +251,8 @@ def element_from_model(model: ElementModel) -> Any:
             style=style,
             z_index=model.z_index,
             group_id=model.group_id,
+            visible=model.visible,
+            locked=model.locked,
             points=points,
             smoothing=data.get("smoothing", 0.5),
         )
@@ -260,6 +266,8 @@ def element_from_model(model: ElementModel) -> Any:
             style=style,
             z_index=model.z_index,
             group_id=model.group_id,
+            visible=model.visible,
+            locked=model.locked,
             shape_type=ShapeType(data.get("shape_type", "rectangle")),
             width=data.get("width", 0.0),
             height=data.get("height", 0.0),
@@ -275,6 +283,8 @@ def element_from_model(model: ElementModel) -> Any:
             style=style,
             z_index=model.z_index,
             group_id=model.group_id,
+            visible=model.visible,
+            locked=model.locked,
             content=data.get("content", ""),
             font_size=data.get("font_size", 16),
             font_family=data.get("font_family", "sans-serif"),
@@ -290,9 +300,10 @@ def element_from_model(model: ElementModel) -> Any:
         style=style,
         z_index=model.z_index,
         group_id=model.group_id,
+        visible=model.visible,
+        locked=model.locked,
         name=data.get("name", ""),
         children=children,
-        locked=data.get("locked", False),
         collapsed=data.get("collapsed", False),
     )
     element.created_at = model.created_at

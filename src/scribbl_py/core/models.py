@@ -38,6 +38,8 @@ class Element:
         style: Visual styling configuration for the element.
         z_index: Layer ordering (higher values are rendered on top).
         group_id: ID of parent group if this element is grouped.
+        visible: Whether the element is visible (for layer show/hide).
+        locked: Whether the element is locked from editing.
         created_at: Timestamp when the element was created.
     """
 
@@ -47,6 +49,8 @@ class Element:
     style: ElementStyle = field(default_factory=ElementStyle)
     z_index: int = 0
     group_id: UUID | None = None
+    visible: bool = True
+    locked: bool = False
     created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
