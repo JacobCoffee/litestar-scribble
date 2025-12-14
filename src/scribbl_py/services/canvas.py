@@ -522,6 +522,151 @@ class CanvasService:
         updated = replace(element, z_index=new_z)
         return await self._storage.update_element(canvas_id, updated)
 
+    # Layer state operations (visibility/lock)
+
+    async def toggle_visibility(
+        self,
+        canvas_id: UUID,
+        element_id: UUID,
+        user_id: str = "system",
+    ) -> Element:
+        """Toggle element visibility.
+
+        Args:
+            canvas_id: The canvas ID.
+            element_id: The element ID.
+            user_id: ID of the user performing the action.
+
+        Returns:
+            The updated element.
+
+        Raises:
+            ElementNotFoundError: If the element does not exist.
+        """
+        element = await self.get_element(canvas_id, element_id)
+        new_visible = not element.visible
+
+        # Record for undo
+        cmd = UpdateElementCommand(
+            canvas_id=canvas_id,
+            user_id=user_id,
+            element_id=element_id,
+            updates={"visible": new_visible},
+        )
+        cmd.set_previous_state({"visible": element.visible})
+        self.command_history.push(canvas_id, cmd)
+
+        updated = replace(element, visible=new_visible)
+        return await self._storage.update_element(canvas_id, updated)
+
+    async def set_visibility(
+        self,
+        canvas_id: UUID,
+        element_id: UUID,
+        visible: bool,
+        user_id: str = "system",
+    ) -> Element:
+        """Set element visibility explicitly.
+
+        Args:
+            canvas_id: The canvas ID.
+            element_id: The element ID.
+            visible: New visibility state.
+            user_id: ID of the user performing the action.
+
+        Returns:
+            The updated element.
+
+        Raises:
+            ElementNotFoundError: If the element does not exist.
+        """
+        element = await self.get_element(canvas_id, element_id)
+        if element.visible == visible:
+            return element
+
+        cmd = UpdateElementCommand(
+            canvas_id=canvas_id,
+            user_id=user_id,
+            element_id=element_id,
+            updates={"visible": visible},
+        )
+        cmd.set_previous_state({"visible": element.visible})
+        self.command_history.push(canvas_id, cmd)
+
+        updated = replace(element, visible=visible)
+        return await self._storage.update_element(canvas_id, updated)
+
+    async def toggle_lock(
+        self,
+        canvas_id: UUID,
+        element_id: UUID,
+        user_id: str = "system",
+    ) -> Element:
+        """Toggle element lock state.
+
+        Args:
+            canvas_id: The canvas ID.
+            element_id: The element ID.
+            user_id: ID of the user performing the action.
+
+        Returns:
+            The updated element.
+
+        Raises:
+            ElementNotFoundError: If the element does not exist.
+        """
+        element = await self.get_element(canvas_id, element_id)
+        new_locked = not element.locked
+
+        cmd = UpdateElementCommand(
+            canvas_id=canvas_id,
+            user_id=user_id,
+            element_id=element_id,
+            updates={"locked": new_locked},
+        )
+        cmd.set_previous_state({"locked": element.locked})
+        self.command_history.push(canvas_id, cmd)
+
+        updated = replace(element, locked=new_locked)
+        return await self._storage.update_element(canvas_id, updated)
+
+    async def set_lock(
+        self,
+        canvas_id: UUID,
+        element_id: UUID,
+        locked: bool,
+        user_id: str = "system",
+    ) -> Element:
+        """Set element lock state explicitly.
+
+        Args:
+            canvas_id: The canvas ID.
+            element_id: The element ID.
+            locked: New lock state.
+            user_id: ID of the user performing the action.
+
+        Returns:
+            The updated element.
+
+        Raises:
+            ElementNotFoundError: If the element does not exist.
+        """
+        element = await self.get_element(canvas_id, element_id)
+        if element.locked == locked:
+            return element
+
+        cmd = UpdateElementCommand(
+            canvas_id=canvas_id,
+            user_id=user_id,
+            element_id=element_id,
+            updates={"locked": locked},
+        )
+        cmd.set_previous_state({"locked": element.locked})
+        self.command_history.push(canvas_id, cmd)
+
+        updated = replace(element, locked=locked)
+        return await self._storage.update_element(canvas_id, updated)
+
     # Grouping operations
 
     async def group_elements(
