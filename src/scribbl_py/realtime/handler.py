@@ -184,6 +184,8 @@ class CanvasWebSocketHandler:
             MessageType.STROKE_START.value: self._handle_stroke_start,
             MessageType.STROKE_CONTINUE.value: self._handle_stroke_continue,
             MessageType.STROKE_END.value: self._handle_stroke_end,
+            "get_elements": self._handle_get_elements,
+            "layer_action": self._handle_layer_action,
         }
 
         handler = handlers.get(msg_type)
@@ -274,6 +276,9 @@ class CanvasWebSocketHandler:
                 "stroke_width": response.style.stroke_width,
                 "opacity": response.style.opacity,
             },
+            "z_index": element.z_index,
+            "visible": element.visible,
+            "locked": element.locked,
             "created_at": response.created_at.isoformat(),
         }
 
@@ -851,6 +856,123 @@ class CanvasWebSocketHandler:
                 canvas_id=str(canvas_id),
             )
             await self._send_error(socket, "stroke_creation_failed", "Failed to create stroke")
+
+    async def _handle_get_elements(
+        self,
+        socket: WebSocket,
+        user_data: dict[str, Any],
+        message: dict[str, Any],
+    ) -> None:
+        """Handle request for elements list.
+
+        Args:
+            socket: The WebSocket connection.
+            user_data: The user's connection data.
+            message: The message (unused).
+        """
+        canvas_id = user_data["canvas_id"]
+
+        elements = await self._service.list_elements(canvas_id)
+
+        await socket.send_json({
+            "type": "elements_list",
+            "elements": [self._element_to_dict(e) for e in elements],
+        })
+
+    async def _handle_layer_action(
+        self,
+        socket: WebSocket,
+        user_data: dict[str, Any],
+        message: dict[str, Any],
+    ) -> None:
+        """Handle layer management actions.
+
+        Args:
+            socket: The WebSocket connection.
+            user_data: The user's connection data.
+            message: The layer action message.
+        """
+        canvas_id = user_data["canvas_id"]
+        user_id = user_data.get("user_id", "system")
+
+        action = message.get("action")
+        element_id_str = message.get("element_id")
+
+        if not element_id_str:
+            await self._send_error(socket, "missing_element_id", "Element ID required")
+            return
+
+        try:
+            element_id = UUID(element_id_str)
+        except ValueError:
+            await self._send_error(socket, "invalid_element_id", "Invalid element ID format")
+            return
+
+        try:
+            if action == "toggle_visibility":
+                element = await self._service.toggle_visibility(canvas_id, element_id, user_id)
+                updates = {"visible": element.visible}
+
+            elif action == "toggle_lock":
+                element = await self._service.toggle_lock(canvas_id, element_id, user_id)
+                updates = {"locked": element.locked}
+
+            elif action == "bring_to_front":
+                element = await self._service.bring_to_front(canvas_id, element_id, user_id)
+                updates = {"z_index": element.z_index}
+
+            elif action == "send_to_back":
+                element = await self._service.send_to_back(canvas_id, element_id, user_id)
+                updates = {"z_index": element.z_index}
+
+            elif action == "move_forward":
+                element = await self._service.move_forward(canvas_id, element_id, user_id)
+                updates = {"z_index": element.z_index}
+
+            elif action == "move_backward":
+                element = await self._service.move_backward(canvas_id, element_id, user_id)
+                updates = {"z_index": element.z_index}
+
+            elif action == "delete":
+                deleted = await self._service.delete_element(canvas_id, element_id, user_id)
+                if deleted:
+                    await self._manager.broadcast(canvas_id, {
+                        "type": "element_deleted",
+                        "element_id": str(element_id),
+                    })
+                    logger.debug(
+                        "Layer deleted",
+                        element_id=str(element_id),
+                        canvas_id=str(canvas_id),
+                    )
+                return
+
+            else:
+                await self._send_error(socket, "unknown_action", f"Unknown layer action: {action}")
+                return
+
+            # Broadcast the update to all clients
+            await self._manager.broadcast(canvas_id, {
+                "type": "element_updated",
+                "element_id": str(element_id),
+                "updates": updates,
+            })
+
+            logger.debug(
+                "Layer action completed",
+                action=action,
+                element_id=str(element_id),
+                canvas_id=str(canvas_id),
+            )
+
+        except Exception:
+            logger.exception(
+                "Error handling layer action",
+                action=action,
+                element_id=str(element_id),
+                canvas_id=str(canvas_id),
+            )
+            await self._send_error(socket, "layer_action_failed", f"Failed to execute layer action: {action}")
 
     async def _send_error(
         self,
