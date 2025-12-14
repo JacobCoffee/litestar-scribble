@@ -1277,24 +1277,23 @@ document.addEventListener('DOMContentLoaded', function() {
         const words = hint.split(/\s{2,}/);
 
         if (words.length > 1) {
-            // Multi-word: display with visual separator
+            // Multi-word: display with clear visual separator and big gap
             const formattedWords = words.map(w => {
-                // Add letter spacing within each word
-                return w.split(' ').join(' ');
+                return `<span class="tracking-widest">${w}</span>`;
             });
-            hintEl.innerHTML = formattedWords.join(' <span class="text-base-content/30 mx-2">/</span> ');
+            // Big gap between words with pipe separator
+            hintEl.innerHTML = formattedWords.join('<span class="mx-8 text-base-content/40 text-2xl font-light">|</span>');
 
             // Show word lengths
             if (lengthsEl) {
                 const lengths = words.map(w => {
-                    // Count underscores/letters (excluding spaces between letters)
                     return w.split(' ').filter(c => c === '_' || c.match(/[a-zA-Z]/)).length;
                 });
                 lengthsEl.textContent = `(${lengths.join(' + ')} letters)`;
             }
         } else {
-            // Single word
-            hintEl.textContent = hint;
+            // Single word with letter spacing
+            hintEl.innerHTML = `<span class="tracking-widest">${hint}</span>`;
             if (lengthsEl) {
                 const length = hint.split(' ').filter(c => c === '_' || c.match(/[a-zA-Z]/)).length;
                 lengthsEl.textContent = `(${length} letters)`;

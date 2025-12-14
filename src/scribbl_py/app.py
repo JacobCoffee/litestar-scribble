@@ -23,9 +23,9 @@ from advanced_alchemy.extensions.litestar import (  # noqa: E402
 from advanced_alchemy.extensions.litestar.plugins.init.config.asyncio import (  # noqa: E402
     SQLAlchemyAsyncConfig,
 )
-from litestar import Litestar, get  # noqa: E402
+from litestar import Litestar, Request, get  # noqa: E402
 from litestar.openapi import OpenAPIConfig  # noqa: E402
-from litestar.response import Redirect  # noqa: E402
+from litestar.response import Redirect, Template  # noqa: E402
 from litestar_vite import ViteConfig, VitePlugin  # noqa: E402
 
 from scribbl_py import ScribblConfig, ScribblPlugin  # noqa: E402
@@ -39,6 +39,10 @@ from scribbl_py.core.logging import (  # noqa: E402
 from scribbl_py.core.openapi import get_openapi_plugins  # noqa: E402
 from scribbl_py.core.rate_limit import get_rate_limit_middleware  # noqa: E402
 from scribbl_py.web.health import HealthController  # noqa: E402
+
+# These imports are needed at runtime for Litestar dependency injection
+from scribbl_py.auth.db_service import DatabaseAuthService  # noqa: E402
+from scribbl_py.services.game import GameService  # noqa: E402
 
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator
@@ -205,9 +209,6 @@ def create_app(
     )
 
     # Dashboard at root
-    from scribbl_py.auth.db_service import DatabaseAuthService  # noqa: E402, PLC0415
-    from scribbl_py.services.game import GameService  # noqa: E402, PLC0415
-
     @get("/", include_in_schema=False)
     async def dashboard(
         game_service: GameService,
@@ -215,8 +216,6 @@ def create_app(
         request: Request,
     ) -> Template:
         """Render the main dashboard/home page."""
-        from litestar.response import Template  # noqa: PLC0415
-
         # Get available lobby rooms
         lobby_rooms = game_service.get_lobby_rooms()
         active_games = game_service.get_active_games()
