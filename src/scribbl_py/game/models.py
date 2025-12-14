@@ -328,7 +328,15 @@ class Round:
             word: The word to be drawn.
         """
         self.word = word.lower().strip()
-        self.word_hint = "_ " * len(self.word)
+        # Generate hint with word separation for multi-word phrases
+        # Each word gets underscores, separated by 3 spaces between words
+        words = self.word.split(" ")
+        word_hints = []
+        for w in words:
+            # Each letter gets an underscore with space between
+            word_hints.append(" ".join("_" * len(w)))
+        # Join words with 3 spaces for visual separation
+        self.word_hint = "   ".join(word_hints)
         self.start_time = datetime.now(UTC)
         self.end_time = self.start_time + timedelta(seconds=self.duration_seconds)
         self.is_active = True
@@ -375,6 +383,27 @@ class Round:
         points = int(max_points * math.exp(-2 * ratio))
         return max(points, 100)  # Minimum 100 points
 
+    def _get_hint_char_mapping(self) -> list[int]:
+        """Get mapping from word letter indices to hint character indices.
+
+        Returns:
+            List where index i gives the hint position for word letter i.
+            Only maps non-space characters in the word.
+        """
+        mapping = []
+        hint_pos = 0
+        words = self.word.split(" ")
+
+        for word_idx, w in enumerate(words):
+            for char_idx in range(len(w)):
+                mapping.append(hint_pos)
+                hint_pos += 2  # Each letter takes 2 positions (char + space)
+            hint_pos -= 1  # Remove trailing space from word
+            if word_idx < len(words) - 1:
+                hint_pos += 4  # Add 3 spaces + 1 for next char position
+
+        return mapping
+
     def reveal_hint(self, reveal_count: int = 1) -> str:
         """Reveal additional letters in the word hint.
 
@@ -387,8 +416,17 @@ class Round:
         if not self.word:
             return self.word_hint
 
-        # Find unrevealed positions
-        unrevealed = [i for i, char in enumerate(self.word) if self.word_hint[i * 2] == "_"]
+        # Build mapping from word letter index to hint position
+        # Only consider non-space characters
+        letter_indices = [(i, char) for i, char in enumerate(self.word) if char != " "]
+        mapping = self._get_hint_char_mapping()
+
+        # Find unrevealed positions (only letters, not spaces)
+        unrevealed = []
+        for letter_idx, (word_idx, char) in enumerate(letter_indices):
+            hint_pos = mapping[letter_idx]
+            if hint_pos < len(self.word_hint) and self.word_hint[hint_pos] == "_":
+                unrevealed.append((letter_idx, word_idx, char))
 
         if not unrevealed:
             return self.word_hint
@@ -397,8 +435,9 @@ class Round:
         to_reveal = random.sample(unrevealed, min(reveal_count, len(unrevealed)))
 
         hint_chars = list(self.word_hint)
-        for i in to_reveal:
-            hint_chars[i * 2] = self.word[i]
+        for letter_idx, word_idx, char in to_reveal:
+            hint_pos = mapping[letter_idx]
+            hint_chars[hint_pos] = char
 
         self.word_hint = "".join(hint_chars)
         return self.word_hint
@@ -634,7 +673,7 @@ class GameRoom:
         self.current_round_number = 0
 
     def next_round(self) -> Round:
-        """Create and start the next round.
+        """Create and start the next turn (each player drawing once = 1 turn).
 
         Returns:
             The new round instance.
@@ -642,7 +681,7 @@ class GameRoom:
         Raises:
             ValueError: If game is over or not in correct state.
         """
-        if self.current_round_number >= self.settings.rounds_per_game:
+        if self.current_round_number >= self.total_turns():
             self.game_state = GameState.GAME_OVER
             self.ended_at = datetime.now(UTC)
             raise ValueError("Game is over")
@@ -693,13 +732,40 @@ class GameRoom:
             reverse=True,
         )
 
+    def total_turns(self) -> int:
+        """Calculate total turns in the game.
+
+        Each player draws once per round, so total turns = rounds × players.
+
+        Returns:
+            Total number of turns in the game.
+        """
+        num_players = len(self.active_guessers())
+        if num_players == 0:
+            return self.settings.rounds_per_game
+        return self.settings.rounds_per_game * num_players
+
+    def current_display_round(self) -> int:
+        """Get the current round number for display (1-indexed).
+
+        A round is complete when every player has drawn once.
+
+        Returns:
+            Current round number (1 to rounds_per_game).
+        """
+        num_players = len(self.active_guessers())
+        if num_players == 0 or self.current_round_number == 0:
+            return 1
+        # Use (turn - 1) // players + 1 so turn 1-4 = round 1, turn 5-8 = round 2, etc.
+        return ((self.current_round_number - 1) // num_players) + 1
+
     def is_game_over(self) -> bool:
         """Check if all rounds are complete.
 
         Returns:
             True if game is finished.
         """
-        return self.current_round_number >= self.settings.rounds_per_game
+        return self.current_round_number >= self.total_turns()
 
     def is_host(self, player_id: UUID) -> bool:
         """Check if a player is the host.

@@ -117,7 +117,7 @@ def room_to_response(room: Any) -> RoomResponseDTO:
         host_id=str(room.host_id) if room.host_id else None,
         player_count=len(room.active_players()),
         max_players=room.settings.max_players,
-        current_round=room.current_round_number,
+        current_round=room.current_display_round(),
         total_rounds=room.settings.rounds_per_game,
     )
 
@@ -148,7 +148,7 @@ def room_to_detail(room: Any) -> RoomDetailDTO:
             "custom_words": room.settings.custom_words,
             "custom_words_only": room.settings.custom_words_only,
         },
-        current_round=room.current_round_number,
+        current_round=room.current_display_round(),
         total_rounds=room.settings.rounds_per_game,
     )
 
@@ -582,7 +582,7 @@ class GameUIController(Controller):
                         "name": r.name,
                         "player_count": len(r.active_guessers()),
                         "spectator_count": len(r.spectators()),
-                        "current_round": r.current_round_number,
+                        "current_round": r.current_display_round(),
                         "total_rounds": r.settings.rounds_per_game,
                     }
                     for r in active_games
@@ -727,7 +727,7 @@ class GameUIController(Controller):
                     "code": room.room_code,
                 },
                 "game": {
-                    "current_round": room.current_round_number,
+                    "current_round": room.current_display_round(),
                     "total_rounds": room.settings.rounds_per_game,
                     # Use room.players (all players) not active_players() which filters by connection state
                     # Players may briefly show as disconnected during page transition
@@ -838,14 +838,15 @@ class GameUIController(Controller):
                 }
             )
 
-        is_final = room.current_round_number >= room.settings.rounds_per_game
+        is_final = room.is_game_over()
 
         return Template(
             template_name="partials/canvas_clash_round_end.html",
             context={
                 "room_id": str(room_id),
                 "word": word,
-                "round_number": round_num,
+                "round_number": room.current_display_round(),
+                "total_rounds": room.settings.rounds_per_game,
                 "drawer_name": drawer_name,
                 "round_scores": round_scores,
                 "leaderboard": [{"name": p.user_name, "total_score": s} for p, s in leaderboard[:3]],
@@ -920,7 +921,7 @@ class GameUIController(Controller):
                 "room_id": str(room_id),
                 "final_scores": final_scores,
                 "game_stats": {
-                    "total_rounds": room.current_round_number,
+                    "total_rounds": room.settings.rounds_per_game,
                     "total_guesses": total_correct_guesses,
                 },
             },
