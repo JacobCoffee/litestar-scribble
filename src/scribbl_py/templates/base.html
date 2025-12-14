@@ -53,7 +53,8 @@
             </ul>
         </div>
         <div class="navbar-end gap-2">
-            <!-- Quick Test Game Button (debug) -->
+            {% if debug_mode %}
+            <!-- Quick Test Game Button (debug only) -->
             <button
                 id="navbar-test-game-btn"
                 class="btn btn-sm btn-outline btn-secondary hidden lg:flex"
@@ -65,6 +66,7 @@
                 </svg>
                 Test Game
             </button>
+            {% endif %}
 
             <!-- Theme Toggle -->
             <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme">

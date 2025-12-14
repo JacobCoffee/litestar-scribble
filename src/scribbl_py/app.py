@@ -287,6 +287,7 @@ def create_app(
         template_config = TemplateConfig(
             directory=template_dir,
             engine=JinjaTemplateEngine,
+            engine_callback=lambda engine: engine.engine.globals.update({"debug_mode": debug}),
         )
 
     # Build middleware stack
