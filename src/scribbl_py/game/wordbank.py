@@ -105,15 +105,35 @@ class WordBank:
         # Custom words only mode - ignore default word bank
         if custom_words_only and custom_words:
             logger.info("Using CUSTOM WORDS ONLY mode", custom_words=custom_words)
-            available_custom = [w for w in custom_words if w and w not in used]
-            if len(available_custom) < count:
-                raise InsufficientWordsError(count, len(available_custom))
-            selected = random.sample(available_custom, count)
+            # Filter to non-empty custom words
+            valid_custom = [w for w in custom_words if w]
+            available_custom = [w for w in valid_custom if w not in used]
 
-            # Mark words as used for this game
-            if game_id not in self.used_words:
-                self.used_words[game_id] = set()
-            self.used_words[game_id].update(selected)
+            if len(available_custom) >= count:
+                # Enough fresh words available
+                selected = random.sample(available_custom, count)
+            elif len(valid_custom) >= count:
+                # Not enough fresh words, but can reuse some
+                # Prioritize unused words, then fill with used ones
+                logger.info(
+                    "Reusing custom words due to limited pool",
+                    available=len(available_custom),
+                    total=len(valid_custom),
+                    needed=count,
+                )
+                # Take all available unused words first
+                selected = list(available_custom)
+                # Fill remaining with random used words
+                used_words = [w for w in valid_custom if w in used]
+                remaining = count - len(selected)
+                if remaining > 0 and used_words:
+                    selected.extend(random.sample(used_words, min(remaining, len(used_words))))
+                random.shuffle(selected)
+            else:
+                # Not enough words even with reuse
+                raise InsufficientWordsError(count, len(valid_custom))
+
+            # Don't mark words as used here - only mark when actually selected for drawing
             logger.info("Selected custom words", selected=selected)
             return selected
 
@@ -162,10 +182,8 @@ class WordBank:
                 raise InsufficientWordsError(count, len(available_words))
             selected = random.sample(available_words, count)
 
-        # Mark words as used for this game
-        if game_id not in self.used_words:
-            self.used_words[game_id] = set()
-        self.used_words[game_id].update(selected)
+        # Don't mark words as used here - only mark when actually selected for drawing
+        # The actual selected word is marked via mark_word_used() when drawer picks
 
         return selected
 
@@ -264,6 +282,20 @@ class WordBank:
             self.word_lists[category][difficulty].extend(new_words)
         else:
             self.word_lists[category][difficulty] = words
+
+    def mark_word_used(self, game_id: UUID, word: str) -> None:
+        """Mark a word as used for a game session.
+
+        Called when the drawer actually selects a word to draw.
+
+        Args:
+            game_id: Unique identifier for the game session.
+            word: The word that was selected.
+        """
+        if game_id not in self.used_words:
+            self.used_words[game_id] = set()
+        self.used_words[game_id].add(word)
+        logger.debug("Marked word as used", game_id=str(game_id), word=word)
 
     def reset_game_words(self, game_id: UUID) -> None:
         """Reset the used words tracking for a specific game.

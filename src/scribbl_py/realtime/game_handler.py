@@ -1545,8 +1545,13 @@ class GameWebSocketHandler:
                 next_round = self._service.next_round(room_id)
                 room = self._service.get_room(room_id)
                 await self._broadcast_round_started(room_id, next_round, room)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.error(
+                    "Failed to start next round",
+                    room_id=str(room_id),
+                    error=str(e),
+                    exc_info=True,
+                )
 
     async def _record_game_stats(
         self,
@@ -1735,7 +1740,7 @@ class GameWebSocketHandler:
                 "rounds_per_game": room.settings.rounds_per_game,
                 "max_players": room.settings.max_players,
             },
-            "current_round": room.current_round_number,
+            "current_round": room.current_display_round(),
             "total_rounds": room.settings.rounds_per_game,
         }
 

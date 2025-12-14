@@ -138,21 +138,26 @@ class TestGetWordOptions:
             wb.get_word_options(game_id, count=5, category=WordCategory.ANIMALS)
 
     def test_used_words_tracking(self) -> None:
-        """Test that used words are tracked per game."""
+        """Test that used words are tracked per game via mark_word_used."""
         wb = WordBank()
         game_id = uuid4()
 
+        # get_word_options doesn't mark words as used
         options1 = wb.get_word_options(game_id, count=3)
-        assert game_id in wb.used_words
-        assert len(wb.used_words[game_id]) == 3
+        assert game_id not in wb.used_words  # Not tracked yet
 
+        # mark_word_used tracks the selected word
+        wb.mark_word_used(game_id, options1[0])
+        assert game_id in wb.used_words
+        assert len(wb.used_words[game_id]) == 1
+        assert options1[0] in wb.used_words[game_id]
+
+        # Get more options - the marked word won't be included
         options2 = wb.get_word_options(game_id, count=3)
-        assert len(wb.used_words[game_id]) == 6
-        # Verify no overlap
-        assert len(set(options1) & set(options2)) == 0
+        assert options1[0] not in options2
 
     def test_separate_game_tracking(self) -> None:
-        """Test that different games track words separately."""
+        """Test that different games track words separately via mark_word_used."""
         wb = WordBank()
         game1 = uuid4()
         game2 = uuid4()
@@ -160,11 +165,16 @@ class TestGetWordOptions:
         options1 = wb.get_word_options(game1, count=3)
         options2 = wb.get_word_options(game2, count=3)
 
+        # Mark words used for each game
+        wb.mark_word_used(game1, options1[0])
+        wb.mark_word_used(game2, options2[0])
+
         assert len(wb.used_words) == 2
         assert game1 in wb.used_words
         assert game2 in wb.used_words
-        # Games can have overlapping words
-        assert set(options1) != set(options2) or len(options1) == len(options2)
+        # Each game tracks only the selected word
+        assert len(wb.used_words[game1]) == 1
+        assert len(wb.used_words[game2]) == 1
 
 
 class TestCheckGuess:
@@ -379,9 +389,12 @@ class TestGameManagement:
         wb = WordBank()
         game_id = uuid4()
 
-        # Use some words
-        wb.get_word_options(game_id, count=3)
+        # Mark some words as used
+        options = wb.get_word_options(game_id, count=3)
+        wb.mark_word_used(game_id, options[0])
+        wb.mark_word_used(game_id, options[1])
         assert game_id in wb.used_words
+        assert len(wb.used_words[game_id]) == 2
 
         # Reset
         wb.reset_game_words(game_id)

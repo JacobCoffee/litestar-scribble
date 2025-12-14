@@ -364,6 +364,9 @@ class GameService:
         if word.lower() not in [w.lower() for w in room.current_round.word_options]:
             raise GameStateError("Invalid word selection")
 
+        # Mark the selected word as used (so it won't appear in future rounds)
+        self._word_bank.mark_word_used(room.id, word)
+
         # Start the round
         room.current_round.start(word)
         room.game_state = GameState.DRAWING
