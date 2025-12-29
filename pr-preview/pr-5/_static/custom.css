@@ -1,0 +1,38 @@
+/* Custom styles for scribbl-py documentation */
+
+/* Enhance code blocks */
+.highlight pre {
+    border-radius: 8px;
+}
+
+/* Style for the lead paragraph */
+.lead {
+    font-size: 1.2em;
+    font-weight: 300;
+    color: var(--color-content-secondary);
+}
+
+/* Card hover effects */
+.sd-card:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th {
+    background-color: var(--color-background-secondary);
+}
+
+/* API reference styling */
+.py.class > dt,
+.py.function > dt,
+.py.method > dt {
+    background-color: var(--color-background-secondary);
+    padding: 0.5em;
+    border-radius: 4px;
+}
